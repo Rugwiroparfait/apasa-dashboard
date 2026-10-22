@@ -18,3 +18,6 @@ section3_4_plot_crop_slots.*
 /.vscode/
 __pycache__/
 *.py[cod]
+
+# Detailed Day 3 aggregates contain singleton groups and disclosive scenario differences.
+/outputs/day3/maize_support_summary.csv
