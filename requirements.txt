@@ -1,2 +1,7 @@
 numpy
 pandas
+matplotlib
+streamlit>=1.52,<2
+altair>=5,<7
+# Streamlit table serialization; PyArrow 26 requires NumPy 2 at runtime.
+pyarrow>=10.0.1,<25

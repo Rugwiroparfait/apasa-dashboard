@@ -2,7 +2,8 @@
 
 APASA is a project for the 2026 NISR Big Data Hackathon. Day 2 preparation
 of AHS 2024 Section 3_4 is complete. This baseline organizes that workflow;
-Day 3 analysis has not started.
+Day 3 descriptive maize exploration is published. Day 4 adds a local Streamlit
+dashboard prototype; deployment is a later stage.
 
 ## Scope and status
 
@@ -23,8 +24,16 @@ unchanged; their interpretation is unresolved.
 README.md
 requirements.txt
 .gitignore
+app.py
+.streamlit/config.toml
 analysis/prepare_section3_4.py
+analysis/day3_exploratory_analysis.py
+docs/day3_findings.md
 outputs/aggregates/day2_section3_4_crop_candidates.csv
+outputs/day3/maize_overall_summary.csv
+outputs/day3/category_dictionary.csv
+outputs/day3/figures/
+tests/test_dashboard.py
 ```
 
 Local-only files are organized as follows:
@@ -81,4 +90,57 @@ Raw survey files and all row-level processed data remain local and are excluded
 from Git, including records without direct identifiers. Never force-add ignored
 data. Only reviewed source code, documentation and aggregate-only outputs may
 be committed. Other survey metadata, reference PDFs, editor settings and scratch
-files remain local. No dashboard or Day 3 work is included in this baseline.
+files remain local. The published Day 2 baseline contains no dashboard or Day 3 analysis.
+
+## Day 3 descriptive exploration
+
+Run `python3 analysis/day3_exploratory_analysis.py` using the same local inputs
+and the dependencies in `requirements.txt` (now including matplotlib for charts).
+Read `docs/day3_findings.md`; the public overall-summary CSV, category dictionary
+and eleven charts are in `outputs/day3/`. The detailed support CSV is written to
+ignored `local_data/day3/`; its legacy copy under `outputs/day3/` is also ignored
+because small categories and sensitivity differences can disclose individual values.
+This stage describes observed maize plot-crop harvest quantities in kilograms,
+without weighting, causal inference, area normalization, or other-section merges.
+Raw inputs and all Day 2 artifacts remain unchanged. The Day 3 workflow does not build the dashboard.
+
+## Day 4: local dashboard prototype
+
+The dashboard starts from the public repository alone; no survey inputs, local
+metadata, preparation run, or ignored files are needed. Use Python 3.10+:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
+```
+
+Open `http://localhost:8501`. Stop with Ctrl+C. The server binds to loopback;
+this is a local prototype and has not been deployed. Run the verification with
+`python -m unittest discover -s tests -v`. The tests use
+[Streamlit AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest)
+on a temporary copy containing only the public app inputs.
+
+The app reads an explicit set of approved public files: the two scenarios in
+`outputs/day3/maize_overall_summary.csv`, the traditional/improved seed rows
+already published in `docs/day3_findings.md`, and the eleven committed chart
+images. The category dictionary is public metadata but is not needed at startup.
+It does not import the preparation or analysis scripts, traverse data folders,
+load the detailed support CSV, or compute new group statistics.
+
+The only sample control switches the overall-summary panel between all records
+and the published sensitivity excluding values above 5,000 kg. Seed medians
+and practice charts always show the all-record view. No geographic filters are
+available. Harvest quantity is kg per maize crop-slot/plot-season record;
+statistics exclude missing reports and retain reported zeros. Zero meaning is
+unconfirmed, and the 5,000 kg threshold is a review flag, not an error rule.
+
+These are unweighted descriptions of observed records, not national estimates.
+Seed comparisons are observational associations, not causal effects. The app
+does not calculate crop-specific yield or productivity. Small or sensitive
+groups and complementary harvest statistics remain suppressed or omitted.
+Neither raw `.dta` files nor row-level data may ever be bundled or pushed.
+
+Stage history: Day 2 preparation → Day 3 descriptive maize exploration →
+Day 4 local prototype. Deployment and final submission remain future tasks.
