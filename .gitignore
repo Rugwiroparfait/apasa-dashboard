@@ -1,0 +1,20 @@
+# Raw survey files and local microdata must never be committed.
+/data/
+/local_data/
+*.[dD][tT][aA]
+section3_4_plot_crop_slots.*
+
+# Local audit inputs, generated working outputs and metadata scratch files.
+/audit_tmp/
+/tmp_apasa_metadata_summary.json
+
+# These unchanged QA artifacts contain individual extreme harvest values.
+/docs/day2_section3_4_qa_report.md
+/docs/day2_section3_4_structure_and_qa.json
+
+# Local environment, editor settings and Python caches.
+/.venv/
+/venv/
+/.vscode/
+__pycache__/
+*.py[cod]
