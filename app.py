@@ -28,7 +28,7 @@ def load_public_data():
     summary = pd.read_csv(SUMMARY).set_index('scenario')
     expected = {'all_reported', 'review_sensitivity_le_5000'}
     if set(summary.index) != expected or len(summary) != 2:
-        raise ValueError('Expected the two approved Day 3 overall scenarios.')
+        raise ValueError('Expected the two approved overall scenarios.')
     for _, row in summary.iterrows():
         if row.records != row.harvest_nonmissing + row.harvest_missing:
             raise ValueError('Published summary denominators do not reconcile.')
@@ -81,7 +81,7 @@ def main():
     try:
         summary, seed = load_public_data()
     except (OSError, ValueError, KeyError, IndexError) as exc:
-        st.error(f'The approved public Day 3 inputs could not be loaded: {exc}')
+        st.error(f'The approved public research inputs could not be loaded: {exc}')
         st.stop()
     full = summary.loc['all_reported']
     with st.sidebar:
@@ -91,12 +91,12 @@ def main():
         st.markdown('**AHS 2024 · Section 3_4**\n\nMaize · observed plot-seasons')
         st.info('Exploratory, unweighted descriptions. These are not national estimates.')
         st.markdown('**Read this dashboard**\n\n1. Check the analyzed sample.\n2. Compare published seed medians.\n3. Review large-value sensitivity.')
-        st.caption('Day 4 · Local prototype\n\nNo geographic breakdowns are available in the approved aggregates.')
+        st.caption('AHS 2024 · Research evidence\n\nNo geographic breakdowns are available in the approved aggregates.')
     st.markdown('''<div class="hero"><div class="eyebrow">APASA / AGRICULTURAL CONDITIONS</div>
     <h1>Maize harvest, in context.</h1>
     <p>A descriptive view of reported harvest quantities across observed maize plot-season records.
     AHS 2024, Section 3_4 · Rwanda.</p></div>''', unsafe_allow_html=True)
-    st.caption('LOCAL PROTOTYPE  /  UNWEIGHTED OBSERVED RECORDS  /  NOT NATIONAL ESTIMATES')
+    st.caption('RESEARCH EVIDENCE  /  UNWEIGHTED OBSERVED RECORDS  /  NOT NATIONAL ESTIMATES')
     st.subheader('The analyzed sample')
     cols = st.columns(4)
     for col, label, value in zip(cols,
@@ -160,7 +160,7 @@ def main():
     })
     st.caption('Both approved views have a 30 kg median. The mean changes from 92.12 to 86.91 kg. '
                'No seed-specific or practice-specific sensitivity summaries are exposed.')
-    with st.expander('Explore the published Day 3 practice charts'):
+    with st.expander('Explore the published research practice charts'):
         chosen = st.selectbox('Published comparison', list(FIGURES))
         st.image(str(ROOT/'outputs/day3/figures'/FIGURES[chosen]), width='stretch',
                  caption=f'{chosen} — all-record view. Median dot and Q1–Q3 line in kg; each row shows its own denominator.')
@@ -176,13 +176,12 @@ def main():
 - **Group boundaries:** Plot practices can apply to other crops on mixed-crop plots. Small or sensitive groups are suppressed or omitted, including complementary suppression where needed. No district or geographic filters are supported.
 ''')
     with st.expander('Sources and approved aggregate download'):
-        st.markdown('Source: `docs/day3_findings.md` and `outputs/day3/maize_overall_summary.csv`, published in Day 3 commit '
-                    '`cbdd42ab3051a75e46f85fe1cfae1f2034c8e418`. The additional charts are the eleven images committed under `outputs/day3/figures/`.')
+        st.markdown('Source: AHS 2024 Section 3_4. This research view uses approved published aggregate summaries and charts.')
         st.download_button('Download approved overall summary (CSV)', SUMMARY.read_bytes(),
                            file_name='apasa_maize_overall_summary.csv', mime='text/csv')
-        st.caption('This prototype reads only public report, overall-summary and chart files. No raw survey files, identifiers or row-level records are loaded.')
+        st.caption('This research view reads only public report, overall-summary and chart files. No raw survey files, identifiers or row-level records are loaded.')
     st.divider()
-    st.caption('APASA · 2026 NISR Big Data Hackathon project · Local exploratory prototype · No deployment')
+    st.caption('APASA · AHS research evidence · Descriptive sample findings')
 
 
 if __name__ == '__main__':

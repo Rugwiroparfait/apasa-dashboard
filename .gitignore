@@ -21,3 +21,35 @@ __pycache__/
 
 # Detailed Day 3 aggregates contain singleton groups and disclosive scenario differences.
 /outputs/day3/maize_support_summary.csv
+
+# Local database credentials, snapshots and test databases.
+.env
+.env.*
+!.env.example
+*.sqlite3
+*.sqlite3-*
+*.dump
+*.pgdump
+
+# Keep only current app evidence, its provenance and operational setup docs.
+# Other planning notes, historical audits and session/checkpoint guides stay local.
+/docs/*
+!/docs/day3_findings.md
+!/docs/day6_indicator_comparability.csv
+!/docs/day6_policy_data_inventory.md
+!/docs/day7_district_data_dictionary.md
+!/docs/day7_source_reconciliation.md
+!/docs/public_evidence_data_layer.md
+
+# Not consumed by the current application or approved evidence import.
+/outputs/day5/
+
+# Local agent/session guidance and machine-specific configuration.
+/.agents/
+/.codex/
+/.claude/
+/.aws/
+AGENTS.md
+AGENTS.local.md
+CODEX.md
+CLAUDE.md

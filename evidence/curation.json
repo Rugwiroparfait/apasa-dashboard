@@ -1,0 +1,1312 @@
+{
+  "version": "1",
+  "crops": [
+    {
+      "code": "maize",
+      "name": "Maize",
+      "kind": "individual"
+    },
+    {
+      "code": "sorghum",
+      "name": "Sorghum",
+      "kind": "individual"
+    },
+    {
+      "code": "paddy_rice",
+      "name": "Paddy rice",
+      "kind": "individual"
+    },
+    {
+      "code": "wheat",
+      "name": "Wheat",
+      "kind": "individual"
+    },
+    {
+      "code": "cassava",
+      "name": "Cassava",
+      "kind": "individual"
+    },
+    {
+      "code": "sweet_potato",
+      "name": "Sweet potato",
+      "kind": "individual"
+    },
+    {
+      "code": "irish_potato",
+      "name": "Irish potato",
+      "kind": "individual"
+    },
+    {
+      "code": "cooking_banana",
+      "name": "Cooking banana",
+      "kind": "individual"
+    },
+    {
+      "code": "dessert_banana",
+      "name": "Dessert banana",
+      "kind": "individual"
+    },
+    {
+      "code": "beer_banana",
+      "name": "Banana for beer",
+      "kind": "individual"
+    },
+    {
+      "code": "bush_bean",
+      "name": "Bush bean",
+      "kind": "individual"
+    },
+    {
+      "code": "climbing_bean",
+      "name": "Climbing bean",
+      "kind": "individual"
+    },
+    {
+      "code": "pea",
+      "name": "Pea",
+      "kind": "individual"
+    },
+    {
+      "code": "groundnut",
+      "name": "Groundnut",
+      "kind": "individual"
+    },
+    {
+      "code": "soybean",
+      "name": "Soybean",
+      "kind": "individual"
+    },
+    {
+      "code": "coffee",
+      "name": "Coffee",
+      "kind": "individual"
+    },
+    {
+      "code": "tea",
+      "name": "Tea",
+      "kind": "individual"
+    },
+    {
+      "code": "pyrethrum",
+      "name": "Pyrethrum",
+      "kind": "individual"
+    },
+    {
+      "code": "avocado",
+      "name": "Avocado",
+      "kind": "individual"
+    },
+    {
+      "code": "cabbage",
+      "name": "Cabbage",
+      "kind": "individual"
+    },
+    {
+      "code": "carrot",
+      "name": "Carrot",
+      "kind": "individual"
+    },
+    {
+      "code": "chili",
+      "name": "Chili",
+      "kind": "individual"
+    },
+    {
+      "code": "eggplant",
+      "name": "Egg plant",
+      "kind": "individual"
+    },
+    {
+      "code": "garlic",
+      "name": "Garlic",
+      "kind": "individual"
+    },
+    {
+      "code": "pepper",
+      "name": "Pepper",
+      "kind": "individual"
+    },
+    {
+      "code": "onion",
+      "name": "Onion",
+      "kind": "individual"
+    },
+    {
+      "code": "pineapple",
+      "name": "Pineapple",
+      "kind": "individual"
+    },
+    {
+      "code": "macadamia",
+      "name": "Macadamia",
+      "kind": "individual"
+    },
+    {
+      "code": "mango",
+      "name": "Mango",
+      "kind": "individual"
+    },
+    {
+      "code": "passion_fruit",
+      "name": "Passion fruit",
+      "kind": "individual"
+    },
+    {
+      "code": "tree_tomato",
+      "name": "Tree tomato",
+      "kind": "individual"
+    },
+    {
+      "code": "french_bean",
+      "name": "French bean",
+      "kind": "individual"
+    },
+    {
+      "code": "beans_unspecified",
+      "name": "Beans (source grouping)",
+      "kind": "group"
+    },
+    {
+      "code": "beans_bush_climbing",
+      "name": "Beans (Bush and Climbing)",
+      "kind": "group"
+    },
+    {
+      "code": "cereals",
+      "name": "Cereals",
+      "kind": "group"
+    },
+    {
+      "code": "food_crops",
+      "name": "Food crops",
+      "kind": "group"
+    },
+    {
+      "code": "fruits",
+      "name": "Fruits",
+      "kind": "group"
+    },
+    {
+      "code": "vegetables",
+      "name": "Vegetables",
+      "kind": "group"
+    },
+    {
+      "code": "horticulture",
+      "name": "Horticulture",
+      "kind": "group"
+    },
+    {
+      "code": "grains",
+      "name": "Grains",
+      "kind": "group"
+    },
+    {
+      "code": "flowers",
+      "name": "Flowers",
+      "kind": "group"
+    },
+    {
+      "code": "essential_oils",
+      "name": "Essential oils",
+      "kind": "group"
+    },
+    {
+      "code": "maize_beans",
+      "name": "Maize and beans",
+      "kind": "group"
+    },
+    {
+      "code": "rice_wheat",
+      "name": "Rice and wheat",
+      "kind": "group"
+    },
+    {
+      "code": "banana_coffee",
+      "name": "Banana/coffee",
+      "kind": "group"
+    }
+  ],
+  "crop_aliases": [
+    {
+      "raw_label": "Maize",
+      "crop_code": "maize",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Sorghum",
+      "crop_code": "sorghum",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Paddy rice",
+      "crop_code": "paddy_rice",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Wheat",
+      "crop_code": "wheat",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Cassava",
+      "crop_code": "cassava",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Sweet Potatoes",
+      "crop_code": "sweet_potato",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "sweet potato",
+      "crop_code": "sweet_potato",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Sweet potato",
+      "crop_code": "sweet_potato",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Irish Potato",
+      "crop_code": "irish_potato",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Irish Potatoes",
+      "crop_code": "irish_potato",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Irish potato",
+      "crop_code": "irish_potato",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Cooking Banana",
+      "crop_code": "cooking_banana",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Cooking banana",
+      "crop_code": "cooking_banana",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Dessert banana",
+      "crop_code": "dessert_banana",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Banana for beer",
+      "crop_code": "beer_banana",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Bush bean",
+      "crop_code": "bush_bean",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Climbing bean",
+      "crop_code": "climbing_bean",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Peas",
+      "crop_code": "pea",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Pea",
+      "crop_code": "pea",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Groundnuts",
+      "crop_code": "groundnut",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Soybean",
+      "crop_code": "soybean",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Soybeans",
+      "crop_code": "soybean",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Coffee",
+      "crop_code": "coffee",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Tea",
+      "crop_code": "tea",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Pyrethrum",
+      "crop_code": "pyrethrum",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Avocado",
+      "crop_code": "avocado",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Cabbage",
+      "crop_code": "cabbage",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Carrot",
+      "crop_code": "carrot",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Chili",
+      "crop_code": "chili",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Egg plant",
+      "crop_code": "eggplant",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Garlic",
+      "crop_code": "garlic",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Pepper",
+      "crop_code": "pepper",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Onions",
+      "crop_code": "onion",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Pineapple",
+      "crop_code": "pineapple",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Macadamia",
+      "crop_code": "macadamia",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Mango",
+      "crop_code": "mango",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Passion Fruits",
+      "crop_code": "passion_fruit",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Passion fruit",
+      "crop_code": "passion_fruit",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Tree tomato",
+      "crop_code": "tree_tomato",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "French beans",
+      "crop_code": "french_bean",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Beans",
+      "crop_code": "beans_unspecified",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Beans (Bush and Climbing)",
+      "crop_code": "beans_bush_climbing",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Cereals",
+      "crop_code": "cereals",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Food crops",
+      "crop_code": "food_crops",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Fruits",
+      "crop_code": "fruits",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Vegetables",
+      "crop_code": "vegetables",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Horticulture",
+      "crop_code": "horticulture",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Grains",
+      "crop_code": "grains",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Flowers",
+      "crop_code": "flowers",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Essential oils",
+      "crop_code": "essential_oils",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Maize and beans",
+      "crop_code": "maize_beans",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Rice and wheat",
+      "crop_code": "rice_wheat",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "banana/coffee",
+      "crop_code": "banana_coffee",
+      "status": "curated",
+      "note": "Explicit display equivalence only; original labels retained. No policy/SAS scope equivalence implied."
+    },
+    {
+      "raw_label": "Rice",
+      "crop_code": "",
+      "status": "review",
+      "note": "Scope or crop equivalence unconfirmed; not merged with a curated individual crop/group."
+    },
+    {
+      "raw_label": "Potato",
+      "crop_code": "",
+      "status": "review",
+      "note": "Scope or crop equivalence unconfirmed; not merged with a curated individual crop/group."
+    },
+    {
+      "raw_label": "Soya",
+      "crop_code": "",
+      "status": "review",
+      "note": "Scope or crop equivalence unconfirmed; not merged with a curated individual crop/group."
+    },
+    {
+      "raw_label": "Soya bean",
+      "crop_code": "",
+      "status": "review",
+      "note": "Scope or crop equivalence unconfirmed; not merged with a curated individual crop/group."
+    },
+    {
+      "raw_label": "All crops",
+      "crop_code": "",
+      "status": "review",
+      "note": "Scope or crop equivalence unconfirmed; not merged with a curated individual crop/group."
+    },
+    {
+      "raw_label": "All crops (broader agriculture scope)",
+      "crop_code": "",
+      "status": "review",
+      "note": "Scope or crop equivalence unconfirmed; not merged with a curated individual crop/group."
+    },
+    {
+      "raw_label": "Horticulture (crop allocation unspecified)",
+      "crop_code": "",
+      "status": "review",
+      "note": "Scope or crop equivalence unconfirmed; not merged with a curated individual crop/group."
+    }
+  ],
+  "policy_nodes": [
+    {
+      "code": "PSTA5:Outcome-1.1",
+      "name": "Outcome 1.1 — MODERNIZED CROP PRODUCTION AND PRODUCTIVITY",
+      "aliases": [
+        "Outcome 1.1",
+        "Outcome 1.1: MODERNIZED CROP PRODUCTION AND PRODUCTIVITY"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 103 (printed page 102)"
+    },
+    {
+      "code": "PSTA5:Outcome-2.1",
+      "name": "Outcome 2.1 — BOOSTED AGRICULTURE EXPORTS",
+      "aliases": [
+        "Outcome 2.1: BOOSTED AGRICULTURE EXPORTS"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 109 (printed page 108)"
+    },
+    {
+      "code": "PSTA5:Outcome-2.2",
+      "name": "Outcome 2.2 — STRENGTHENED MARKET LINKAGES AND POST-HARVEST INFRASTRUCTURES",
+      "aliases": [
+        "Outcome 2.2"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 111 (printed page 110)"
+    },
+    {
+      "code": "PSTA5:Outcome-3.1",
+      "name": "Outcome 3.1 — STRENGTHENED RESEARCH AND TECHNOLOGY TRANSFER FOR AGRI-FOOD SYSTEMS TRANSFORMATION",
+      "aliases": [
+        "Outcome 3.1"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 115 (printed page 114)"
+    },
+    {
+      "code": "PSTA5:Outcome-3.2",
+      "name": "Outcome 3.2 — STRENGTHENED AGRICULTURE DE-RISKING FOR RESILIENCE",
+      "aliases": [
+        "Outcome 3.2"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 116 (printed page 115)"
+    },
+    {
+      "code": "PSTA5:Output-1.1.1",
+      "name": "Output 1.1.1 — Agricultural land management and production models improved",
+      "aliases": [
+        "Output 1.1.1"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 104 (printed page 103)"
+    },
+    {
+      "code": "PSTA5:Output-1.1.3",
+      "name": "Output 1.1.3 — Urban and peri-urban farming promoted",
+      "aliases": [
+        "Output 1.1.3"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 104 (printed page 103)"
+    },
+    {
+      "code": "PSTA5:Output-1.1.4",
+      "name": "Output 1.1.4 — Climate-smart agriculture practices improved",
+      "aliases": [
+        "Output 1.1.4"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 104 (printed page 103)"
+    },
+    {
+      "code": "PSTA5:Output-1.1.5",
+      "name": "Output 1.1.5 — Irrigation and water resource management improved",
+      "aliases": [
+        "Output 1.1.5"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 105 (printed page 104)"
+    },
+    {
+      "code": "PSTA5:Output-1.1.6",
+      "name": "Output 1.1.6 — Access to agricultural Inputs for climate-resilient production improved",
+      "aliases": [
+        "Output 1.1.6"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 105 (printed page 104)"
+    },
+    {
+      "code": "PSTA5:Output-1.1.7",
+      "name": "Output 1.1.7 — Plant Health Management enhanced",
+      "aliases": [
+        "Output 1.1.7"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 106 (printed page 105)"
+    },
+    {
+      "code": "PSTA5:Output-1.1.8",
+      "name": "Output 1.1.8 — Mechanization and labour-saving technologies promoted",
+      "aliases": [
+        "Output 1.1.8"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 106 (printed page 105)"
+    },
+    {
+      "code": "PSTA5:Output-2.1.1",
+      "name": "Output 2.1.1 — Export crops expanded",
+      "aliases": [
+        "Output 2.1.1: Export crops expanded"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 110 (printed page 109)"
+    },
+    {
+      "code": "PSTA5:Output-2.1.2",
+      "name": "Output 2.1.2 — Rwandan agri-exports de-commoditized",
+      "aliases": [
+        "Output 2.1.2: Rwandan agri-exports de-commoditized"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 111 (printed page 110)"
+    },
+    {
+      "code": "PSTA5:Output-2.2.2",
+      "name": "Output 2.2.2 — Post-harvest handling for reduced losses improved",
+      "aliases": [
+        "Output 2.2.2"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 112 (printed page 111)"
+    },
+    {
+      "code": "PSTA5:Output-2.3.1",
+      "name": "Output 2.3.1 — Food security and nutrition improved",
+      "aliases": [
+        "Output 2.3.1",
+        "Output 2.3.1: Food security and nutrition improved"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 113 (printed page 112)"
+    },
+    {
+      "code": "PSTA5:Output-2.3.2",
+      "name": "Output 2.3.2 — Households supported in Animal resources production and Nutrition-Sensitive crop production (at least 30% distributed to women headed households)",
+      "aliases": [
+        "Output 2.3.2"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 114 (printed page 113)"
+    },
+    {
+      "code": "PSTA5:Output-2.3.3",
+      "name": "Output 2.3.3 — Food stability and mitigating related shocks ensured",
+      "aliases": [
+        "Output 2.3.3"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 114 (printed page 113)"
+    },
+    {
+      "code": "PSTA5:Output-3.1.1",
+      "name": "Output 3.1.1 — Demand-driven research enhanced",
+      "aliases": [
+        "Output 3.1.1"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 115 (printed page 114)"
+    },
+    {
+      "code": "PSTA5:Output-3.1.2",
+      "name": "Output 3.1.2 — Customised agriculture extension system enhanced",
+      "aliases": [
+        "Output 3.1.2"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 116 (printed page 115)"
+    },
+    {
+      "code": "PSTA5:Output-3.2.2",
+      "name": "Output 3.2.2 — Agriculture insurance scheme strengthened",
+      "aliases": [
+        "Output 3.2.2: Agriculture insurance scheme strengthened"
+      ],
+      "framework_code": "PSTA5",
+      "framework_name": "Fifth Strategic Plan for Agriculture Transformation",
+      "name_status": "verified",
+      "source_url": "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "source_reference": "Annex 1 results framework, PDF page 117 (printed page 116)"
+    }
+  ],
+  "indicators": [
+    {
+      "code": "PSTA5-I001",
+      "name": "Agriculture land under mechanisation",
+      "aliases": [
+        "Agriculture land under mechanisation"
+      ]
+    },
+    {
+      "code": "PSTA5-I002",
+      "name": "Agriculture land use master plan",
+      "aliases": [
+        "Agriculture land use master plan"
+      ]
+    },
+    {
+      "code": "PSTA5-I003",
+      "name": "Area under AgriHubs",
+      "aliases": [
+        "Area under AgriHubs"
+      ]
+    },
+    {
+      "code": "PSTA5-I004",
+      "name": "Area under Agro-forestry",
+      "aliases": [
+        "Area under Agro-forestry"
+      ]
+    },
+    {
+      "code": "PSTA5-I005",
+      "name": "Area under Conservation Agriculture",
+      "aliases": [
+        "Area under Conservation Agriculture"
+      ]
+    },
+    {
+      "code": "PSTA5-I006",
+      "name": "Area under Export crops",
+      "aliases": [
+        "Area under Export crops"
+      ]
+    },
+    {
+      "code": "PSTA5-I007",
+      "name": "Area under Food Basket Sites",
+      "aliases": [
+        "Area under Food Basket Sites"
+      ]
+    },
+    {
+      "code": "PSTA5-I008",
+      "name": "Area under Greenhouses",
+      "aliases": [
+        "Area under Greenhouses"
+      ]
+    },
+    {
+      "code": "PSTA5-I009",
+      "name": "Area under Progressive terraces (Cumulative)",
+      "aliases": [
+        "Area under Progressive terraces (Cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I010",
+      "name": "Area under Radical terraces (Cumulative)",
+      "aliases": [
+        "Area under Radical terraces (Cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I011",
+      "name": "Area under banana/coffee multi-cropping",
+      "aliases": [
+        "Area under banana/coffee multi-cropping"
+      ]
+    },
+    {
+      "code": "PSTA5-I012",
+      "name": "Beans (source wording; definition review)",
+      "aliases": [
+        "Beans"
+      ]
+    },
+    {
+      "code": "PSTA5-I013",
+      "name": "Bio-fertilizers produced",
+      "aliases": [
+        "Bio-fertilizers produced"
+      ]
+    },
+    {
+      "code": "PSTA5-I014",
+      "name": "Biofortified seeds produced (per crop type)",
+      "aliases": [
+        "Biofortified seeds produced (per crop type)"
+      ]
+    },
+    {
+      "code": "PSTA5-I015",
+      "name": "Cold storage facilities established and upgraded (Cumulative)",
+      "aliases": [
+        "Cold storage facilities established and upgraded (Cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I016",
+      "name": "Collection centres (Irish potato, cassava, vegetables, honey and eggs etc.) (cumulative)",
+      "aliases": [
+        "Collection centres (Irish potato, cassava, vegetables, honey and eggs etc.) (cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I017",
+      "name": "Coverage of agricultural extension services",
+      "aliases": [
+        "Coverage of agricultural extension services"
+      ]
+    },
+    {
+      "code": "PSTA5-I018",
+      "name": "Crop Suitability Maps developed",
+      "aliases": [
+        "Crop Suitability Maps developed"
+      ]
+    },
+    {
+      "code": "PSTA5-I019",
+      "name": "Crop farmers with agriculture insurance",
+      "aliases": [
+        "Crop farmers with agriculture insurance"
+      ]
+    },
+    {
+      "code": "PSTA5-I020",
+      "name": "Crop insured",
+      "aliases": [
+        "Crop insured"
+      ]
+    },
+    {
+      "code": "PSTA5-I021",
+      "name": "Crop varieties developed (climate resilient, disease resistant) total for all crops",
+      "aliases": [
+        "Crop varieties developed (climate resilient, disease resistant) total for all crops"
+      ]
+    },
+    {
+      "code": "PSTA5-I022",
+      "name": "Drying grounds (Rice and wheat) (Cumulative)",
+      "aliases": [
+        "Drying grounds (Rice and wheat) (Cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I023",
+      "name": "Drying shelters (Maize and beans) (cumulative)",
+      "aliases": [
+        "Drying shelters (Maize and beans) (cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I024",
+      "name": "Existing irrigated schemes maintained and rehabilitated",
+      "aliases": [
+        "Existing irrigated schemes maintained and rehabilitated"
+      ]
+    },
+    {
+      "code": "PSTA5-I025",
+      "name": "Export crops production",
+      "aliases": [
+        "Export crops production"
+      ]
+    },
+    {
+      "code": "PSTA5-I026",
+      "name": "Export revenues increased",
+      "aliases": [
+        "Export revenues increased"
+      ]
+    },
+    {
+      "code": "PSTA5-I027",
+      "name": "Extension agents (such as FFS facilitators, FPs) trained on the delivery of new extension packages and facilitated (disaggregated by gender/age)",
+      "aliases": [
+        "Extension agents (such as FFS facilitators, FPs) trained on the delivery of new extension packages and facilitated (disaggregated by gender/age)"
+      ]
+    },
+    {
+      "code": "PSTA5-I028",
+      "name": "Farmers (male & female) accessing extension (including climate smart) services through the CAES",
+      "aliases": [
+        "Farmers (male & female) accessing extension (including climate smart) services through the CAES"
+      ]
+    },
+    {
+      "code": "PSTA5-I029",
+      "name": "Farmers (male and female) using IPM practices",
+      "aliases": [
+        "Farmers (male and female) using IPM practices"
+      ]
+    },
+    {
+      "code": "PSTA5-I030",
+      "name": "Farmers adoption rate of modern and climate resilient agricultural practices",
+      "aliases": [
+        "Farmers adoption rate of modern and climate resilient agricultural practices"
+      ]
+    },
+    {
+      "code": "PSTA5-I031",
+      "name": "Farmers using climate resilient seed varieties",
+      "aliases": [
+        "Farmers using climate resilient seed varieties"
+      ]
+    },
+    {
+      "code": "PSTA5-I032",
+      "name": "Farmers using improved seeds (Large scale)",
+      "aliases": [
+        "Farmers using improved seeds (Large scale)"
+      ]
+    },
+    {
+      "code": "PSTA5-I033",
+      "name": "Farmers using improved seeds (Small scale)",
+      "aliases": [
+        "Farmers using improved seeds (Small scale)"
+      ]
+    },
+    {
+      "code": "PSTA5-I034",
+      "name": "Farmers using inorganic fertilizer (Large scale)",
+      "aliases": [
+        "Farmers using inorganic fertilizer (Large scale)"
+      ]
+    },
+    {
+      "code": "PSTA5-I035",
+      "name": "Farmers using inorganic fertilizer (Small scale)",
+      "aliases": [
+        "Farmers using inorganic fertilizer (Small scale)"
+      ]
+    },
+    {
+      "code": "PSTA5-I036",
+      "name": "Farmers using pest and disease surveillance tools",
+      "aliases": [
+        "Farmers using pest and disease surveillance tools"
+      ]
+    },
+    {
+      "code": "PSTA5-I037",
+      "name": "Food crop gross value added sold",
+      "aliases": [
+        "Food crop gross value added sold"
+      ]
+    },
+    {
+      "code": "PSTA5-I038",
+      "name": "Food crop storage facilities constructed (silos and warehouses)",
+      "aliases": [
+        "Food crop storage facilities constructed (silos and warehouses)"
+      ]
+    },
+    {
+      "code": "PSTA5-I039",
+      "name": "Fruits trees distributed",
+      "aliases": [
+        "Fruits trees distributed"
+      ]
+    },
+    {
+      "code": "PSTA5-I040",
+      "name": "Green houses facilities established",
+      "aliases": [
+        "Green houses facilities established"
+      ]
+    },
+    {
+      "code": "PSTA5-I041",
+      "name": "Household with kitchen garden",
+      "aliases": [
+        "Household with kitchen garden"
+      ]
+    },
+    {
+      "code": "PSTA5-I042",
+      "name": "Improved quality seeds used (per crop type)",
+      "aliases": [
+        "Improved quality seeds used (per crop type)"
+      ]
+    },
+    {
+      "code": "PSTA5-I043",
+      "name": "Inorganic fertilizers application per ha",
+      "aliases": [
+        "Inorganic fertilizers application per ha"
+      ]
+    },
+    {
+      "code": "PSTA5-I044",
+      "name": "Inorganic fertilizers used",
+      "aliases": [
+        "Inorganic fertilizers used"
+      ]
+    },
+    {
+      "code": "PSTA5-I045",
+      "name": "Lime used",
+      "aliases": [
+        "Lime used"
+      ]
+    },
+    {
+      "code": "PSTA5-I046",
+      "name": "Maize (source wording; definition review)",
+      "aliases": [
+        "Maize"
+      ]
+    },
+    {
+      "code": "PSTA5-I047",
+      "name": "Master trainers trained on specific value chain and their segments",
+      "aliases": [
+        "Master trainers trained on specific value chain and their segments"
+      ]
+    },
+    {
+      "code": "PSTA5-I048",
+      "name": "Mobile dryers for cereals (cumulative)",
+      "aliases": [
+        "Mobile dryers for cereals (cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I049",
+      "name": "National storage capacity of food crops (cumulative)",
+      "aliases": [
+        "National storage capacity of food crops (cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I050",
+      "name": "Pest/disease surveillance conducted",
+      "aliases": [
+        "Pest/disease surveillance conducted"
+      ]
+    },
+    {
+      "code": "PSTA5-I051",
+      "name": "Plant genetic resources conserved",
+      "aliases": [
+        "Plant genetic resources conserved"
+      ]
+    },
+    {
+      "code": "PSTA5-I052",
+      "name": "Post-harvest technologies developed",
+      "aliases": [
+        "Post-harvest technologies developed"
+      ]
+    },
+    {
+      "code": "PSTA5-I053",
+      "name": "Productivity for the priority food crops",
+      "aliases": [
+        "Productivity for the priority food crops"
+      ]
+    },
+    {
+      "code": "PSTA5-I054",
+      "name": "Quantity of grains stored as strategic reserves",
+      "aliases": [
+        "Quantity of grains stored as strategic reserves"
+      ]
+    },
+    {
+      "code": "PSTA5-I055",
+      "name": "Quantity of production",
+      "aliases": [
+        "Quantity of production"
+      ]
+    },
+    {
+      "code": "PSTA5-I056",
+      "name": "Reduction of post-harvest losses in priority staple crops",
+      "aliases": [
+        "Reduction of post-harvest losses in priority staple crops"
+      ]
+    },
+    {
+      "code": "PSTA5-I057",
+      "name": "Rice (source wording; definition review)",
+      "aliases": [
+        "Rice"
+      ]
+    },
+    {
+      "code": "PSTA5-I058",
+      "name": "Schools with school garden",
+      "aliases": [
+        "Schools with school garden"
+      ]
+    },
+    {
+      "code": "PSTA5-I059",
+      "name": "Soya (source wording; definition review)",
+      "aliases": [
+        "Soya"
+      ]
+    },
+    {
+      "code": "PSTA5-I060",
+      "name": "Tea sold under direct agreement",
+      "aliases": [
+        "Tea sold under direct agreement"
+      ]
+    },
+    {
+      "code": "PSTA5-I061",
+      "name": "Technologies demonstrated in the horticulture of centre of excellences",
+      "aliases": [
+        "Technologies demonstrated in the horticulture of centre of excellences"
+      ]
+    },
+    {
+      "code": "PSTA5-I062",
+      "name": "Total area under irrigation (Cumulative)",
+      "aliases": [
+        "Total area under irrigation (Cumulative)"
+      ]
+    },
+    {
+      "code": "PSTA5-I063",
+      "name": "Vegetable seeds for kitchen garden distributed",
+      "aliases": [
+        "Vegetable seeds for kitchen garden distributed"
+      ]
+    },
+    {
+      "code": "PSTA5-I064",
+      "name": "a) Marshland",
+      "aliases": [
+        "a) Marshland"
+      ]
+    },
+    {
+      "code": "PSTA5-I065",
+      "name": "b) Hillside irrigation",
+      "aliases": [
+        "b) Hillside irrigation"
+      ]
+    },
+    {
+      "code": "PSTA5-I066",
+      "name": "c)Small-Scale Irrigation Technology",
+      "aliases": [
+        "c)Small-Scale Irrigation Technology"
+      ]
+    }
+  ]
+}

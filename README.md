@@ -144,3 +144,87 @@ Neither raw `.dta` files nor row-level data may ever be bundled or pushed.
 
 Stage history: Day 2 preparation → Day 3 descriptive maize exploration →
 Day 4 local prototype. Deployment and final submission remain future tasks.
+
+
+## Django migration: local read-only prototype
+
+The Django version now lives alongside the retained Streamlit pilot. Use
+[Django 5.2 LTS](https://docs.djangoproject.com/en/5.2/releases/5.2/), compatible
+with the inspected Python 3.12.3 environment. The requirements select the supported
+5.2 patch series. This is a local prototype, not deployment configuration.
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+python manage.py check
+python manage.py test evidence
+python manage.py runserver 127.0.0.1:8000
+```
+
+Open `http://127.0.0.1:8000/` for the two user journeys. The separate maize research page is at `/evidence/maize/`. Stop with Ctrl+C.
+The default CSV mode needs no database setup or migrations. PostgreSQL-backed
+public evidence is optional; see the data-layer instructions below. There are
+no accounts, sessions, uploads or admin site. The maize research page uses only
+the published overall CSV, the two seed rows in the published Day 3 report and
+the eleven allowlisted images. No raw survey files, local metadata or row-level
+files are required. The development server serves app CSS; published images and
+the CSV download use explicit read-only endpoints, not a directory-wide data mount.
+
+`apasa/` contains project configuration; `evidence/` contains public-data loading,
+views, templates, static CSS and tests. Presentation and loading are separated
+so a later task can add catalogue/availability views. The 126-row catalogue and
+user-journey documents are preserved but are not loaded or presented as current
+monitoring capabilities. Maize remains the first descriptive pilot, not the
+product's permanent crop scope.
+
+The migration retains the all-record sample, zero/missing distinction, seed
+comparison denominators, approved overall sensitivity panel, eleven published
+charts and source/limitations statements. It computes no new crop statistics.
+GET controls select published scenarios/images only. No national estimates,
+district scores, yield measures, causal effects or machine learning are added.
+The tests include a fresh process running from a public-files-only copy, with
+no `data/`, `local_data/`, analysis scripts or Streamlit app present.
+
+Streamlit remains available as the separate research interface. Candidates for a
+future cleanup task are `app.py`, `.streamlit/config.toml`, `tests/test_dashboard.py`, and
+the Streamlit, Altair and PyArrow requirements (used by that UI). Keep NumPy,
+pandas and Matplotlib for existing preparation/analysis workflows. The prototype is not configured for production deployment.
+
+## Public evidence data layer
+
+The national policy and district statistics pages now support an optional
+PostgreSQL backend. Default CSV mode still starts without PostgreSQL or private
+microdata. Explicit curated policy codes/names and crop entries drive filters;
+broad crop groups remain separate and uncertain mappings are flagged for review.
+
+See [setup, import commands, provenance and privacy boundaries](docs/public_evidence_data_layer.md).
+Run `python manage.py export_public_evidence` to reproduce aggregate-only tables,
+then configure PostgreSQL and run `migrate` and `import_public_evidence`. Set
+`APASA_EVIDENCE_MODE=database` to use imported records. Source files remain unchanged.
+
+Run `python manage.py test evidence` without a database. Run the explicit portable
+import tests with `python manage.py test evidence.database_checks --settings=apasa.test_settings`;
+with PostgreSQL configured, omit `--settings` to test the real backend.
+
+## Policy analyst workspace
+
+Start at `/` to choose national policy evidence or district crop statistics.
+The national workflow is available at `/national-policy-evidence/`: filter by
+curated outcome/output, crop/group and indicator, then inspect source-backed
+policy targets and official observations side by side. Dependent choices narrow
+as filters are applied. Crop groups remain separate from individual crops.
+
+Use **Explore this crop’s observations** for separately recorded seasonal values,
+or **Prepare evidence note** for a structured preview with copy/plain-text download.
+No continuous historical trend or target-progress score is established here.
+
+For missing actuals only, an optional **MOCK DATA** layout preview is available.
+Its invented value, illustrative period/geography and lack of official source
+are labelled explicitly. The official value remains unavailable. Mock values are
+never imported or saved to public evidence tables; notes containing a mock carry
+warnings and a `-MOCK` filename. The interface explains the source verification
+and review needed to replace a missing actual responsibly.
+
+The app runs offline in CSV mode using public files. Raw workbooks, microdata,
+unused planning/history documents and local agent/session guides remain ignored.

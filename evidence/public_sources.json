@@ -1,0 +1,23 @@
+[
+  {
+    "slug": "psta5_day6",
+    "path": "docs/day6_indicator_comparability.csv",
+    "label": "APASA Day 6 PSTA5 comparison inventory",
+    "source_urls": [
+      "https://www.minagri.gov.rw/fileadmin/user_upload/Minagri/Publications/Policies_and_strategies/PSTA_5_Fulltext__Final.pdf",
+      "https://statistics.gov.rw/sites/default/files/documents/2026-09/Tables_2026%20Season%20B.xlsx",
+      "https://statistics.gov.rw/sites/default/files/documents/2025-12/SAS%202025_Annual%20Tables.xlsx"
+    ],
+    "approved_sha256": "7c15729058a1e4302eb17afd4b6741daef48a51c64c536b35ef84a42e1c91c94"
+  },
+  {
+    "slug": "sas_2026_b_district",
+    "path": "outputs/day7/official_sas_2026_b_district.csv",
+    "label": "NISR SAS 2026 Season B district estimates",
+    "source_urls": [
+      "https://statistics.gov.rw/sites/default/files/documents/2026-09/Tables_2026%20Season%20B.xlsx",
+      "https://statistics.gov.rw/sites/default/files/documents/2026-09/SAS%202026B_Main%20report.pdf"
+    ],
+    "approved_sha256": "4b72202444d921d7de6c2097ff78ee38820b131eab607bd33391f0fc1f06650a"
+  }
+]

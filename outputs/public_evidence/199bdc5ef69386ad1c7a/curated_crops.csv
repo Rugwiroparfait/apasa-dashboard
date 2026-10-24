@@ -1,0 +1,46 @@
+code,name,kind
+maize,Maize,individual
+sorghum,Sorghum,individual
+paddy_rice,Paddy rice,individual
+wheat,Wheat,individual
+cassava,Cassava,individual
+sweet_potato,Sweet potato,individual
+irish_potato,Irish potato,individual
+cooking_banana,Cooking banana,individual
+dessert_banana,Dessert banana,individual
+beer_banana,Banana for beer,individual
+bush_bean,Bush bean,individual
+climbing_bean,Climbing bean,individual
+pea,Pea,individual
+groundnut,Groundnut,individual
+soybean,Soybean,individual
+coffee,Coffee,individual
+tea,Tea,individual
+pyrethrum,Pyrethrum,individual
+avocado,Avocado,individual
+cabbage,Cabbage,individual
+carrot,Carrot,individual
+chili,Chili,individual
+eggplant,Egg plant,individual
+garlic,Garlic,individual
+pepper,Pepper,individual
+onion,Onion,individual
+pineapple,Pineapple,individual
+macadamia,Macadamia,individual
+mango,Mango,individual
+passion_fruit,Passion fruit,individual
+tree_tomato,Tree tomato,individual
+french_bean,French bean,individual
+beans_unspecified,Beans (source grouping),group
+beans_bush_climbing,Beans (Bush and Climbing),group
+cereals,Cereals,group
+food_crops,Food crops,group
+fruits,Fruits,group
+vegetables,Vegetables,group
+horticulture,Horticulture,group
+grains,Grains,group
+flowers,Flowers,group
+essential_oils,Essential oils,group
+maize_beans,Maize and beans,group
+rice_wheat,Rice and wheat,group
+banana_coffee,Banana/coffee,group
