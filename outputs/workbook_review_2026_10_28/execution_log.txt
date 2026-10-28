@@ -1,0 +1,66 @@
+Excel inputs: 15
+2018 Annual Tables_Final (1).xlsx
+PSTA5_Indicator_Register (1).xlsx
+SAS 2019 _Annual report _Tables.xlsx
+SAS 2021_Tables.xlsx
+SAS 2022_Tables_0.xlsx
+SAS 2023_Annual Tables (3).xlsx
+SAS-2016 Final Report.xlsx
+Tables_2024 Season A (1).xlsx
+Tables_2024 Season B.xlsx
+Tables_2025 Season A.xlsx
+Tables_2025_Season_B_0.xlsx
+Tables_2026 Season A.xlsx
+Tables_2026 Season B.xlsx
+USAS 2017 Tables.xls
+USAS 2020 _Final_Tables.xlsx
+Other data files (not treated as workbook observations):
+AHS2024_Credits.dta
+AHS2024_Saving.dta
+AHS2024_Section0.dta
+AHS2024_Section11_1_CATTLE MILK PRODUCTION AND USE.dta
+AHS2024_Section11_2_EGG PRODUCTION.dta
+AHS2024_Section11_3_HONEY PRODUCTION.dta
+AHS2024_Section1_HOUSEHOLD MEMBERS CHARACTERISTICS.dta
+AHS2024_Section2_LAND TENURE.dta
+AHS2024_Section3_4_CROP GROWN, SEEDS AND PRODUCTION & AGRICULTURAL INPUTS AND PRACTICES.dta
+AHS2024_Section5_FRUITS PRODUCTION.dta
+AHS2024_Section6_EXTENSION SERVICES AND AGRICULTURAL PROGRAMMES.dta
+AHS2024_Section7_AGRICULTURAL TOOLS.dta
+AHS2024_Section8_SUSTAINABLE AGRICULTURE.dta
+AHS2024_Section9_10_12_LIVESTOCK AND ANIMAL INPUTS EXPENDITURES,.dta
+rwanda.json
+Sheets inspected: 871
+2018 Annual Tables_Final (1).xlsx — 55 sheets; header year labels: ['2017', '2018']
+PSTA5_Indicator_Register (1).xlsx — 5 sheets; header year labels: ['2023', '2024', '2025', '2026']
+SAS 2019 _Annual report _Tables.xlsx — 71 sheets; header year labels: ['2017', '2018', '2019']
+SAS 2021_Tables.xlsx — 67 sheets; header year labels: ['2019', '2020', '2021']
+SAS 2022_Tables_0.xlsx — 68 sheets; header year labels: ['2020', '2021', '2022']
+SAS 2023_Annual Tables (3).xlsx — 79 sheets; header year labels: ['2017', '2022', '2023']
+SAS-2016 Final Report.xlsx — 129 sheets; header year labels: ['2015', '2016']
+Tables_2024 Season A (1).xlsx — 34 sheets; header year labels: ['2017', '2023', '2024']
+Tables_2024 Season B.xlsx — 33 sheets; header year labels: ['2023', '2024']
+Tables_2025 Season A.xlsx — 34 sheets; header year labels: ['2017', '2024', '2025']
+Tables_2025_Season_B_0.xlsx — 33 sheets; header year labels: ['2023', '2024', '2025']
+Tables_2026 Season A.xlsx — 35 sheets; header year labels: ['2017', '2024', '2025', '2026']
+Tables_2026 Season B.xlsx — 33 sheets; header year labels: ['2024', '2025', '2026']
+USAS 2017 Tables.xls — 135 sheets; header year labels: ['2016', '2017']
+USAS 2020 _Final_Tables.xlsx — 60 sheets; header year labels: ['2017', '2018', '2019', '2020']
+Sheets with missing formula caches: 5
+Sheets with external formulas: 23
+{'indicator_id': 'REG-01', 'psta5_indicator': 'Quantity of production by crop', 'definition': 'Stated volume of crop production for main categories', 'unit': 'Metric Tons (MT)', 'crop_or_group': 'Cereals, Tubers/Roots, Bananas, Legumes/Pulses'}
+{'indicator_id': 'REG-02', 'psta5_indicator': 'Productivity for priority food crops', 'definition': 'Average productivity measured by yield per harvested area', 'unit': 'Metric Tons per Hectare (MT/ha)', 'crop_or_group': 'Maize, Paddy Rice, Wheat, Cassava, Sweet potato, Irish potato, Beans'}
+{'indicator_id': 'REG-03', 'psta5_indicator': 'Small-scale farmers using improved seeds', 'definition': 'Percentage of small-scale farmers who applied improved seeds', 'unit': 'Percentage (%)', 'crop_or_group': 'Small-Scale Farmers (SSF)'}
+{'indicator_id': 'REG-04', 'psta5_indicator': 'Large-scale farmers using improved seeds', 'definition': 'Percentage of large-scale farmers who applied improved seeds', 'unit': 'Percentage (%)', 'crop_or_group': 'Large-Scale Farmers (LSF)'}
+{'indicator_id': 'REG-05', 'psta5_indicator': 'Small-scale farmers using inorganic fertilizer', 'definition': 'Percentage of small-scale farmers who applied inorganic fertilizer', 'unit': 'Percentage (%)', 'crop_or_group': 'Small-Scale Farmers (SSF)'}
+{'indicator_id': 'REG-06', 'psta5_indicator': 'Large-scale farmers using inorganic fertilizer', 'definition': 'Percentage of large-scale farmers who applied inorganic fertilizer', 'unit': 'Percentage (%)', 'crop_or_group': 'Large-Scale Farmers (LSF)'}
+Register records: 30
+Candidate rows: 2520
+{'UNRESOLVED': 204, 'CONTEXT ONLY': 2126, 'POSSIBLE MATCH': 190}
+REG-01 Quantity of production by crop {'UNRESOLVED': 18, 'CONTEXT ONLY': 352, 'POSSIBLE MATCH': 50}
+REG-02 Productivity for priority food crops {'UNRESOLVED': 18, 'CONTEXT ONLY': 334, 'POSSIBLE MATCH': 68}
+REG-03 Small-scale farmers using improved seeds {'UNRESOLVED': 43, 'CONTEXT ONLY': 357, 'POSSIBLE MATCH': 20}
+REG-04 Large-scale farmers using improved seeds {'UNRESOLVED': 47, 'CONTEXT ONLY': 357, 'POSSIBLE MATCH': 16}
+REG-05 Small-scale farmers using inorganic fertilizer {'UNRESOLVED': 37, 'CONTEXT ONLY': 363, 'POSSIBLE MATCH': 20}
+REG-06 Large-scale farmers using inorganic fertilizer {'UNRESOLVED': 41, 'CONTEXT ONLY': 363, 'POSSIBLE MATCH': 16}
+Verified all input SHA-256 hashes unchanged. Open review.html for the full inventory and crosswalk.
