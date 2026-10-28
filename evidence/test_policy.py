@@ -167,7 +167,7 @@ class PolicyEvidenceTests(SimpleTestCase):
         self.assertEqual(opened, [self.root / DATA_PATH, REGISTRY_PATH])
 
     def test_fresh_process_without_ahs_or_day7(self):
-        for package in ["apasa", "evidence", "accounts"]:
+        for package in ["apasa", "evidence", "accounts", "planning"]:
             shutil.copytree(
                 settings.BASE_DIR / package,
                 self.root / package,

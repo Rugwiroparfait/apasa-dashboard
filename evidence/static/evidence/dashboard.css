@@ -81,3 +81,15 @@ button,.button-link{background:var(--gold);border:1px solid #c49b42;color:#172a2
  .chart-scale{font-size:.75rem;color:#526b70}
 }
 .compact-journeys h2{margin:.2rem 0 .5rem}
+
+/* Reviewed comparisons and action planning. */
+.planning-form{display:block}.planning-form p,.planning-form>label{display:block;margin:1rem 0}
+.planning-form label{display:block;font-weight:600;margin-bottom:.35rem}
+.planning-form input:not([type=checkbox]):not([type=hidden]),.planning-form select,.planning-form textarea{width:100%;max-width:100%;font:inherit;border:1px solid #aac4bc;border-radius:5px;padding:.7rem;background:#fff}
+.planning-form input[type=checkbox]{width:auto;margin-right:.5rem}
+.planning-form .helptext{display:block;font-size:.82rem;font-weight:400;color:#526b70;margin-top:.3rem}
+.errorlist{color:#9f2525;background:#fff1f1;padding:1rem 2rem}
+.workflow-steps{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}.workflow-steps span{padding:.7rem 1rem;border:1px solid #c8d9d2;border-radius:6px;background:#edf4f0}
+.brief-text{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;line-height:1.7}
+.followup{border-top:1px solid #dae5df;margin-top:1rem;padding-top:1rem}
+.metric-strip strong{overflow-wrap:anywhere}

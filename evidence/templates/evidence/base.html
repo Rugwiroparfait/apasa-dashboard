@@ -9,5 +9,6 @@
 <a href="{% url 'evidence:policy' %}" {% if request.resolver_match.url_name == 'policy' or request.resolver_match.url_name == 'policy-crop' or request.resolver_match.url_name == 'policy-note' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">≡</span>National policy</a>
 <a href="{% url 'evidence:workbooks' %}" {% if request.resolver_match.url_name == 'workbooks' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">▥</span>National statistics</a>
 <a href="{% url 'evidence:district-statistics' %}" {% if request.resolver_match.url_name == 'district-statistics' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">◇</span>District statistics</a>
+<a href="{% url 'planning:index' %}" {% if request.resolver_match.app_name == 'planning' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">◎</span>Compare &amp; plan</a>
 <p class="nav-footnote">Published evidence for agricultural planning.</p>
-</nav><div class="content-shell"><main id="main">{% block content %}{% endblock %}</main><footer>APASA · Public evidence with source and interpretation limits</footer></div></div></body></html>
+</nav><div class="content-shell"><main id="main">{% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main><footer>APASA · Public evidence with source and interpretation limits</footer></div></div></body></html>

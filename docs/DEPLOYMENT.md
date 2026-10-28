@@ -18,7 +18,7 @@ Required environment configuration:
 
 Optional database variables: `APASA_DB_NAME`, `APASA_DB_USER`, `APASA_DB_PASSWORD`, `APASA_DB_HOST`, `APASA_DB_PORT`. Setting `APASA_DB_NAME` selects PostgreSQL; otherwise set `APASA_SQLITE_PATH` to a persistent writable file. `APASA_EVIDENCE_MODE=csv` remains the default and works with either authentication database backend. For imported evidence mode, follow the separate data-layer guide.
 
-Set secrets through the hosting platform's secure environment settings, never source control. `.env.example` contains names and non-secret examples only. Django does not read `.env` automatically. Remove initial-account password variables after provisioning. Rotate the secret key and passwords if exposed; rotating the key invalidates sessions.
+Set secrets through the hosting platform's secure environment settings, never source control. `.env.example` contains names and non-secret examples only. The ignored local `.env` is loaded without replacing injected process variables; production should use platform-injected secrets. The image excludes `.env` files. Remove initial-account password variables after provisioning. Rotate the secret key and passwords if exposed; rotating the key invalidates sessions.
 
 ## Release commands
 
@@ -34,7 +34,7 @@ python manage.py check
 python -m gunicorn apasa.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 60 --access-logfile - --error-logfile -
 ```
 
-Run migrations once per release, not independently in each worker. `provision_accounts` is repeatable and preserves existing passwords. Use `python manage.py changepassword USERNAME` to rotate an existing account. Provisioning is transactional; production rejects known demo passwords. There is no public signup or email provider to configure.
+Run migrations once per release, not independently in each worker. This release adds the planning app and four schema migrations; back up the database before applying them. It stores source versions, policy targets, approvals, immutable comparison/scenario outputs, briefs and follow-up history in addition to accounts/sessions. `provision_accounts` is repeatable and preserves existing passwords. Use `python manage.py changepassword USERNAME` to rotate an existing account. Provisioning is transactional; production rejects known demo passwords. There is no public signup or email provider to configure.
 
 Before exposure, configure the trusted proxy to terminate TLS, replace forwarded headers, limit request sizes, and rate-limit `/accounts/login/`. Django login does not provide brute-force throttling by itself. An Nginx example is in `deploy/nginx.conf`; replace the hostname and supply your platform's TLS certificate configuration. The application port should only be reachable through that proxy. Set the correct real-client-IP handling for your hosting platform before using IP rate limits.
 
@@ -65,3 +65,21 @@ Log output goes to stdout/stderr for platform collection. Do not log passwords o
 ## Recovery
 
 Keep the prior application image and database backup. Inspect migrations before downgrading; roll back code only when compatible with the current schema. Evidence bundles are immutable release artifacts: deploy the prior bundle and checksum together if needed and restart workers. Default account provisioning never resets a user's password.
+
+
+## Planning workflow operations
+
+Run `python manage.py seed_planning_demo` only with development settings if mocked walkthroughs are wanted. Production deliberately rejects this command and demo-account provisioning; no official target or model is automatically approved during installation. Configure trusted role accounts for at least two different people so authors can obtain independent review. Both provisioned planning roles can review each other's submissions.
+
+Use persistent SQLite for one instance or PostgreSQL for shared production instances. The database is now the system of record for uploaded aggregate observations, target versions, decisions, published calculation snapshots, scenario assumptions and action tracking. Backups and restoration tests must include all planning tables. Raw rejected CSV uploads are not retained; their hashes and bounded validation errors are stored.
+
+Uploads are limited to 2 MB/5,000 rows at the application layer; set the reverse proxy's request-body limit to 3 MB (or greater) to allow multipart overhead while retaining the application limit. This release's Nginx fragment uses 3 MB. Keep CSRF, HTTPS, cookie and forwarding-header protections in place.
+
+AI drafting is optional. Set `chat_openai_key` or `APASA_AI_API_KEY` securely and set `APASA_AI_MODEL=gpt-5.4-mini`; permit outbound HTTPS to `api.openai.com` through the configured proxy. No API key is stored in source code or database records. With no key or a provider failure, factual template drafting remains available and is labelled as such. Live provider authorization is not validated without operator-supplied credentials. AI requests use a 30-second timeout; the supplied Gunicorn timeout is 60 seconds. Do not enable raw request-body logging for login, uploads or AI credentials.
+
+Smoke-test `/planning/`, source/target registration, quarantine errors, both users' review boundary, comparison publication, model backtesting, saved scenario review, brief approval, and follow-up updates. No email service, external source polling or automatic publication daemon is required. Due/overdue follow-ups are evaluated when the planning page is opened.
+
+
+AI request accounting requires the planning migrations as well as the normal authentication schema. Configure persistent shared storage for quotas; multiple production replicas should share PostgreSQL. The default allowed-model list contains only gpt-5.4-mini. No automatic fallback or provider billing change is implemented. Local rolling caps are 8 requests/minute, 45 requests/24 hours and a conservative 80,000-token/minute reservation budget; the provider's own limits and available credits remain authoritative. Requests use the Responses API with low reasoning effort and at most 1,200 output tokens. Changing model access/rate settings requires explicit operator review.
+
+Do not pass real AI credentials into `deploy/validate_container.py`: its disposable workflow checks local fallback and must make no provider generation requests. Run `manage.py check_ai --check-access` and optionally `--generate` separately on the configured deployment or local computer to verify live access. Keys are never printed by these commands.

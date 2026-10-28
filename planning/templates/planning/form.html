@@ -1,0 +1,2 @@
+{% extends 'evidence/base.html' %}{% block content %}<a href="{% url 'planning:manage' %}">← Evidence &amp; review</a><h1>{{ title }}</h1><p>{{ intro }}</p>
+<form method="post" class="planning-form panel" {% if upload %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}{{ form.as_p }}<button type="submit">Save for validation →</button></form>{% endblock %}

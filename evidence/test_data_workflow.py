@@ -194,7 +194,7 @@ class PublicWorkflowTests(SimpleTestCase):
     def test_fresh_public_only_startup_without_database_or_microdata(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            for package in ["apasa", "evidence", "accounts"]:
+            for package in ["apasa", "evidence", "accounts", "planning"]:
                 shutil.copytree(
                     settings.BASE_DIR / package,
                     root / package,

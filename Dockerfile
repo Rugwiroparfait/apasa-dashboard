@@ -7,6 +7,7 @@ RUN --mount=type=secret,id=proxy_ca \
     if [ -f /run/secrets/proxy_ca ]; then PIP_CERT=/run/secrets/proxy_ca pip install --no-cache-dir -r requirements.lock; else pip install --no-cache-dir -r requirements.lock; fi
 COPY apasa ./apasa
 COPY accounts ./accounts
+COPY planning ./planning
 COPY evidence ./evidence
 COPY manage.py ./
 COPY docs ./docs

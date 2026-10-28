@@ -1,5 +1,6 @@
 {% extends 'evidence/base.html' %}{% block content %}
 <section class="hero compact-hero"><p class="eyebrow">RWANDA · AGRICULTURAL PLANNING</p><h1>Your planning overview</h1><p>Explore national evidence or inspect crop statistics for your district.</p></section>
+<div class="page-actions"><a class="button-link" href="{% url 'planning:index' %}">Compare a target &amp; plan next steps →</a></div>
 <div class="metric-strip" aria-label="Available evidence"><div><strong>{{ coverage.seasons|default:'—' }}</strong><span>Published seasons · 2024–2026</span></div><div><strong>30</strong><span>Districts · 2026 Season B</span></div><div><strong>15</strong><span>Crops per district</span></div><div><strong>{{ coverage.observations|default:'—' }}</strong><span>Numeric national observations</span></div></div>
 <div class="section-heading"><div><p class="eyebrow">AT A GLANCE</p><h2>Maize production by season</h2></div><a href="{% url 'evidence:workbooks' %}?crop=Maize&amp;indicator=production">Explore these observations →</a></div>
 <p class="muted">Season A and Season B are shown separately. Values are published observations in metric tonnes, not progress against a policy target.</p>

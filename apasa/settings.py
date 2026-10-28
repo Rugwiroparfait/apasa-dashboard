@@ -4,7 +4,11 @@ from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.environ.get("APASA_SECRET_KEY", "apasa-local-prototype-only")
+# Local secrets stay in the ignored .env; injected process bindings take precedence.
+from dotenv import load_dotenv
+
+load_dotenv(BASE_DIR / ".env", override=False)
+SECRET_KEY = os.environ.get("APASA_SECRET_KEY") or "apasa-local-prototype-only"
 DEBUG = os.environ.get("APASA_DEBUG", "true").lower() == "true"
 if not DEBUG and (
     not os.environ.get("APASA_SECRET_KEY") or SECRET_KEY == "apasa-local-prototype-only"
@@ -21,10 +25,12 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "accounts",
     "evidence",
+    "planning",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -33,6 +39,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
     "accounts.middleware.WorkspaceAuthenticationMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -45,6 +52,7 @@ TEMPLATES = [
             "context_processors": [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ]
         },
     }
@@ -57,7 +65,7 @@ if PUBLIC_EVIDENCE_MODE not in {"csv", "database"}:
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.environ.get("APASA_SQLITE_PATH", str(BASE_DIR / "db.sqlite3")),
+        "NAME": os.environ.get("APASA_SQLITE_PATH") or str(BASE_DIR / "db.sqlite3"),
     }
 }
 if os.environ.get("APASA_DB_NAME"):
@@ -120,3 +128,19 @@ CSRF_TRUSTED_ORIGINS = [
 # Enable only behind a trusted proxy that strips client-supplied forwarding headers.
 if os.environ.get("APASA_TRUST_PROXY", "false").lower() == "true":
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 3 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024
+APASA_AI_MODEL = os.environ.get("APASA_AI_MODEL", "gpt-5.4-mini")
+
+APASA_AI_ALLOWED_MODELS = tuple(
+    x.strip()
+    for x in os.environ.get("APASA_AI_ALLOWED_MODELS", "gpt-5.4-mini").split(",")
+    if x.strip()
+)
+APASA_AI_RPM = min(8, max(1, int(os.environ.get("APASA_AI_RPM", "8"))))
+APASA_AI_RPD = min(45, max(1, int(os.environ.get("APASA_AI_RPD", "45"))))
+APASA_AI_TPM = min(80000, max(2000, int(os.environ.get("APASA_AI_TPM", "80000"))))
+APASA_AI_MAX_OUTPUT_TOKENS = min(
+    1200, max(128, int(os.environ.get("APASA_AI_MAX_OUTPUT_TOKENS", "1200")))
+)

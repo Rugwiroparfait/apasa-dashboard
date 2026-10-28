@@ -124,7 +124,7 @@ class DistrictStatisticsTests(SimpleTestCase):
         )
 
     def test_fresh_process_with_only_day7_aggregate(self):
-        for package in ["apasa", "evidence", "accounts"]:
+        for package in ["apasa", "evidence", "accounts", "planning"]:
             shutil.copytree(
                 settings.BASE_DIR / package,
                 self.root / package,

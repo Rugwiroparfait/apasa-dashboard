@@ -5,7 +5,7 @@ A Django workspace for two agricultural planning roles in Rwanda:
 - **National policymaker:** policy references, source-linked seasonal observations, and downloadable evidence notes.
 - **District agriculture officer:** province, district and crop filters for published SAS 2026 Season B statistics.
 
-The public landing page is at `/`; sign-in is at `/accounts/login/`. All evidence pages and downloads require authentication. Roles choose the initial workspace; both roles can read both journeys. Neither role can upload or edit evidence through the app.
+The public landing page is at `/`; sign-in is at `/accounts/login/`. All evidence pages and downloads require authentication. Roles choose the initial workspace; both roles can read both journeys. Both roles can register aggregate sources, define cited policy targets, create comparisons and peer-review the other user’s submissions. Published inputs and results are immutable through the interface; corrections create new versions. No individual farmer or household data are accepted by the upload schema.
 
 ## Local development
 
@@ -16,6 +16,7 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.lock
 .venv/bin/python manage.py migrate --noinput
 .venv/bin/python manage.py provision_accounts --demo
+.venv/bin/python manage.py seed_planning_demo
 .venv/bin/python manage.py runserver 127.0.0.1:8000
 ```
 
@@ -46,6 +47,42 @@ Rebuild the compact workbook bundle, verifying all input hashes first:
 
 The deployed app reads the compact JSON bundle, not Excel or the 30 MB audit. Raw survey microdata are not needed. Original uploaded workbooks and review artifacts are preserved.
 
+## Target comparisons, scenarios and follow-up
+
+Open **Compare & plan** (`/planning/`) for current value, target, remaining need, and practical next steps. National and district mocked demonstrations show the complete workflow immediately. For official reports, register and independently review the source and authenticated NST2/PSTA5 target, then review the comparison before publication. Invalid CSV uploads are quarantined with row-level errors.
+
+Calculations include direction-aware gaps, percentage-point differences, baseline progress, required yearly/compound change, source-standard-error intervals and historical regression diagnostics. Forecast candidates require at least six comparable observations, a two-observation holdout test, acceptable RMSE and independent model approval. Saved assumptions/scenarios receive separate review before an action brief uses them. Advice approval precedes implementation tracking; owners can record outcomes, feedback and due/overdue actions.
+
+Mocked records cannot be approved as official evidence. Incompatible periods, units, populations, geography or methods produce explanations instead of unsupported calculations. AI wording and evidence Q&A are optional. The app reuses `chat_openai_key` from your environment or ignored local `.env`; `APASA_AI_API_KEY` is also supported. The selected model is `gpt-5.4-mini`, matching the supplied API Free tier model list. The factual local template works without a provider. No AI output publishes itself or establishes intervention effects.
+
+See [the workflow guide](docs/PLANNING.md) and [statistical methods](docs/STATISTICS.md).
+
+### Run AI on your computer
+
+Keep your existing key private. Add or update the model settings in your ignored local `.env` without overwriting its other values:
+
+```text
+APASA_DEBUG=true
+APASA_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
+APASA_AI_MODEL=gpt-5.4-mini
+APASA_AI_ALLOWED_MODELS=gpt-5.4-mini
+```
+
+After updating the checkout:
+
+```bash
+.venv/bin/python -m pip install -r requirements.lock
+.venv/bin/python manage.py migrate --noinput
+.venv/bin/python manage.py check_ai
+.venv/bin/python manage.py check_ai --check-access
+# Optional: explicitly send one small generation request using your API project.
+.venv/bin/python manage.py check_ai --generate
+```
+
+Restart the app after changing environment variables. **Compare & plan → AI availability** shows configuration and local limits; **Ask the evidence assistant** explains a selected report. Generated wording is unapproved until a different user reviews it. Explicitly mocked demonstrations remain mocked even when AI explains them.
+
+The client uses the Responses API, never automatically changes model/billing, and caps requests below the shown gpt-5.4-mini limits: 8/minute, 45/rolling 24 hours, a conservative 80,000-token/minute budget, and 1,200 output tokens per generation. An API Free tier rate-limit listing does not itself establish available credits or zero-priced usage; access/quota errors produce a transparent local fallback. This workspace has no copy of your local key, so live provider validation must run on your computer.
+
 ## Visual dashboards
 
 The overview opens with evidence coverage and maize production charts. National statistics defaults to maize production; crop, measure, population and reporting-period controls update the source-linked charts and CSV selection. Season A and B remain separate, sharing a zero-based scale within the same crop, measure, population and unit.
@@ -58,7 +95,7 @@ Desktop SVGs and mobile bar rows show the same data without an external chart li
 
 ```bash
 .venv/bin/python manage.py check
-.venv/bin/python manage.py test evidence accounts evidence.database_checks --settings=apasa.test_settings
+.venv/bin/python manage.py test evidence accounts planning evidence.database_checks --settings=apasa.test_settings
 .venv/bin/python manage.py makemigrations --check --dry-run
 .venv/bin/python manage.py collectstatic --noinput
 .venv/bin/python -m pip check
@@ -68,6 +105,8 @@ Desktop SVGs and mobile bar rows show the same data without an external chart li
 
 ## Project guide
 
+- [Reviewed planning workflow](docs/PLANNING.md)
+- [Statistical specification](docs/STATISTICS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Data provenance and coverage](docs/DATA.md)
 - [Deployment and operations](docs/DEPLOYMENT.md)

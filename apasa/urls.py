@@ -12,5 +12,6 @@ urlpatterns = [
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("workspace/", views.workspace, name="workspace"),
     path("health/", views.health, name="health"),
+    path("planning/", include("planning.urls")),
     path("", include("evidence.urls")),
 ]
