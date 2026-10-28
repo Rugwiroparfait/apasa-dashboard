@@ -37,7 +37,7 @@ class WorkbookTests(TestCase):
         self.assertContains(response, "MOCKED — illustrative")
         self.assertIn("MOCKED", response["Content-Disposition"])
         self.assertEqual(json.dumps(bundle, sort_keys=True), before)
-        self.assertContains(self.client.get("/workbook-evidence/"), "unavailable")
+        self.assertContains(self.client.get("/workbook-evidence/?indicator=yield&crop=Cereals"), "Unavailable")
 
 
 class BundleIntegrityTests(SimpleTestCase):

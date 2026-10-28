@@ -187,7 +187,7 @@ class PolicyEvidenceTests(SimpleTestCase):
 
     def test_navigation_and_missing_source(self):
         r = self.page()
-        for url in ["/", "/evidence/maize/", "/district-crop-statistics/"]:
+        for url in ["/", "/workbook-evidence/", "/district-crop-statistics/"]:
             self.assertContains(
                 r, 'href="' + url + '"' if url != "/" else "National Policy Evidence"
             )
@@ -314,4 +314,4 @@ class PolicyEvidenceTests(SimpleTestCase):
             self.assertIsNone(
                 re.search(r"\bDay\s+\d+\b", template.read_text(), re.I), str(template)
             )
-        self.assertContains(self.page(), "AHS Research Evidence")
+        self.assertNotContains(self.page(), "AHS Research Evidence")

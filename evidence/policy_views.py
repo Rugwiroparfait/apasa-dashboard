@@ -7,6 +7,7 @@ from django.views.decorators.http import require_safe
 from .repository import policy_rows
 from .curation import registry, crop_options, resolve_crop
 from .workbook_data import crop_observations
+from .charts import seasonal_charts
 from .policy_presentation import presentation, choose_record, note_text
 
 
@@ -110,10 +111,25 @@ def policy_evidence(request):
             )
         except (OSError, ValueError, KeyError):
             selected["workbook_observations"] = []
+    charts = []
+    if selected:
+        measure = (
+            "yield"
+            if "productivity" in selected["indicator_name"].lower()
+            else "production"
+        )
+        charts, _ = seasonal_charts(
+            [
+                r
+                for r in selected.get("workbook_observations", [])
+                if r["indicator"] == measure
+            ]
+        )
     return render(
         request,
         "evidence/policy.html",
         dict(
+            charts=charts,
             filters=filters,
             rows=matching,
             selected=selected,
@@ -165,8 +181,9 @@ def policy_workspace(request, section):
         if text
         else []
     )
+    charts, _ = seasonal_charts(selected.get("workbook_observations", []))
     return render(
         request,
         "evidence/policy_" + section + ".html",
-        dict(selected=selected, note_text=text, note_sections=sections),
+        dict(selected=selected, charts=charts, note_text=text, note_sections=sections),
     )

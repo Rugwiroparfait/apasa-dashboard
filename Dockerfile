@@ -10,8 +10,6 @@ COPY accounts ./accounts
 COPY evidence ./evidence
 COPY manage.py ./
 COPY docs ./docs
-COPY outputs/aggregates ./outputs/aggregates
-COPY outputs/day3 ./outputs/day3
 COPY outputs/day7 ./outputs/day7
 COPY outputs/public_evidence ./outputs/public_evidence
 COPY outputs/workbook_observations ./outputs/workbook_observations

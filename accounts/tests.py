@@ -23,8 +23,6 @@ class AuthenticationTests(TestCase):
             "/national-policy-evidence/note/?download=text",
             "/district-crop-statistics/",
             "/workbook-evidence/?download=csv",
-            "/evidence/maize/",
-            "/evidence/maize/summary.csv",
         ]:
             with self.subTest(path=path):
                 self.assertEqual(self.client.get(path).status_code, 302)

@@ -1,3 +1,0 @@
-scenario,records,plots,harvest_nonmissing,harvest_missing,missing_pct,reported_zero,positive_le_5000,flagged_gt_5000,negative,statistics_denominator,statistics_suppressed,median_kg,q1_kg,q3_kg,iqr_kg,mean_kg
-all_reported,9017,9017,8908,109,1.208828,215,8688,5,0,8908,False,30.000000,10.000000,70.000000,60.000000,92.118506
-review_sensitivity_le_5000,9012,9012,8903,109,1.209498,215,8688,0,0,8903,False,30.000000,10.000000,70.000000,60.000000,86.905161

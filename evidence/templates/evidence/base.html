@@ -5,12 +5,9 @@
 <div class="app-shell"><nav class="workspace-nav" aria-label="Evidence pages">
 {% if user.is_authenticated %}<p class="nav-label">{{ user.username }}</p><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="secondary-button" type="submit">Sign out</button></form>{% else %}<a href="{% url 'login' %}">Sign in</a>{% endif %}
 <p class="nav-label">PLANNING WORKSPACE</p>
-<a href="{% url 'evidence:home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">⌂</span>Home</a>
-<a href="{% url 'evidence:policy' %}" {% if request.resolver_match.url_name == 'policy' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">≡</span>National Policy Evidence</a>
-<a href="{% url 'evidence:policy-crop' %}{% if selected.policy_code %}?record={{ selected.key }}{% if selected.mock %}&amp;mock=1{% endif %}{% endif %}" {% if request.resolver_match.url_name == 'policy-crop' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">▥</span>Explore crop evidence</a>
-<a href="{% url 'evidence:policy-note' %}{% if selected.policy_code %}?record={{ selected.key }}{% if selected.mock %}&amp;mock=1{% endif %}{% endif %}" {% if request.resolver_match.url_name == 'policy-note' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">▤</span>Evidence notes</a>
-<a href="{% url 'evidence:district-statistics' %}" {% if request.resolver_match.url_name == 'district-statistics' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">◇</span>District Crop Statistics</a>
-<a href="{% url 'evidence:workbooks' %}"><span class="nav-icon" aria-hidden="true">▦</span>Workbook evidence</a>
-<p class="nav-label research-label">SEPARATE RESEARCH</p><a href="{% url 'evidence:pilot' %}" {% if request.resolver_match.url_name == 'pilot' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">⊙</span>AHS Research Evidence</a>
-<p class="nav-footnote">Policy references, official estimates and research records remain distinct.</p>
+<a href="{% url 'evidence:home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">⌂</span>Overview</a>
+<a href="{% url 'evidence:policy' %}" {% if request.resolver_match.url_name == 'policy' or request.resolver_match.url_name == 'policy-crop' or request.resolver_match.url_name == 'policy-note' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">≡</span>National policy</a>
+<a href="{% url 'evidence:workbooks' %}" {% if request.resolver_match.url_name == 'workbooks' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">▥</span>National statistics</a>
+<a href="{% url 'evidence:district-statistics' %}" {% if request.resolver_match.url_name == 'district-statistics' %}aria-current="page"{% endif %}><span class="nav-icon" aria-hidden="true">◇</span>District statistics</a>
+<p class="nav-footnote">Published evidence for agricultural planning.</p>
 </nav><div class="content-shell"><main id="main">{% block content %}{% endblock %}</main><footer>APASA · Public evidence with source and interpretation limits</footer></div></div></body></html>

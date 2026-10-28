@@ -1,8 +1,7 @@
 # Public evidence data layer
 
 APASA can serve the national policy and district statistics pages from PostgreSQL,
-or run locally from approved public CSVs without any database. The AHS research
-page retains its separate approved-aggregate workflow. No new statistics, target
+or run locally from approved public CSVs without any database. The former AHS research interface has been retired. No new statistics, target
 progress, programme-delivery measures or crop analyses are calculated.
 
 ## Inputs and boundaries
@@ -13,7 +12,7 @@ progress, programme-delivery measures or crop analyses are calculated.
 | `outputs/day7/official_sas_2026_b_district.csv` (1,800 rows) | Versioned district source records and observations; four measures, original units, source blanks, zeros, district identifiers and worksheet/cell references retained. |
 | `docs/apasa_crop_indicator_catalogue.csv`, `docs/crop_coverage_matrix.csv` | Preserved policy/reference material; not imported as duplicate actual observations. |
 | Day 11 requirements and Day 12 evidence/history/2016 audit tables | Preserved audit material; not automatically promoted to application observations. |
-| Day 2/3/5 approved AHS aggregates | Preserved research workflow; outside this initial database import. |
+| Historical AHS aggregates | Retired from the application; recoverable in Git history, not imported. |
 | Local published SAS workbooks and reference reports | Unchanged source references; this importer does not open or convert them. |
 | Raw `.dta`, local prepared records and detailed support CSVs | Restricted, ignored, never read, exported or loaded by this workflow. |
 

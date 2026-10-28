@@ -46,6 +46,14 @@ Rebuild the compact workbook bundle, verifying all input hashes first:
 
 The deployed app reads the compact JSON bundle, not Excel or the 30 MB audit. Raw survey microdata are not needed. Original uploaded workbooks and review artifacts are preserved.
 
+## Visual dashboards
+
+The overview opens with evidence coverage and maize production charts. National statistics defaults to maize production; crop, measure, population and reporting-period controls update the source-linked charts and CSV selection. Season A and B remain separate, sharing a zero-based scale within the same crop, measure, population and unit.
+
+District statistics provides a crop-comparison chart after a district is selected. Choose production, cultivated area, harvested area or yield; each chart uses one unit, crops remain alphabetically ordered, and the selected crop is highlighted. Summary cards are rounded to two decimals; exact values stay in source details.
+
+Desktop SVGs and mobile bar rows show the same data without an external chart library or CDN. Missing values are not plotted as zero; mocked values are labelled and styled distinctly. Expand the source details for exact values. Sidebar navigation now contains only Overview, National policy, National statistics and District statistics; crop details and note actions remain beside the relevant policy record.
+
 ## Checks
 
 ```bash
@@ -66,4 +74,4 @@ The deployed app reads the compact JSON bundle, not Excel or the 30 MB audit. Ra
 - [Cleanup and implementation record](docs/CHANGELOG.md)
 - [Optional versioned evidence database](docs/public_evidence_data_layer.md)
 
-Django is the single supported web runtime. The duplicate Streamlit app and unused private-survey preparation scripts were removed; their history remains in Git. Published AHS summary assets and the Django read-only research page remain separate from official policy and district evidence.
+Django is the single supported web runtime. The retired AHS research interface, routes, loader, published charts and aggregate artifacts have been removed from this application, along with the duplicate Streamlit runtime and unused preparation scripts. Their history remains in Git. Uploaded NISR workbooks and their audit are preserved.

@@ -6,6 +6,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_safe
 from .workbook_data import load_bundle
+from .charts import seasonal_charts
 
 LABELS = {
     "production": "Crop production",
@@ -22,6 +23,7 @@ def workbook_evidence(request):
     except (OSError, ValueError, KeyError):
         return render(request, "evidence/policy_unavailable.html", status=503)
     rows = [dict(row) for row in bundle["observations"]]
+    defaults = {"indicator": "production", "crop": "Maize"} if not request.GET else {}
     filters = []
     for key, label in [
         ("indicator", "Measure"),
@@ -30,7 +32,7 @@ def workbook_evidence(request):
         ("period", "Reporting period"),
     ]:
         choices = sorted({r[key] for r in bundle["observations"]})
-        value = request.GET.get(key, "")
+        value = request.GET.get(key, defaults.get(key, ""))
         if value and value not in choices:
             raise Http404("Unknown workbook filter")
         filters.append(
@@ -85,13 +87,18 @@ def workbook_evidence(request):
         writer.writeheader()
         writer.writerows(rows)
         return response
+    charts, chart_preview = seasonal_charts(rows)
     params = request.GET.copy()
+    for item in filters:
+        params[item["name"]] = item["value"]
     params["download"] = "csv"
     return render(
         request,
         "evidence/workbooks.html",
         {
             "rows": rows,
+            "charts": charts,
+            "chart_preview": chart_preview,
             "filters": filters,
             "register": bundle["register"],
             "mock_requested": mock,

@@ -1,4 +1,4 @@
-"""Read-only planning and research routes; authentication is enforced by middleware."""
+"""Read-only planning routes; authentication is enforced by middleware."""
 
 from django.urls import path
 
@@ -25,7 +25,4 @@ urlpatterns = [
     ),
     path("district-crop-statistics/", district_statistics, name="district-statistics"),
     path("workbook-evidence/", workbook_evidence, name="workbooks"),
-    path("evidence/maize/", views.pilot, name="pilot"),
-    path("evidence/figures/<str:filename>/", views.figure, name="figure"),
-    path("evidence/maize/summary.csv", views.summary_download, name="summary"),
 ]

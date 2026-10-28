@@ -125,6 +125,11 @@ try:
         ]:
             status, headers, body = request(path, cookies=cookie)
             assert status == 200 and expected in body, (path, status)
+        status, _, chart_body = request("/workspace/overview/", cookies=cookie)
+        assert status == 200 and chart_body.count(b"<svg") == 2
+        assert b"AHS Research Evidence" not in chart_body
+        status, _, chart_body = request("/workbook-evidence/", cookies=cookie)
+        assert status == 200 and chart_body.count(b"<svg") == 2
         print(
             name,
             "production HTTPS-proxy session, role redirect and evidence journeys passed",
