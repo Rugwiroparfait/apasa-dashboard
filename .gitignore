@@ -53,3 +53,11 @@ AGENTS.md
 AGENTS.local.md
 CODEX.md
 CLAUDE.md
+
+# Collected deployment assets and local runtime files.
+/staticfiles/
+/runtime/
+!/docs/DEPLOYMENT.md
+!/docs/ARCHITECTURE.md
+!/docs/DATA.md
+!/docs/CHANGELOG.md

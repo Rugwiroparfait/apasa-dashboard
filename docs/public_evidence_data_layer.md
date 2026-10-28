@@ -105,7 +105,7 @@ python manage.py test evidence.database_checks
 python manage.py makemigrations --check --dry-run
 ```
 
-The default suite is database-free. The explicit integration suite uses in-memory
+Evidence loader regression tests isolate the CSV adapter from authentication; the current full suite uses a temporary authentication database. The explicit integration suite uses in-memory
 SQLite only with `apasa.test_settings`, or a temporary Django test database on
 PostgreSQL (the test role must be allowed to create that test database). It checks
 idempotence, provenance, curated labels/groups, atomic rollback, constraints and

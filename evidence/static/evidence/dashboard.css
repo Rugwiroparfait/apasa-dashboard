@@ -31,3 +31,5 @@ button,.button-link{background:var(--gold);border:1px solid #c49b42;color:#172a2
 
 .note-section{padding:18px 0;border-bottom:1px solid var(--line)}.note-section:first-of-type{padding-top:0}.note-section:last-child{border-bottom:0;padding-bottom:0}.note-section h3{font-size:14px;margin-bottom:8px}.note-section p{font-size:13px;line-height:1.8;margin:0 0 7px;overflow-wrap:anywhere}.note-section p:last-child{margin-bottom:0}
 .filter-disclosure{border:0;padding:0;margin:0 0 24px}.filter-disclosure>summary{color:var(--green);padding:12px 0}.filter-disclosure[open]>summary{margin-bottom:10px}
+
+.auth-panel{max-width:34rem}.auth-panel form{display:grid;gap:1rem}input{font:inherit;padding:.8rem;border:1px solid #b9cdca;border-radius:4px;max-width:100%}.workspace-nav form{padding:0 12px}.mocked{border:2px solid #b47a00;background:#fff5d8;padding:1rem}.source-table{font-size:.9rem}

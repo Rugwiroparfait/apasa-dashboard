@@ -1,230 +1,69 @@
 # APASA
 
-APASA is a project for the 2026 NISR Big Data Hackathon. Day 2 preparation
-of AHS 2024 Section 3_4 is complete. This baseline organizes that workflow;
-Day 3 descriptive maize exploration is published. Day 4 adds a local Streamlit
-dashboard prototype; deployment is a later stage.
+A Django workspace for two agricultural planning roles in Rwanda:
 
-## Scope and status
+- **National policymaker:** policy references, source-linked seasonal observations, and downloadable evidence notes.
+- **District agriculture officer:** province, district and crop filters for published SAS 2026 Season B statistics.
 
-The preparation uses only the combined Section 3_4 file (crop grown, seeds,
-production, and agricultural inputs and practices). It reshapes seven crop
-slots into valid plot-crop slot records and checks crop, seed, harvest quantity
-and support-indicator completeness. The existing run produced 74,549 valid
-slots from 32,616 source rows and identified 15 candidate crops.
+The public landing page is at `/`; sign-in is at `/accounts/login/`. All evidence pages and downloads require authentication. Roles choose the initial workspace; both roles can read both journeys. Neither role can upload or edit evidence through the app.
 
-There are no merges with other survey sections, yield or productivity
-calculations, survey-design inference, or national estimates. No contact with
-NISR is part of this workflow. Zero and unusual harvest quantities remain
-unchanged; their interpretation is unresolved.
+## Local development
 
-## Repository structure
-
-```text
-README.md
-requirements.txt
-.gitignore
-app.py
-.streamlit/config.toml
-analysis/prepare_section3_4.py
-analysis/day3_exploratory_analysis.py
-docs/day3_findings.md
-outputs/aggregates/day2_section3_4_crop_candidates.csv
-outputs/day3/maize_overall_summary.csv
-outputs/day3/category_dictionary.csv
-outputs/day3/figures/
-tests/test_dashboard.py
-```
-
-Local-only files are organized as follows:
-
-```text
-data/                     # original survey inputs
-local_data/section3_4/     # generated row-level CSV (optional Parquet)
-audit_tmp/                # metadata inputs and script-generated QA working files
-docs/day2_section3_4_qa_report.md
-docs/day2_section3_4_structure_and_qa.json
-```
-
-The unchanged QA report and JSON were moved to `docs/` but are excluded from
-Git because they include the ten largest individual observed harvest values;
-their public-release status is unresolved. The tracked candidate CSV contains
-only crop-level counts and completeness rates, with at least 400 records per
-candidate and no household IDs, plot IDs, or individual records.
-
-## Install and run
-
-Use Python 3.10 or newer:
+Python 3.12 is tested. `requirements.txt` declares supported dependency ranges; `requirements.lock` pins the validated deployment versions. From the repository root:
 
 ```bash
 python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements.txt
-python analysis/prepare_section3_4.py
+.venv/bin/python -m pip install -r requirements.lock
+.venv/bin/python manage.py migrate --noinput
+.venv/bin/python manage.py provision_accounts --demo
+.venv/bin/python manage.py runserver 127.0.0.1:8000
 ```
 
-Before running, place the authorized original input at this exact local path:
+Development defaults (created only by the explicit `--demo` command):
 
-```text
-data/AHS2024_Section3_4_CROP GROWN, SEEDS AND PRODUCTION & AGRICULTURAL INPUTS AND PRACTICES.dta
-```
+| Role | Username | Development password |
+| --- | --- | --- |
+| National policymaker | `policymaker` | `ApasaPolicyDemo!2026` |
+| District agriculture officer | `district_officer` | `ApasaDistrictDemo!2026` |
 
-Also supply the existing local metadata inputs:
+These accounts are for local demonstrations. Do not deploy this development database or these passwords. Production refuses demo provisioning. Re-running account provisioning preserves existing passwords. Administrators can reset a password with `python manage.py changepassword USERNAME`; there is no public registration or email-reset service.
 
-- `audit_tmp/s3_4_variables.csv`, with columns `var,label,value_label_set`.
-- `audit_tmp/s3_4_value_labels.csv`, with columns `value_label_set,code,label`.
+CSV evidence is the default. Authentication now requires a database even in CSV mode; local development uses ignored SQLite. PostgreSQL is supported for production and for the optional versioned evidence import.
 
-These inputs are not distributed in Git. Obtain them through the project's
-authorized local data workflow; this script does not generate the metadata.
+## Data and mocked previews
 
-The preparation script is preserved byte-for-byte. Its root-relative paths
-still work from `analysis/`. It writes row-level data to `local_data/section3_4/`
-and regenerates QA report, JSON and candidate CSV in ignored `audit_tmp/`.
-The files in `docs/` and `outputs/aggregates/` are the preserved Day 2 snapshots.
-Parquet export is optional and skipped if no Parquet engine is installed;
-NumPy and pandas are the only required third-party dependencies.
+`/national-policy-evidence/` retains the reviewed 126-record policy inventory. `/workbook-evidence/` adds 348 source-linked entries from six 2024–2026 seasonal workbooks and the 30 supplied register entries. Crop observations are also linked to the national workflow and included in evidence-note downloads.
 
-## Data boundary
+Non-numeric source cells are unavailable, not zero. An explicit preview control substitutes illustrative values only for unavailable cells. Every replacement is labelled **MOCKED**, exported with its status and `mocked` flag, and placed in a `-MOCKED.csv` download. Existing policy previews similarly carry mock warnings. Mock values never enter the official bundle or target calculations.
 
-Raw survey files and all row-level processed data remain local and are excluded
-from Git, including records without direct identifiers. Never force-add ignored
-data. Only reviewed source code, documentation and aggregate-only outputs may
-be committed. Other survey metadata, reference PDFs, editor settings and scratch
-files remain local. The published Day 2 baseline contains no dashboard or Day 3 analysis.
+Register targets have unresolved policy provenance; several reproduce observed NISR values. No target attainment, annual aggregation, causal result or district ranking is calculated. Earlier annual workbooks remain available for review rather than being silently interpreted as a comparable time series.
 
-## Day 3 descriptive exploration
-
-Run `python3 analysis/day3_exploratory_analysis.py` using the same local inputs
-and the dependencies in `requirements.txt` (now including matplotlib for charts).
-Read `docs/day3_findings.md`; the public overall-summary CSV, category dictionary
-and eleven charts are in `outputs/day3/`. The detailed support CSV is written to
-ignored `local_data/day3/`; its legacy copy under `outputs/day3/` is also ignored
-because small categories and sensitivity differences can disclose individual values.
-This stage describes observed maize plot-crop harvest quantities in kilograms,
-without weighting, causal inference, area normalization, or other-section merges.
-Raw inputs and all Day 2 artifacts remain unchanged. The Day 3 workflow does not build the dashboard.
-
-## Day 4: local dashboard prototype
-
-The dashboard starts from the public repository alone; no survey inputs, local
-metadata, preparation run, or ignored files are needed. Use Python 3.10+:
+Rebuild the compact workbook bundle, verifying all input hashes first:
 
 ```bash
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m streamlit run app.py
+.venv/bin/python manage.py build_workbook_evidence
 ```
 
-Open `http://localhost:8501`. Stop with Ctrl+C. The server binds to loopback;
-this is a local prototype and has not been deployed. Run the verification with
-`python -m unittest discover -s tests -v`. The tests use
-[Streamlit AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest)
-on a temporary copy containing only the public app inputs.
+The deployed app reads the compact JSON bundle, not Excel or the 30 MB audit. Raw survey microdata are not needed. Original uploaded workbooks and review artifacts are preserved.
 
-The app reads an explicit set of approved public files: the two scenarios in
-`outputs/day3/maize_overall_summary.csv`, the traditional/improved seed rows
-already published in `docs/day3_findings.md`, and the eleven committed chart
-images. The category dictionary is public metadata but is not needed at startup.
-It does not import the preparation or analysis scripts, traverse data folders,
-load the detailed support CSV, or compute new group statistics.
-
-The only sample control switches the overall-summary panel between all records
-and the published sensitivity excluding values above 5,000 kg. Seed medians
-and practice charts always show the all-record view. No geographic filters are
-available. Harvest quantity is kg per maize crop-slot/plot-season record;
-statistics exclude missing reports and retain reported zeros. Zero meaning is
-unconfirmed, and the 5,000 kg threshold is a review flag, not an error rule.
-
-These are unweighted descriptions of observed records, not national estimates.
-Seed comparisons are observational associations, not causal effects. The app
-does not calculate crop-specific yield or productivity. Small or sensitive
-groups and complementary harvest statistics remain suppressed or omitted.
-Neither raw `.dta` files nor row-level data may ever be bundled or pushed.
-
-Stage history: Day 2 preparation → Day 3 descriptive maize exploration →
-Day 4 local prototype. Deployment and final submission remain future tasks.
-
-
-## Django migration: local read-only prototype
-
-The Django version now lives alongside the retained Streamlit pilot. Use
-[Django 5.2 LTS](https://docs.djangoproject.com/en/5.2/releases/5.2/), compatible
-with the inspected Python 3.12.3 environment. The requirements select the supported
-5.2 patch series. This is a local prototype, not deployment configuration.
+## Checks
 
 ```bash
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements.txt
-python manage.py check
-python manage.py test evidence
-python manage.py runserver 127.0.0.1:8000
+.venv/bin/python manage.py check
+.venv/bin/python manage.py test evidence accounts evidence.database_checks --settings=apasa.test_settings
+.venv/bin/python manage.py makemigrations --check --dry-run
+.venv/bin/python manage.py collectstatic --noinput
+.venv/bin/python -m pip check
 ```
 
-Open `http://127.0.0.1:8000/` for the two user journeys. The separate maize research page is at `/evidence/maize/`. Stop with Ctrl+C.
-The default CSV mode needs no database setup or migrations. PostgreSQL-backed
-public evidence is optional; see the data-layer instructions below. There are
-no accounts, sessions, uploads or admin site. The maize research page uses only
-the published overall CSV, the two seed rows in the published Day 3 report and
-the eleven allowlisted images. No raw survey files, local metadata or row-level
-files are required. The development server serves app CSS; published images and
-the CSV download use explicit read-only endpoints, not a directory-wide data mount.
+`apasa.test_settings` explicitly uses temporary SQLite for portable import tests. Existing public-evidence unit tests bypass only the authentication gate to isolate loaders and rendering; `accounts/tests.py` exercises real session authentication, roles, logout, CSRF, protected routes, and provisioning.
 
-`apasa/` contains project configuration; `evidence/` contains public-data loading,
-views, templates, static CSS and tests. Presentation and loading are separated
-so a later task can add catalogue/availability views. The 126-row catalogue and
-user-journey documents are preserved but are not loaded or presented as current
-monitoring capabilities. Maize remains the first descriptive pilot, not the
-product's permanent crop scope.
+## Project guide
 
-The migration retains the all-record sample, zero/missing distinction, seed
-comparison denominators, approved overall sensitivity panel, eleven published
-charts and source/limitations statements. It computes no new crop statistics.
-GET controls select published scenarios/images only. No national estimates,
-district scores, yield measures, causal effects or machine learning are added.
-The tests include a fresh process running from a public-files-only copy, with
-no `data/`, `local_data/`, analysis scripts or Streamlit app present.
+- [Architecture](docs/ARCHITECTURE.md)
+- [Data provenance and coverage](docs/DATA.md)
+- [Deployment and operations](docs/DEPLOYMENT.md)
+- [Cleanup and implementation record](docs/CHANGELOG.md)
+- [Optional versioned evidence database](docs/public_evidence_data_layer.md)
 
-Streamlit remains available as the separate research interface. Candidates for a
-future cleanup task are `app.py`, `.streamlit/config.toml`, `tests/test_dashboard.py`, and
-the Streamlit, Altair and PyArrow requirements (used by that UI). Keep NumPy,
-pandas and Matplotlib for existing preparation/analysis workflows. The prototype is not configured for production deployment.
-
-## Public evidence data layer
-
-The national policy and district statistics pages now support an optional
-PostgreSQL backend. Default CSV mode still starts without PostgreSQL or private
-microdata. Explicit curated policy codes/names and crop entries drive filters;
-broad crop groups remain separate and uncertain mappings are flagged for review.
-
-See [setup, import commands, provenance and privacy boundaries](docs/public_evidence_data_layer.md).
-Run `python manage.py export_public_evidence` to reproduce aggregate-only tables,
-then configure PostgreSQL and run `migrate` and `import_public_evidence`. Set
-`APASA_EVIDENCE_MODE=database` to use imported records. Source files remain unchanged.
-
-Run `python manage.py test evidence` without a database. Run the explicit portable
-import tests with `python manage.py test evidence.database_checks --settings=apasa.test_settings`;
-with PostgreSQL configured, omit `--settings` to test the real backend.
-
-## Policy analyst workspace
-
-Start at `/` to choose national policy evidence or district crop statistics.
-The national workflow is available at `/national-policy-evidence/`: filter by
-curated outcome/output, crop/group and indicator, then inspect source-backed
-policy targets and official observations side by side. Dependent choices narrow
-as filters are applied. Crop groups remain separate from individual crops.
-
-Use **Explore this crop’s observations** for separately recorded seasonal values,
-or **Prepare evidence note** for a structured preview with copy/plain-text download.
-No continuous historical trend or target-progress score is established here.
-
-For missing actuals only, an optional **MOCK DATA** layout preview is available.
-Its invented value, illustrative period/geography and lack of official source
-are labelled explicitly. The official value remains unavailable. Mock values are
-never imported or saved to public evidence tables; notes containing a mock carry
-warnings and a `-MOCK` filename. The interface explains the source verification
-and review needed to replace a missing actual responsibly.
-
-The app runs offline in CSV mode using public files. Raw workbooks, microdata,
-unused planning/history documents and local agent/session guides remain ignored.
+Django is the single supported web runtime. The duplicate Streamlit app and unused private-survey preparation scripts were removed; their history remains in Git. Published AHS summary assets and the Django read-only research page remain separate from official policy and district evidence.

@@ -8,90 +8,166 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='PolicyNode',
+            name="PolicyNode",
             fields=[
-                ('code', models.CharField(max_length=80, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=300)),
-                ('framework_code', models.CharField(max_length=30)),
-                ('framework_name', models.CharField(max_length=200)),
-                ('name_status', models.CharField(max_length=30)),
+                (
+                    "code",
+                    models.CharField(max_length=80, primary_key=True, serialize=False),
+                ),
+                ("name", models.CharField(max_length=300)),
+                ("framework_code", models.CharField(max_length=30)),
+                ("framework_name", models.CharField(max_length=200)),
+                ("name_status", models.CharField(max_length=30)),
             ],
         ),
         migrations.CreateModel(
-            name='Crop',
+            name="Crop",
             fields=[
-                ('code', models.CharField(max_length=80, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=160)),
-                ('kind', models.CharField(choices=[('individual', 'Individual crop'), ('group', 'Crop group')], max_length=16)),
+                (
+                    "code",
+                    models.CharField(max_length=80, primary_key=True, serialize=False),
+                ),
+                ("name", models.CharField(max_length=160)),
+                (
+                    "kind",
+                    models.CharField(
+                        choices=[
+                            ("individual", "Individual crop"),
+                            ("group", "Crop group"),
+                        ],
+                        max_length=16,
+                    ),
+                ),
             ],
             options={
-                'constraints': [models.CheckConstraint(condition=models.Q(('kind__in', ['individual', 'group'])), name='crop_kind_valid')],
+                "constraints": [
+                    models.CheckConstraint(
+                        condition=models.Q(("kind__in", ["individual", "group"])),
+                        name="crop_kind_valid",
+                    )
+                ],
             },
         ),
         migrations.CreateModel(
-            name='DatasetVersion',
+            name="DatasetVersion",
             fields=[
-                ('fingerprint', models.CharField(max_length=64, primary_key=True, serialize=False)),
-                ('slug', models.CharField(max_length=80)),
-                ('source_path', models.CharField(max_length=240)),
-                ('source_sha256', models.CharField(max_length=64)),
-                ('registry_sha256', models.CharField(max_length=64)),
-                ('transform_version', models.CharField(max_length=40)),
-                ('source_label', models.CharField(max_length=200)),
-                ('source_urls', models.JSONField(default=list)),
-                ('manifest', models.JSONField(default=dict)),
-                ('imported_at', models.DateTimeField(auto_now_add=True)),
-                ('active', models.BooleanField(default=False)),
+                (
+                    "fingerprint",
+                    models.CharField(max_length=64, primary_key=True, serialize=False),
+                ),
+                ("slug", models.CharField(max_length=80)),
+                ("source_path", models.CharField(max_length=240)),
+                ("source_sha256", models.CharField(max_length=64)),
+                ("registry_sha256", models.CharField(max_length=64)),
+                ("transform_version", models.CharField(max_length=40)),
+                ("source_label", models.CharField(max_length=200)),
+                ("source_urls", models.JSONField(default=list)),
+                ("manifest", models.JSONField(default=dict)),
+                ("imported_at", models.DateTimeField(auto_now_add=True)),
+                ("active", models.BooleanField(default=False)),
             ],
             options={
-                'constraints': [models.UniqueConstraint(condition=models.Q(('active', True)), fields=('slug',), name='one_active_dataset_version')],
+                "constraints": [
+                    models.UniqueConstraint(
+                        condition=models.Q(("active", True)),
+                        fields=("slug",),
+                        name="one_active_dataset_version",
+                    )
+                ],
             },
         ),
         migrations.CreateModel(
-            name='SourceRecord',
+            name="SourceRecord",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('key', models.CharField(max_length=120)),
-                ('crop_label_raw', models.TextField()),
-                ('crop_mapping_status', models.CharField(max_length=30)),
-                ('policy_label_raw', models.TextField(blank=True)),
-                ('original', models.JSONField()),
-                ('crop', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='evidence.crop')),
-                ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='records', to='evidence.datasetversion')),
-                ('policy_node', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='evidence.policynode')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("key", models.CharField(max_length=120)),
+                ("crop_label_raw", models.TextField()),
+                ("crop_mapping_status", models.CharField(max_length=30)),
+                ("policy_label_raw", models.TextField(blank=True)),
+                ("original", models.JSONField()),
+                (
+                    "crop",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="evidence.crop",
+                    ),
+                ),
+                (
+                    "dataset",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="records",
+                        to="evidence.datasetversion",
+                    ),
+                ),
+                (
+                    "policy_node",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="evidence.policynode",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Observation',
+            name="Observation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('key', models.CharField(max_length=80)),
-                ('kind', models.CharField(max_length=40)),
-                ('measure', models.TextField()),
-                ('value_text', models.TextField(blank=True)),
-                ('value_state', models.CharField(max_length=40)),
-                ('period', models.TextField()),
-                ('unit', models.TextField(blank=True)),
-                ('geography', models.TextField()),
-                ('geography_code', models.CharField(blank=True, max_length=40)),
-                ('source_label', models.TextField()),
-                ('source_url', models.TextField(blank=True)),
-                ('source_reference', models.TextField(blank=True)),
-                ('source_crop_label', models.TextField(blank=True)),
-                ('record', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='observations', to='evidence.sourcerecord')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("key", models.CharField(max_length=80)),
+                ("kind", models.CharField(max_length=40)),
+                ("measure", models.TextField()),
+                ("value_text", models.TextField(blank=True)),
+                ("value_state", models.CharField(max_length=40)),
+                ("period", models.TextField()),
+                ("unit", models.TextField(blank=True)),
+                ("geography", models.TextField()),
+                ("geography_code", models.CharField(blank=True, max_length=40)),
+                ("source_label", models.TextField()),
+                ("source_url", models.TextField(blank=True)),
+                ("source_reference", models.TextField(blank=True)),
+                ("source_crop_label", models.TextField(blank=True)),
+                (
+                    "record",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="observations",
+                        to="evidence.sourcerecord",
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='sourcerecord',
-            constraint=models.UniqueConstraint(fields=('dataset', 'key'), name='unique_source_record'),
+            model_name="sourcerecord",
+            constraint=models.UniqueConstraint(
+                fields=("dataset", "key"), name="unique_source_record"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='observation',
-            constraint=models.UniqueConstraint(fields=('record', 'key'), name='unique_record_observation'),
+            model_name="observation",
+            constraint=models.UniqueConstraint(
+                fields=("record", "key"), name="unique_record_observation"
+            ),
         ),
     ]

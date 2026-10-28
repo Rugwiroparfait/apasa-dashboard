@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1
+FROM python:3.12-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 APASA_DEBUG=false
+WORKDIR /app
+COPY requirements.lock ./
+RUN --mount=type=secret,id=proxy_ca \
+    if [ -f /run/secrets/proxy_ca ]; then PIP_CERT=/run/secrets/proxy_ca pip install --no-cache-dir -r requirements.lock; else pip install --no-cache-dir -r requirements.lock; fi
+COPY apasa ./apasa
+COPY accounts ./accounts
+COPY evidence ./evidence
+COPY manage.py ./
+COPY docs ./docs
+COPY outputs/aggregates ./outputs/aggregates
+COPY outputs/day3 ./outputs/day3
+COPY outputs/day7 ./outputs/day7
+COPY outputs/public_evidence ./outputs/public_evidence
+COPY outputs/workbook_observations ./outputs/workbook_observations
+RUN APASA_DEBUG=false APASA_SECRET_KEY=build-time-static-collection-only-not-a-runtime-secret-key python manage.py collectstatic --noinput && chmod -R a+rX /app && useradd --create-home app && mkdir -p /app/runtime && chown app:app /app/runtime
+USER app
+ENV APASA_SQLITE_PATH=/app/runtime/db.sqlite3
+EXPOSE 8000
+CMD ["gunicorn", "apasa.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "60", "--access-logfile", "-", "--error-logfile", "-"]

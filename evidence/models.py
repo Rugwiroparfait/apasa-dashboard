@@ -1,4 +1,5 @@
 """Versioned public evidence only; no microdata or personal identifiers."""
+
 from django.db import models
 from django.db.models import Q
 
@@ -6,10 +7,17 @@ from django.db.models import Q
 class Crop(models.Model):
     code = models.CharField(max_length=80, primary_key=True)
     name = models.CharField(max_length=160)
-    kind = models.CharField(max_length=16, choices=[('individual','Individual crop'),('group','Crop group')])
+    kind = models.CharField(
+        max_length=16,
+        choices=[("individual", "Individual crop"), ("group", "Crop group")],
+    )
 
     class Meta:
-        constraints = [models.CheckConstraint(condition=Q(kind__in=['individual','group']), name='crop_kind_valid')]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(kind__in=["individual", "group"]), name="crop_kind_valid"
+            )
+        ]
 
 
 class PolicyNode(models.Model):
@@ -34,11 +42,19 @@ class DatasetVersion(models.Model):
     active = models.BooleanField(default=False)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=['slug'], condition=Q(active=True), name='one_active_dataset_version')]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["slug"],
+                condition=Q(active=True),
+                name="one_active_dataset_version",
+            )
+        ]
 
 
 class SourceRecord(models.Model):
-    dataset = models.ForeignKey(DatasetVersion, on_delete=models.PROTECT, related_name='records')
+    dataset = models.ForeignKey(
+        DatasetVersion, on_delete=models.PROTECT, related_name="records"
+    )
     key = models.CharField(max_length=120)
     crop = models.ForeignKey(Crop, null=True, on_delete=models.PROTECT)
     crop_label_raw = models.TextField()
@@ -48,11 +64,17 @@ class SourceRecord(models.Model):
     original = models.JSONField()
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=['dataset','key'], name='unique_source_record')]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["dataset", "key"], name="unique_source_record"
+            )
+        ]
 
 
 class Observation(models.Model):
-    record = models.ForeignKey(SourceRecord, on_delete=models.CASCADE, related_name='observations')
+    record = models.ForeignKey(
+        SourceRecord, on_delete=models.CASCADE, related_name="observations"
+    )
     key = models.CharField(max_length=80)
     kind = models.CharField(max_length=40)
     measure = models.TextField()
@@ -69,4 +91,8 @@ class Observation(models.Model):
     source_crop_label = models.TextField(blank=True)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=['record','key'], name='unique_record_observation')]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["record", "key"], name="unique_record_observation"
+            )
+        ]
