@@ -23,6 +23,21 @@ The build does not regenerate evidence or require the raw `data/` directory. Mis
 
 Do not run `provision_accounts --demo` or `seed_planning_demo` in production. Existing accounts and passwords are preserved during later releases. To change one, use the Render shell with `python manage.py changepassword policymaker` (or `district_officer`), then remove obsolete initial-password variables. Avoid changing the variables expecting a password reset; provisioning intentionally does not reset accounts.
 
+## Existing Docker service
+
+If your Render log contains `load build definition from Dockerfile`, the service is using Docker. Manually creating a Docker web service does **not** apply `render.yaml`: the database, generated secrets, passwords and pre-deploy command in that file are not created automatically.
+
+For `ValueError: Render requires DATABASE_URL; ephemeral SQLite would lose saved work`:
+
+1. Open an existing Render PostgreSQL database, or create one in the same region/workspace as the web service. Review its pricing/retention before creation. Copy its **Internal Database URL** from the database connection details.
+2. Open the Docker **web service → Environment** and add `DATABASE_URL` with that connection string. Do not paste it into chat or commit it.
+3. Also set `APASA_SECRET_KEY` to a generated stable secret, `APASA_DEBUG=false`, `APASA_TRUST_PROXY=true`, and unique strong initial passwords in `APASA_POLICYMAKER_PASSWORD` and `APASA_DISTRICT_PASSWORD` (at least 12 characters). These passwords are for `policymaker` and `district_officer`. Set `NVIDIA_API_KEY` separately if AI generation is wanted.
+4. Keep **Docker Command** empty so the image uses its updated default startup. Set the health-check path to `/health/`. Deploy the latest `main` commit.
+
+The Docker startup now checks missing database/secret configuration before launching workers, runs migrations and repeatable account provisioning, validates production settings/data, and binds Gunicorn to Render’s `PORT` and `WEB_CONCURRENCY`. A missing account password is reported by provisioning when that account does not exist. Existing accounts and their passwords are preserved.
+
+Keep this manual Docker setup at **one instance**: release commands run once in its container startup before workers, including on restarts. For multiple replicas, use the Blueprint’s native Python service with its separate pre-deploy release phase. The native Blueprint needs no Docker Command changes. No code change can supply your private database connection string on Render; it must be configured in that service’s secure Environment settings.
+
 ## Environment and domains
 
 The Blueprint wires `DATABASE_URL` from PostgreSQL's private connection string, generates secrets, enables production settings and trusted TLS proxy handling, and pins NVIDIA's hosted endpoint/model. PostgreSQL public access is disabled by `ipAllowList: []`. Keep both services in the same Render region/workspace. Do not expose the database publicly or use Render's ephemeral service filesystem for SQLite.

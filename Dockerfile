@@ -10,6 +10,7 @@ COPY accounts ./accounts
 COPY planning ./planning
 COPY evidence ./evidence
 COPY manage.py ./
+COPY deploy/container-start.sh deploy/render-start.sh deploy/render-release.sh ./deploy/
 COPY docs ./docs
 COPY outputs/day7 ./outputs/day7
 COPY outputs/public_evidence ./outputs/public_evidence
@@ -18,4 +19,4 @@ RUN APASA_DEBUG=false APASA_SECRET_KEY=build-time-static-collection-only-not-a-r
 USER app
 ENV APASA_SQLITE_PATH=/app/runtime/db.sqlite3
 EXPOSE 8000
-CMD ["gunicorn", "apasa.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2", "--timeout", "60", "--access-logfile", "-", "--error-logfile", "-"]
+CMD ["bash", "deploy/container-start.sh"]

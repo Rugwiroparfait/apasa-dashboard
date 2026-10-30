@@ -61,3 +61,34 @@ class RenderSettingsTests(SimpleTestCase):
         self.assertIn(
             "126 policy records; 1800 district records; 348", output.getvalue()
         )
+
+
+class ContainerStartupTests(SimpleTestCase):
+    def start_with(self, **extra):
+        import subprocess
+
+        env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "RENDER": "true"}
+        env.update(extra)
+        return subprocess.run(
+            ["bash", "deploy/container-start.sh"],
+            cwd=Path(__file__).resolve().parent.parent,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+    def test_missing_database_has_an_actionable_error_before_worker_start(self):
+        result = self.start_with()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Internal Database URL", result.stderr)
+        self.assertIn("does not automatically apply render.yaml", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_missing_secret_does_not_echo_database_credentials(self):
+        result = self.start_with(
+            DATABASE_URL="postgresql://user:private-placeholder@db/apasa"
+        )
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("APASA_SECRET_KEY", result.stderr)
+        self.assertNotIn("private-placeholder", result.stderr)
