@@ -3,6 +3,7 @@ from . import views
 
 app_name = "planning"
 urlpatterns = [
+    path("ai/ask/", views.question_create, name="dashboard-question"),
     path("ai/", views.ai_status, name="ai-status"),
     path("comparisons/<int:pk>/ask/", views.question_create, name="question"),
     path("", views.index, name="index"),

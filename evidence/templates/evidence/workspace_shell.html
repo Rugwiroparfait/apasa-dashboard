@@ -1,0 +1,12 @@
+{% load static workspace_ui %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>APASA | Agricultural evidence</title><link rel="stylesheet" href="{% static 'evidence/dashboard.css' %}"><link rel="stylesheet" href="{% static 'evidence/workspace-shell.css' %}"><script src="{% static 'evidence/workspace.js' %}" defer></script><script src="{% static 'evidence/assistant.js' %}" defer></script></head>
+<body class="dashboard-shell"><a class="skip" href="#main">Skip to evidence</a>
+<header class="workspace-header"><a class="workspace-brand" href="{% url 'evidence:home' %}">APASA</a><span class="workspace-tagline">RWANDA · AGRICULTURAL EVIDENCE</span><nav class="workspace-links" aria-label="Workspace navigation">
+<a href="{% url 'evidence:home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>Dashboard</a>
+<a href="{% url 'evidence:policy' %}" {% if request.resolver_match.url_name == 'policy' or request.resolver_match.url_name == 'policy-crop' or request.resolver_match.url_name == 'policy-note' %}aria-current="page"{% endif %}>Indicators</a>
+<a href="{% url 'evidence:workbooks' %}" {% if request.resolver_match.url_name == 'workbooks' %}aria-current="page"{% endif %}>National statistics</a>
+<a href="{% url 'evidence:district-statistics' %}" {% if request.resolver_match.url_name == 'district-statistics' %}aria-current="page"{% endif %}>Districts</a>
+<a href="{% url 'planning:index' %}" {% if request.resolver_match.namespace == 'planning' %}aria-current="page"{% endif %}>Planning</a>
+</nav><div class="workspace-account"><button type="button" class="assistant-toggle" aria-controls="apasa-assistant" aria-expanded="true">Assistant</button><span class="workspace-user" title="{{ user.username }}">{{ user.username|first|upper }}<span class="sr-only">: {{ user.username }}</span></span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Sign out</button></form></div></header>
+<div class="dashboard-layout"><div class="dashboard-main"><main id="main">{% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}</main><footer>APASA · Published evidence with sources and interpretation limits</footer></div>{% workspace_assistant %}</div><div class="assistant-backdrop" hidden></div>
+</body></html>

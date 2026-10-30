@@ -733,7 +733,11 @@ def ai_status(request):
 
 @planner
 @require_POST
-def question_create(request, pk):
+def question_create(request, pk=None):
+    if pk is None:
+        from .dashboard_assistant import dashboard_question
+
+        return dashboard_question(request)
     item = get_object_or_404(visible(Assessment, request.user), pk=pk)
     form = forms.QuestionForm(request.POST, assessment=item)
     if form.is_valid():
@@ -754,6 +758,27 @@ def question_create(request, pk):
             is_mocked=item.is_mocked,
             status=State.DEMO if item.is_mocked else State.DRAFT,
         )
+        if request.headers.get("Accept") == "application/json":
+            from django.http import JsonResponse
+
+            if method != "ai":
+                return JsonResponse(
+                    {
+                        "error": notice
+                        or "AI wording is unavailable for this evidence.",
+                        "unavailable": True,
+                    },
+                    status=503,
+                )
+            return JsonResponse(
+                {
+                    "answer": text,
+                    "label": "AI explanation · unreviewed",
+                    "url": reverse(
+                        "planning:record", kwargs={"kind": "answer", "pk": answer.pk}
+                    ),
+                }
+            )
         if notice:
             messages.info(request, notice)
         return redirect("planning:record", kind="answer", pk=answer.pk)

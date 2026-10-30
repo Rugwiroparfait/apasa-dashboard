@@ -115,7 +115,7 @@ class ChartPageTests(TestCase):
         self.assertNotContains(response, "Separate survey research")
         nav = (
             response.content.decode()
-            .split('<nav class="workspace-nav"', 1)[1]
+            .split('<nav class="workspace-links"', 1)[1]
             .split("</nav>", 1)[0]
         )
         self.assertNotIn("/national-policy-evidence/crop/", nav)
@@ -126,3 +126,59 @@ class ChartPageTests(TestCase):
             "/evidence/maize/summary.csv",
         ]:
             self.assertEqual(self.client.get(path).status_code, 404)
+
+
+class SeasonalOverviewTests(TestCase):
+    def test_dimensional_faces_stay_within_true_zero_baseline_geometry(self):
+        from .charts import grouped_season_chart
+        from .workbook_data import load_bundle
+        from django.conf import settings
+
+        rows = [
+            r
+            for r in load_bundle(str(settings.PUBLIC_EVIDENCE_ROOT))["observations"]
+            if r["crop"] == "Maize" and r["indicator"] == "production"
+        ]
+        chart = grouped_season_chart(rows)
+        a = next(b for b in chart["bars"] if b["label"] == "2024 Season A")
+        b = next(b for b in chart["bars"] if b["label"] == "2024 Season B")
+        self.assertAlmostEqual(
+            a["column_height"] / b["column_height"],
+            float(a["value"]) / float(b["value"]),
+        )
+        for bar in chart["bars"]:
+            self.assertAlmostEqual(bar["column_y"] + bar["column_height"], 320)
+            for face in ("top_face", "side_face"):
+                ys = [float(p.split(",")[1]) for p in bar[face].split()]
+                self.assertGreaterEqual(min(ys), bar["column_y"])
+                self.assertLessEqual(max(ys), 320)
+
+    def test_overview_coverage_comes_from_current_adapters(self):
+        from unittest.mock import patch
+        from .workbook_data import load_bundle
+        from django.conf import settings
+
+        original = load_bundle(str(settings.PUBLIC_EVIDENCE_ROOT))
+        rows = [
+            r
+            for r in original["observations"]
+            if r["crop"] == "Maize" and r["indicator"] == "production"
+        ][:2]
+        districts = [
+            dict(district_id="test", display_crop=crop, season="test period")
+            for crop in ["A", "B", "C"]
+        ]
+        with patch(
+            "evidence.views.load_bundle", return_value={"observations": rows}
+        ), patch("evidence.views.district_rows", return_value=districts):
+            # This test isolates the read-only overview from the authentication middleware.
+            from django.contrib.auth import get_user_model
+
+            self.client.force_login(
+                get_user_model().objects.create_user("overview-current-data")
+            )
+            response = self.client.get("/workspace/overview/")
+        self.assertEqual(response.context["coverage"]["seasons"], 2)
+        self.assertEqual(response.context["coverage"]["observations"], 2)
+        self.assertEqual(response.context["district_coverage"]["districts"], 1)
+        self.assertEqual(response.context["district_coverage"]["crops"], "3")

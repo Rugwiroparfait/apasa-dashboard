@@ -100,7 +100,7 @@ The overview opens with evidence coverage and maize production charts. National 
 
 District statistics provides a crop-comparison chart after a district is selected. Choose production, cultivated area, harvested area or yield; each chart uses one unit, crops remain alphabetically ordered, and the selected crop is highlighted. Summary cards are rounded to two decimals; exact values stay in source details.
 
-Desktop SVGs and mobile bar rows show the same data without an external chart library or CDN. Missing values are not plotted as zero; mocked values are labelled and styled distinctly. Expand the source details for exact values. Sidebar navigation now contains only Overview, National policy, National statistics and District statistics; crop details and note actions remain beside the relevant policy record.
+Desktop SVGs and mobile bar rows show the same data without an external chart library or CDN. Missing values are not plotted as zero; mocked values are labelled and styled distinctly. Expand the source details for exact values. Authenticated navigation maps Dashboard, Indicators, National statistics, Districts and Planning to the existing routes; crop details and note actions remain beside the relevant policy record. A right-side APASA Assistant reuses the existing NVIDIA question flow with signed public chart context; on mobile it opens as a keyboard-accessible drawer. Conversation history is scoped to the current selection. Provider failures show an explicit unavailable state.
 
 ## Checks
 
