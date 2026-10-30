@@ -1,4 +1,45 @@
-{% extends 'evidence/base.html' %}{% block content %}
-<section class="hero"><p class="eyebrow">RWANDA · AGRICULTURAL EVIDENCE</p><h1>Better planning starts with clear evidence.</h1><p>Explore national policy references and official district crop statistics, with the reporting period, source and limitations beside every result.</p><a class="button-link" href="{% if user.is_authenticated %}{% url 'workspace' %}{% else %}{% url 'login' %}{% endif %}">{% if user.is_authenticated %}Open your workspace{% else %}Sign in to your workspace{% endif %} →</a></section>
-<div class="journey-cards"><article class="panel"><p class="eyebrow">NATIONAL POLICYMAKER</p><h2>Understand national evidence</h2><p>Find an indicator, inspect policy references, explore seasonal workbook observations and prepare a sourced evidence note.</p></article><article class="panel"><p class="eyebrow">DISTRICT AGRICULTURE OFFICER</p><h2>Explore your district’s crops</h2><p>Select a province, district and crop to inspect published cultivated area, harvested area, yield and production estimates.</p></article></div>
-<section class="panel"><h2>Know what the numbers mean</h2><p>Source observations, unverified register targets and mocked examples are kept distinct. Mocked values are labelled and never used to calculate policy progress.</p></section>{% endblock %}
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore Rwanda’s agricultural policy references and official crop statistics in one evidence workspace.">
+  <title>APASA | Agricultural evidence for Rwanda</title>
+  <link rel="preload" as="image" href="{% static 'accounts/landing/landscape-rwanda.png' %}">
+  <link rel="stylesheet" href="{% static 'accounts/landing.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/landing/animations.css' %}">
+  <script src="{% static 'accounts/landing.js' %}" defer></script>
+</head>
+<body class="landing-page">
+  <a class="landing-skip" href="#main">Skip to main content</a>
+  <main id="main">
+    <section class="hero-scene" aria-labelledby="hero-title">
+      <header class="landing-header">
+        <a class="landing-brand" href="{% url 'landing' %}" aria-label="APASA home">APASA</a>
+      </header>
+      <div class="landing-copy">
+        <p class="landing-kicker">RWANDA · AGRICULTURAL EVIDENCE</p>
+        <h1 id="hero-title">Better planning starts with <span>clear evidence.</span></h1>
+        <p class="landing-intro">Explore Rwanda’s agricultural policy references and official crop statistics in one evidence workspace.</p>
+        <a class="landing-cta" href="{% url 'login' %}">Sign in to your workspace <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="hero-scene__art" id="hero-art" aria-hidden="true">
+        <img class="hero-scene__background" src="{% static 'accounts/landing/landscape-rwanda.png' %}" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
+        <div class="hero-scene__light"></div>
+        <div class="hero-scene__wordmark">APASA</div>
+        <img class="hero-scene__dust" src="{% static 'accounts/landing/tractor-dust.png' %}" width="2046" height="768" alt="" decoding="async">
+        <div class="hero-scene__vehicle">
+          <img class="hero-scene__tractor" src="{% static 'accounts/landing/tractor-3d.png' %}" width="1672" height="941" alt="" decoding="async">
+          <img class="hero-scene__flag" src="{% static 'accounts/landing/rwanda-flag.svg' %}" width="640" height="420" alt="" decoding="async">
+        </div>
+        <img class="hero-scene__crops" src="{% static 'accounts/landing/foreground-crops.png' %}" width="2146" height="733" alt="" decoding="async">
+      </div>
+      <button class="landing-motion" type="button" aria-pressed="false" aria-controls="hero-art" hidden>Pause scenery</button>
+    </section>
+    <section class="landing-about" aria-labelledby="about-title">
+      <h2 id="about-title">What is APASA?</h2>
+      <p>APASA is an agriculture policy and statistics workspace for Rwanda. It helps national planners and district agriculture officers explore sourced policy references and official crop statistics, with context and limitations alongside the evidence.</p>
+    </section>
+  </main>
+</body>
+</html>

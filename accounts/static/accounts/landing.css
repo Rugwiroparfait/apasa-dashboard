@@ -1,0 +1,67 @@
+/* Public entry only. Workspace styles and navigation are intentionally independent. */
+.landing-page {
+  --landing-forest: #062f26;
+  --landing-gold: #c18a11;
+  --landing-paper: #faf9f5;
+  margin: 0;
+  color: var(--landing-forest);
+  background: var(--landing-paper);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.landing-page *, .landing-page *::before, .landing-page *::after { box-sizing: border-box; }
+.landing-page a { color: inherit; }
+.landing-page :focus-visible { outline: 3px solid #075c48; outline-offset: 5px; }
+.landing-skip { position: absolute; top: -6rem; left: 1rem; z-index: 20; padding: .8rem 1rem; background: white; border-radius: .3rem; }
+.landing-skip:focus { top: 1rem; }
+.hero-scene { min-height: 760px; height: clamp(760px, 55vw, 970px); }
+.landing-header { position: relative; z-index: 8; display: flex; justify-content: center; padding: 19px 24px 0; }
+.landing-brand { font-size: clamp(1.5rem, 2.2vw, 2rem); font-weight: 850; letter-spacing: -.045em; text-decoration: none; line-height: 1.2; }
+.landing-brand::after { content: ""; display: block; width: 32px; height: 3px; margin: 12px auto 0; background: #e7ae27; }
+.landing-copy { position: relative; z-index: 7; max-width: 1140px; padding: 0 24px; margin: 10px auto 0; text-align: center; }
+.landing-kicker { margin: 0 0 14px; font-size: .75rem; line-height: 1.5; font-weight: 650; letter-spacing: .28em; }
+.landing-kicker::after { content: ""; display: block; width: 44px; height: 3px; background: #e7ae27; margin: 12px auto 0; }
+.landing-copy h1 { margin: 0 auto 12px; max-width: 1050px; font-size: clamp(2.5rem, 4.25vw, 4.65rem); font-weight: 850; line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
+.landing-copy h1 span { display: block; color: var(--landing-gold); }
+.landing-intro { max-width: 680px; margin: 0 auto 20px; font-size: clamp(1rem, 1.45vw, 1.35rem); font-weight: 450; line-height: 1.45; text-wrap: balance; }
+.landing-cta { display: inline-flex; justify-content: center; align-items: center; gap: 16px; min-height: 54px; padding: 13px 28px; border: 1px solid #e3a923; border-radius: 9px; background: #fac13d; box-shadow: 0 5px 18px #6a4c1814; font-size: 1.05rem; line-height: 1.4; font-weight: 750; text-decoration: none; transition: background .2s ease, box-shadow .2s ease; }
+.landing-cta:hover { background: #ffd05a; box-shadow: 0 7px 22px #6a4c1824; }
+.hero-scene__art { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.hero-scene__light { position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse 65% 58% at 50% 10%, #fffcf2ed 0%, #fff9e4a8 40%, #fff8e22b 78%, transparent 100%); }
+.hero-scene__vehicle { position: absolute; z-index: 4; width: min(46vw, 790px); aspect-ratio: 1672 / 941; left: 50%; bottom: 8px; transform: translateX(-50%); }
+.hero-scene__tractor { display: block; width: 100%; height: 100%; object-fit: contain; }
+.hero-scene__flag { position: absolute; z-index: 1; width: 10%; height: auto; left: 65%; top: -1%; }
+.hero-scene__flag::selection { background: transparent; }
+.landing-motion { position: absolute; z-index: 8; right: 18px; bottom: 16px; padding: 7px 11px; border: 1px solid #ffffff7a; border-radius: 5px; background: #063329df; color: #fffaf0; font: inherit; font-size: .72rem; cursor: pointer; }
+.landing-motion[hidden] { display: none; }
+.landing-motion:focus-visible { outline-color: #fff; }
+.landing-about { padding: 30px 24px 40px; text-align: center; background: var(--landing-paper); }
+.landing-about::before { content: ""; display: block; width: 44px; height: 3px; margin: 0 auto 12px; background: #e7ae27; }
+.landing-about h2 { margin: 0 0 9px; font-size: clamp(1.9rem, 2.8vw, 2.7rem); line-height: 1.2; letter-spacing: -.04em; font-weight: 800; }
+.landing-about p { max-width: 920px; margin: 0 auto; font-size: 1.05rem; line-height: 1.65; color: #52615e; text-wrap: pretty; }
+@media (min-width: 1800px) { .hero-scene__vehicle { width: 900px; } }
+@media (max-width: 900px) {
+  .hero-scene { min-height: 830px; height: 88vw; }
+  .landing-copy { margin-top: 26px; }
+  .landing-copy h1 { font-size: clamp(2.6rem, 6vw, 3.7rem); }
+  .hero-scene__vehicle { width: min(84vw, 710px); bottom: 22px; }
+  .landing-intro { max-width: 570px; }
+}
+@media (max-width: 540px) {
+  .hero-scene { height: clamp(780px, 164vw, 890px); min-height: 780px; }
+  .landing-header { padding-top: 23px; }
+  .landing-copy { padding: 0 19px; margin-top: 28px; }
+  .landing-kicker { font-size: .61rem; letter-spacing: .18em; margin-bottom: 20px; }
+  .landing-copy h1 { max-width: 400px; font-size: clamp(2.15rem, 8.8vw, 2.9rem); line-height: 1.08; }
+  .landing-intro { max-width: 370px; font-size: 1rem; line-height: 1.5; margin-top: 16px; margin-bottom: 22px; }
+  .landing-cta { padding: 13px 18px; font-size: .95rem; gap: 10px; }
+  .hero-scene__vehicle { width: 111vw; max-width: 575px; bottom: 28px; left: 49%; }
+  .hero-scene__flag { width: 11%; }
+  .landing-about { padding: 28px 23px 35px; }
+  .landing-about p { font-size: 1rem; }
+  .landing-motion { bottom: 12px; right: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-page *, .landing-page *::before, .landing-page *::after { transition: none !important; scroll-behavior: auto !important; }
+  .landing-motion { display: none; }
+}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title desc">
+  <title id="title">Flag of Rwanda</title>
+  <desc id="desc">Blue, yellow, and green horizontal bands with a golden sun in the upper-right blue band.</desc>
+  <defs>
+    <clipPath id="flag-cloth">
+      <path d="M48 28 C145 10 225 44 312 28 C405 11 500 48 606 25 L606 388 C510 365 415 398 312 380 C220 363 140 398 48 378 Z"/>
+    </clipPath>
+  </defs>
+  <rect x="24" y="16" width="12" height="388" rx="6" fill="#66766F"/>
+  <g clip-path="url(#flag-cloth)">
+    <rect x="42" y="18" width="574" height="182" fill="#00A1DE"/>
+    <rect x="42" y="200" width="574" height="92" fill="#FAD201"/>
+    <rect x="42" y="292" width="574" height="110" fill="#20603D"/>
+    <g fill="#FAD201" transform="translate(505 109)">
+      <circle r="27"/>
+      <path d="M0-55 5-34 0-29-5-34ZM0 55 5 34 0 29-5 34ZM-55 0-34 5-29 0-34-5ZM55 0 34 5 29 0 34-5ZM-39-39-22-27-20-20-27-22ZM39 39 22 27 20 20 27 22ZM39-39 27-22 20-20 22-27ZM-39 39-27 22-20 20-22 27Z"/>
+    </g>
+  </g>
+  <path d="M48 28 C145 10 225 44 312 28 C405 11 500 48 606 25 L606 388 C510 365 415 398 312 380 C220 363 140 398 48 378 Z" fill="none" stroke="#17352E" stroke-opacity=".18" stroke-width="3"/>
+</svg>

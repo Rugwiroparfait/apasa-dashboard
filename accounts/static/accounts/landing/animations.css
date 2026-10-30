@@ -1,0 +1,24 @@
+/* Adapted from the supplied APASA hero motion helpers. Geometry lives in landing.css. */
+.hero-scene { position: relative; overflow: hidden; isolation: isolate; }
+.hero-scene__background { position: absolute; inset: -2%; width: 104%; height: 104%; object-fit: cover; object-position: center bottom; animation: apasa-pan 36s ease-in-out infinite alternate; }
+.hero-scene__wordmark { position: absolute; z-index: 2; left: 50%; top: 61%; transform: translate(-50%, -50%); color: rgb(10 64 52 / .3); font-size: clamp(8rem, 27vw, 30rem); font-weight: 850; letter-spacing: -.08em; line-height: .8; white-space: nowrap; animation: apasa-mark-in 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.hero-scene__vehicle { animation: apasa-tractor-idle 3.4s ease-in-out infinite; }
+.hero-scene__crops { position: absolute; z-index: 5; left: -1%; bottom: -23%; width: 102%; height: auto; transform-origin: 50% 100%; animation: apasa-crop-breeze 5s ease-in-out infinite alternate; }
+.hero-scene__dust { position: absolute; z-index: 3; left: 19%; bottom: 3%; width: min(60vw, 920px); height: auto; opacity: .5; animation: apasa-dust-drift 7s ease-out infinite; }
+.hero-scene__flag { transform-origin: 5% 95%; animation: apasa-flag-wave 2.6s ease-in-out infinite; }
+.hero-scene[data-motion="paused"] * { animation-play-state: paused !important; }
+@keyframes apasa-pan { from { transform: scale(1.02) translateX(-.5%); } to { transform: scale(1.06) translateX(.5%); } }
+@keyframes apasa-mark-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes apasa-tractor-idle { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
+@keyframes apasa-crop-breeze { from { transform: skewX(-.3deg); } to { transform: skewX(.3deg); } }
+@keyframes apasa-dust-drift { 0% { opacity: 0; transform: translate(-8px, 4px) scale(.92); } 24% { opacity: .35; } 100% { opacity: 0; transform: translate(26px, -10px) scale(1.06); } }
+@keyframes apasa-flag-wave { 0%, 100% { transform: rotate(-1deg) skewY(0deg); } 50% { transform: rotate(1deg) skewY(1.5deg); } }
+@media (max-width: 540px) {
+  .hero-scene__background { object-position: 49% bottom; }
+  .hero-scene__wordmark { top: 69%; font-size: 37vw; }
+  .hero-scene__dust { width: 110%; left: -6%; bottom: 5%; }
+  .hero-scene__crops { width: 150%; left: -25%; bottom: -1%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scene *, .hero-scene *::before, .hero-scene *::after { animation: none !important; transition: none !important; }
+}
