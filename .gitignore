@@ -67,3 +67,7 @@ CLAUDE.md
 !/docs/STATISTICS.md
 
 !/docs/RENDER.md
+
+# Private VPS database backups.
+/backups/
+!/docs/VPS.md

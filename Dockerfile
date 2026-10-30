@@ -10,7 +10,7 @@ COPY accounts ./accounts
 COPY planning ./planning
 COPY evidence ./evidence
 COPY manage.py ./
-COPY deploy/container-start.sh deploy/render-start.sh deploy/render-release.sh ./deploy/
+COPY deploy/container-start.sh deploy/start.sh deploy/release.sh deploy/render-start.sh deploy/render-release.sh ./deploy/
 COPY docs ./docs
 COPY outputs/day7 ./outputs/day7
 COPY outputs/public_evidence ./outputs/public_evidence

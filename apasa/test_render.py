@@ -92,3 +92,9 @@ class ContainerStartupTests(SimpleTestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("APASA_SECRET_KEY", result.stderr)
         self.assertNotIn("private-placeholder", result.stderr)
+
+    def test_vps_release_requires_database_and_secret_before_worker_start(self):
+        result = self.start_with(RENDER="false", APASA_RUN_RELEASE="true")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("set DATABASE_URL and APASA_SECRET_KEY", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)

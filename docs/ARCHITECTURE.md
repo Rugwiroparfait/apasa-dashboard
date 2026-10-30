@@ -54,3 +54,6 @@ Forecasting and advice have separate gates: a quantitatively passing candidate s
 
 
 Render uses native Python with `render.yaml` and three small deployment scripts. `DATABASE_URL` selects persistent PostgreSQL; Render startup refuses ephemeral SQLite. The platform hostname is added to allowed hosts and CSRF origins; custom domains use the existing explicit environment lists. Evidence remains versioned release files, validated during build/release. `/health/` is exempt from HTTPS redirection so Render’s internal probe can read database readiness. AI credentials resolve only NVIDIA aliases; the old OpenAI bindings are ignored.
+
+
+`compose.vps.yaml` isolates the VPS web/database in project `apasa`. NPM shares only the external `apasa-proxy` network with the web alias `apasa-web`; PostgreSQL stays on an internal network and persistent named volume. No APASA ports are published. `deploy/configure_vps.py` generates non-overwriting private settings; `deploy/vps.sh` scopes lifecycle/backups to APASA. Shared `deploy/release.sh`/`start.sh` serve VPS, container and Render wrappers. `APASA_RUN_RELEASE=true` explicitly enables one-instance release-on-start outside Render.

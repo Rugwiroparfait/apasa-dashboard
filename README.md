@@ -7,6 +7,10 @@ A Django workspace for two agricultural planning roles in Rwanda:
 
 The public landing page is at `/`; sign-in is at `/accounts/login/`. All evidence pages and downloads require authentication. Roles choose the initial workspace; both roles can read both journeys. Both roles can register aggregate sources, define cited policy targets, create comparisons and peer-review the other user’s submissions. Published inputs and results are immutable through the interface; corrections create new versions. No individual farmer or household data are accepted by the upload schema.
 
+## Host on your VPS
+
+For **apasa.inzuyange.com**, use [VPS deployment](docs/VPS.md) and `compose.vps.yaml`. The stack uses your existing Nginx Proxy Manager, a private PostgreSQL database with persistent storage, and the existing reviewed evidence files. No new public ports are opened. On the VPS run `bash deploy/vps.sh prepare`, privately edit the generated `.env.vps`, then run `bash deploy/vps.sh up`. The guide gives exact DNS, proxy and certificate settings, first-login credentials, backups and update commands.
+
 ## Host on Render
 
 The [Render Blueprint](render.yaml) provisions a Python web service and persistent PostgreSQL. It includes the existing reviewed evidence files; raw Excel workbooks and local SQLite are unnecessary. In Render choose **New → Blueprint**, connect this private GitHub repository, select `main`, and enter your NVIDIA key securely as `NVIDIA_API_KEY`. The configured Starter web service and PostgreSQL plan are paid; review Render’s pricing before creating resources. No Render deployment has been created by this repository change.
@@ -102,7 +106,7 @@ Desktop SVGs and mobile bar rows show the same data without an external chart li
 
 ```bash
 .venv/bin/python manage.py check
-.venv/bin/python manage.py test evidence accounts planning apasa.test_render evidence.database_checks --settings=apasa.test_settings
+.venv/bin/python manage.py test evidence accounts planning apasa.test_render apasa.test_vps evidence.database_checks --settings=apasa.test_settings
 .venv/bin/python manage.py makemigrations --check --dry-run
 .venv/bin/python manage.py collectstatic --noinput
 .venv/bin/python -m pip check
@@ -116,6 +120,7 @@ Desktop SVGs and mobile bar rows show the same data without an external chart li
 - [Statistical specification](docs/STATISTICS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Data provenance and coverage](docs/DATA.md)
+- [VPS deployment](docs/VPS.md)
 - [Render deployment](docs/RENDER.md)
 - [Deployment and operations](docs/DEPLOYMENT.md)
 - [Cleanup and implementation record](docs/CHANGELOG.md)

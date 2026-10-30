@@ -7,3 +7,8 @@ __pycache__
 local_data
 audit_tmp
 staticfiles
+backups
+attachments
+data
+venv
+outputs/workbook_review_*

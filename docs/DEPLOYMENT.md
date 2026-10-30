@@ -1,5 +1,7 @@
 # Deployment and operations
 
+For `apasa.inzuyange.com` behind the existing Nginx Proxy Manager, follow [VPS deployment](VPS.md).
+
 For the supported Render Blueprint, follow [Render deployment](RENDER.md).
 
 ## Production requirements

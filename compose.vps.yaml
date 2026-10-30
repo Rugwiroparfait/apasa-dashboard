@@ -1,0 +1,80 @@
+# One isolated APASA stack; Nginx Proxy Manager owns public ports and TLS.
+name: apasa
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: apasa
+      POSTGRES_USER: apasa
+      POSTGRES_PASSWORD: ${APASA_DB_PASSWORD:?Run python3 deploy/configure_vps.py first}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - database
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+  web:
+    image: apasa-dashboard:vps
+    build:
+      context: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APASA_DEBUG: "false"
+      APASA_RUN_RELEASE: "true"
+      APASA_SECRET_KEY: ${APASA_SECRET_KEY:?Run python3 deploy/configure_vps.py first}
+      APASA_ALLOWED_HOSTS: ${APASA_DOMAIN:-apasa.inzuyange.com},localhost,127.0.0.1
+      APASA_CSRF_TRUSTED_ORIGINS: https://${APASA_DOMAIN:-apasa.inzuyange.com}
+      APASA_TRUST_PROXY: "true"
+      APASA_EVIDENCE_MODE: csv
+      DATABASE_URL: postgresql://apasa:${APASA_DB_PASSWORD:?Set APASA_DB_PASSWORD}@db:5432/apasa
+      APASA_POLICYMAKER_PASSWORD: ${APASA_POLICYMAKER_PASSWORD:?Run python3 deploy/configure_vps.py first}
+      APASA_DISTRICT_PASSWORD: ${APASA_DISTRICT_PASSWORD:?Run python3 deploy/configure_vps.py first}
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY:-}
+      NVDIA_API_KEY: ${NVDIA_API_KEY:-}
+      NVIDIA_BASE_URL: https://integrate.api.nvidia.com/v1
+      NVIDIA_MODEL: openai/gpt-oss-20b
+      APASA_AI_ALLOWED_MODELS: openai/gpt-oss-20b
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-1}
+      PORT: "8000"
+    expose:
+      - "8000"
+    networks:
+      database:
+      proxy:
+        aliases:
+          - apasa-web
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import http.client; c=http.client.HTTPConnection('127.0.0.1',8000,timeout=4); c.request('GET','/health/',headers={'Host':'localhost'}); r=c.getresponse(); raise SystemExit(0 if r.status==200 else 1)"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+volumes:
+  postgres_data:
+networks:
+  database:
+    internal: true
+  proxy:
+    external: true
+    name: apasa-proxy
