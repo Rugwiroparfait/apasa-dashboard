@@ -1,0 +1,46 @@
+# Render Blueprint: connect this repository through New > Blueprint.
+# Starter + persistent PostgreSQL are paid services; review Render pricing first.
+services:
+  - type: web
+    name: apasa-dashboard
+    runtime: python
+    plan: starter
+    region: frankfurt
+    buildCommand: bash deploy/render-build.sh
+    preDeployCommand: bash deploy/render-release.sh
+    startCommand: bash deploy/render-start.sh
+    healthCheckPath: /health/
+    envVars:
+      - key: APASA_DEBUG
+        value: "false"
+      - key: APASA_SECRET_KEY
+        generateValue: true
+      - key: APASA_TRUST_PROXY
+        value: "true"
+      - key: APASA_EVIDENCE_MODE
+        value: csv
+      - key: DATABASE_URL
+        fromDatabase:
+          name: apasa-db
+          property: connectionString
+      - key: APASA_POLICYMAKER_PASSWORD
+        generateValue: true
+      - key: APASA_DISTRICT_PASSWORD
+        generateValue: true
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: NVIDIA_BASE_URL
+        value: https://integrate.api.nvidia.com/v1
+      - key: NVIDIA_MODEL
+        value: openai/gpt-oss-20b
+      - key: APASA_AI_ALLOWED_MODELS
+        value: openai/gpt-oss-20b
+      - key: WEB_CONCURRENCY
+        value: "2"
+databases:
+  - name: apasa-db
+    databaseName: apasa
+    user: apasa
+    plan: basic-256mb
+    region: frankfurt
+    ipAllowList: []

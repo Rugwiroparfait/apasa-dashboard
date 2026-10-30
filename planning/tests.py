@@ -623,7 +623,7 @@ class AdditionalStatisticalTests(PlanningFixture):
             "planning.briefs.generate",
             return_value=(
                 "Draft wording based on the supplied evidence.",
-                {"model": "gpt-5.4-mini"},
+                {"model": "openai/gpt-oss-20b"},
             ),
         ) as network:
             text, method, _, _ = draft_brief(

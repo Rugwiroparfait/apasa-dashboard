@@ -1,5 +1,6 @@
 """Environment-driven Django settings for local development and HTTPS deployment."""
 
+from urllib.parse import urlsplit, unquote, parse_qs
 from pathlib import Path
 import os
 
@@ -21,6 +22,9 @@ ALLOWED_HOSTS = [
     )
     if h.strip()
 ]
+RENDER_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip()
+if RENDER_HOSTNAME and RENDER_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RENDER_HOSTNAME)
 INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -80,6 +84,45 @@ if os.environ.get("APASA_DB_NAME"):
             "OPTIONS": {"connect_timeout": 3},
         }
     }
+# Render supplies an internal PostgreSQL URL. Never log its credential-bearing value.
+if os.environ.get("DATABASE_URL"):
+    database_url = urlsplit(os.environ["DATABASE_URL"])
+    if (
+        database_url.scheme not in {"postgres", "postgresql"}
+        or not database_url.hostname
+        or not database_url.path.strip("/")
+    ):
+        raise ValueError("DATABASE_URL must identify a PostgreSQL database")
+    options = {"connect_timeout": 5}
+    sslmode = parse_qs(database_url.query).get("sslmode", [None])[0]
+    if sslmode:
+        if sslmode not in {
+            "disable",
+            "allow",
+            "prefer",
+            "require",
+            "verify-ca",
+            "verify-full",
+        }:
+            raise ValueError("Unsupported PostgreSQL sslmode")
+        options["sslmode"] = sslmode
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": unquote(database_url.path.lstrip("/")),
+            "USER": unquote(database_url.username or ""),
+            "PASSWORD": unquote(database_url.password or ""),
+            "HOST": database_url.hostname,
+            "PORT": str(database_url.port or 5432),
+            "CONN_MAX_AGE": 60,
+            "CONN_HEALTH_CHECKS": True,
+            "OPTIONS": options,
+        }
+    }
+if os.environ.get("RENDER") == "true" and not os.environ.get("DATABASE_URL"):
+    raise ValueError(
+        "Render requires DATABASE_URL; ephemeral SQLite would lose saved work"
+    )
 STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 PUBLIC_EVIDENCE_ROOT = BASE_DIR
@@ -125,17 +168,24 @@ CSRF_TRUSTED_ORIGINS = [
     for x in os.environ.get("APASA_CSRF_TRUSTED_ORIGINS", "").split(",")
     if x.strip()
 ]
+if RENDER_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append("https://" + RENDER_HOSTNAME)
+# Render probes health over HTTP; the endpoint returns only database availability.
+SECURE_REDIRECT_EXEMPT = [r"^health/$"]
 # Enable only behind a trusted proxy that strips client-supplied forwarding headers.
 if os.environ.get("APASA_TRUST_PROXY", "false").lower() == "true":
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 3 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024
-APASA_AI_MODEL = os.environ.get("APASA_AI_MODEL", "gpt-5.4-mini")
+NVIDIA_BASE_URL = os.environ.get(
+    "NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1"
+)
+APASA_AI_MODEL = os.environ.get("NVIDIA_MODEL", "openai/gpt-oss-20b")
 
 APASA_AI_ALLOWED_MODELS = tuple(
     x.strip()
-    for x in os.environ.get("APASA_AI_ALLOWED_MODELS", "gpt-5.4-mini").split(",")
+    for x in os.environ.get("APASA_AI_ALLOWED_MODELS", "openai/gpt-oss-20b").split(",")
     if x.strip()
 )
 APASA_AI_RPM = min(8, max(1, int(os.environ.get("APASA_AI_RPM", "8"))))

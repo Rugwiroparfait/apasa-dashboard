@@ -1,5 +1,7 @@
 # Deployment and operations
 
+For the supported Render Blueprint, follow [Render deployment](RENDER.md).
+
 ## Production requirements
 
 Use Python 3.12, PostgreSQL for multiple web instances, and an HTTPS reverse proxy. A single instance can use SQLite on a persistent writable volume. Never ship the development database or demonstration credentials. Back up the application database: it contains authentication sessions and accounts even when evidence uses CSV.
@@ -16,7 +18,7 @@ Required environment configuration:
 | `APASA_POLICYMAKER_PASSWORD` | Initial production password for the `policymaker` account |
 | `APASA_DISTRICT_PASSWORD` | Initial production password for the `district_officer` account |
 
-Optional database variables: `APASA_DB_NAME`, `APASA_DB_USER`, `APASA_DB_PASSWORD`, `APASA_DB_HOST`, `APASA_DB_PORT`. Setting `APASA_DB_NAME` selects PostgreSQL; otherwise set `APASA_SQLITE_PATH` to a persistent writable file. `APASA_EVIDENCE_MODE=csv` remains the default and works with either authentication database backend. For imported evidence mode, follow the separate data-layer guide.
+`DATABASE_URL` takes precedence and supports PostgreSQL URLs (including URL-encoded credentials and an optional `sslmode`). On Render it is required. Optional separate database variables: `APASA_DB_NAME`, `APASA_DB_USER`, `APASA_DB_PASSWORD`, `APASA_DB_HOST`, `APASA_DB_PORT`. Setting `APASA_DB_NAME` selects PostgreSQL; otherwise set `APASA_SQLITE_PATH` to a persistent writable file. `APASA_EVIDENCE_MODE=csv` remains the default and works with either authentication database backend. For imported evidence mode, follow the separate data-layer guide.
 
 Set secrets through the hosting platform's secure environment settings, never source control. `.env.example` contains names and non-secret examples only. The ignored local `.env` is loaded without replacing injected process variables; production should use platform-injected secrets. The image excludes `.env` files. Remove initial-account password variables after provisioning. Rotate the secret key and passwords if exposed; rotating the key invalidates sessions.
 
@@ -75,11 +77,11 @@ Use persistent SQLite for one instance or PostgreSQL for shared production insta
 
 Uploads are limited to 2 MB/5,000 rows at the application layer; set the reverse proxy's request-body limit to 3 MB (or greater) to allow multipart overhead while retaining the application limit. This release's Nginx fragment uses 3 MB. Keep CSRF, HTTPS, cookie and forwarding-header protections in place.
 
-AI drafting is optional. Set `chat_openai_key` or `APASA_AI_API_KEY` securely and set `APASA_AI_MODEL=gpt-5.4-mini`; permit outbound HTTPS to `api.openai.com` through the configured proxy. No API key is stored in source code or database records. With no key or a provider failure, factual template drafting remains available and is labelled as such. Live provider authorization is not validated without operator-supplied credentials. AI requests use a 30-second timeout; the supplied Gunicorn timeout is 60 seconds. Do not enable raw request-body logging for login, uploads or AI credentials.
+AI drafting is optional. Set `NVIDIA_API_KEY` (or the compatibility spelling `NVDIA_API_KEY`) securely and set `NVIDIA_MODEL=openai/gpt-oss-20b`; permit outbound HTTPS to `integrate.api.nvidia.com` through the configured proxy. No API key is stored in source code or database records. With no key or a provider failure, factual template drafting remains available and is labelled as such. Live provider authorization is not validated without operator-supplied credentials. AI requests use a 30-second timeout; the supplied Gunicorn timeout is 60 seconds. Do not enable raw request-body logging for login, uploads or AI credentials.
 
 Smoke-test `/planning/`, source/target registration, quarantine errors, both users' review boundary, comparison publication, model backtesting, saved scenario review, brief approval, and follow-up updates. No email service, external source polling or automatic publication daemon is required. Due/overdue follow-ups are evaluated when the planning page is opened.
 
 
-AI request accounting requires the planning migrations as well as the normal authentication schema. Configure persistent shared storage for quotas; multiple production replicas should share PostgreSQL. The default allowed-model list contains only gpt-5.4-mini. No automatic fallback or provider billing change is implemented. Local rolling caps are 8 requests/minute, 45 requests/24 hours and a conservative 80,000-token/minute reservation budget; the provider's own limits and available credits remain authoritative. Requests use the Responses API with low reasoning effort and at most 1,200 output tokens. Changing model access/rate settings requires explicit operator review.
+AI request accounting requires the planning migrations as well as the normal authentication schema. Configure persistent shared storage for quotas; multiple production replicas should share PostgreSQL. The default allowed-model list contains only `openai/gpt-oss-20b`. No automatic fallback or provider billing change is implemented. Local rolling caps are 8 requests/minute, 45 requests/24 hours and a conservative 80,000-token/minute reservation budget; the provider's own limits and available credits remain authoritative. Requests use NVIDIA’s Chat Completions API with at most 1,200 output tokens. These are application safeguards, not a promise of NVIDIA’s free quota. Changing model access/rate settings requires explicit operator review.
 
 Do not pass real AI credentials into `deploy/validate_container.py`: its disposable workflow checks local fallback and must make no provider generation requests. Run `manage.py check_ai --check-access` and optionally `--generate` separately on the configured deployment or local computer to verify live access. Keys are never printed by these commands.

@@ -230,7 +230,7 @@ class BriefForm(forms.Form):
     )
     use_ai = forms.BooleanField(
         required=False,
-        help_text="Sends approved aggregate facts, citations and your proposed action to the configured OpenAI service. Leave off to draft locally.",
+        help_text="Sends approved aggregate facts, citations and your proposed action to the configured NVIDIA service. Leave off to draft locally.",
         label="Use the configured AI service to draft wording (if available); human approval is always required.",
     )
 

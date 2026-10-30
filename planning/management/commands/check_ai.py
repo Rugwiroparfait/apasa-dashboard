@@ -14,7 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         status = local_status()
         self.stdout.write(
-            f"Credential: {'set' if status['configured'] else 'missing'}; binding: {status['binding_name'] or 'none'}; model: {status['model']}"
+            f"Provider: NVIDIA; credential: {'set' if status['configured'] else 'missing'}; binding: {status['binding_name'] or 'none'}; model: {status['model']}"
         )
         self.stdout.write(
             f"Local limits: {status['requests_per_minute']} requests/minute, {status['requests_per_day']} requests/24 hours, {status['max_output_tokens']} max output tokens."

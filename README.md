@@ -7,6 +7,12 @@ A Django workspace for two agricultural planning roles in Rwanda:
 
 The public landing page is at `/`; sign-in is at `/accounts/login/`. All evidence pages and downloads require authentication. Roles choose the initial workspace; both roles can read both journeys. Both roles can register aggregate sources, define cited policy targets, create comparisons and peer-review the other user’s submissions. Published inputs and results are immutable through the interface; corrections create new versions. No individual farmer or household data are accepted by the upload schema.
 
+## Host on Render
+
+The [Render Blueprint](render.yaml) provisions a Python web service and persistent PostgreSQL. It includes the existing reviewed evidence files; raw Excel workbooks and local SQLite are unnecessary. In Render choose **New → Blueprint**, connect this private GitHub repository, select `main`, and enter your NVIDIA key securely as `NVIDIA_API_KEY`. The configured Starter web service and PostgreSQL plan are paid; review Render’s pricing before creating resources. No Render deployment has been created by this repository change.
+
+Render generates a secret and unique initial passwords for `policymaker` and `district_officer`. Retrieve these in the web service’s Environment settings. [Render instructions](docs/RENDER.md) cover first login, domains, backups and verification. Build validates evidence and collects static files; pre-deploy migrates and provisions accounts; startup binds Gunicorn to Render’s `$PORT`.
+
 ## Local development
 
 Python 3.12 is tested. `requirements.txt` declares supported dependency ranges; `requirements.lock` pins the validated deployment versions. From the repository root:
@@ -53,7 +59,7 @@ Open **Compare & plan** (`/planning/`) for current value, target, remaining need
 
 Calculations include direction-aware gaps, percentage-point differences, baseline progress, required yearly/compound change, source-standard-error intervals and historical regression diagnostics. Forecast candidates require at least six comparable observations, a two-observation holdout test, acceptable RMSE and independent model approval. Saved assumptions/scenarios receive separate review before an action brief uses them. Advice approval precedes implementation tracking; owners can record outcomes, feedback and due/overdue actions.
 
-Mocked records cannot be approved as official evidence. Incompatible periods, units, populations, geography or methods produce explanations instead of unsupported calculations. AI wording and evidence Q&A are optional. The app reuses `chat_openai_key` from your environment or ignored local `.env`; `APASA_AI_API_KEY` is also supported. The selected model is `gpt-5.4-mini`, matching the supplied API Free tier model list. The factual local template works without a provider. No AI output publishes itself or establishes intervention effects.
+Mocked records cannot be approved as official evidence. Incompatible periods, units, populations, geography or methods produce explanations instead of unsupported calculations. AI wording and evidence Q&A are optional. The app uses NVIDIA hosted inference with `NVIDIA_API_KEY` from your environment or ignored local `.env`; the existing `NVDIA_API_KEY` spelling is also supported. The selected model is `openai/gpt-oss-20b`. OpenAI credentials are no longer used. The factual local template works without a provider. No AI output publishes itself or establishes intervention effects.
 
 See [the workflow guide](docs/PLANNING.md) and [statistical methods](docs/STATISTICS.md).
 
@@ -64,8 +70,9 @@ Keep your existing key private. Add or update the model settings in your ignored
 ```text
 APASA_DEBUG=true
 APASA_ALLOWED_HOSTS=localhost,127.0.0.1,[::1]
-APASA_AI_MODEL=gpt-5.4-mini
-APASA_AI_ALLOWED_MODELS=gpt-5.4-mini
+NVIDIA_BASE_URL=https://integrate.api.nvidia.com/v1
+NVIDIA_MODEL=openai/gpt-oss-20b
+APASA_AI_ALLOWED_MODELS=openai/gpt-oss-20b
 ```
 
 After updating the checkout:
@@ -81,7 +88,7 @@ After updating the checkout:
 
 Restart the app after changing environment variables. **Compare & plan → AI availability** shows configuration and local limits; **Ask the evidence assistant** explains a selected report. Generated wording is unapproved until a different user reviews it. Explicitly mocked demonstrations remain mocked even when AI explains them.
 
-The client uses the Responses API, never automatically changes model/billing, and caps requests below the shown gpt-5.4-mini limits: 8/minute, 45/rolling 24 hours, a conservative 80,000-token/minute budget, and 1,200 output tokens per generation. An API Free tier rate-limit listing does not itself establish available credits or zero-priced usage; access/quota errors produce a transparent local fallback. This workspace has no copy of your local key, so live provider validation must run on your computer.
+The client uses NVIDIA’s Chat Completions API at `integrate.api.nvidia.com/v1`, never switches provider/model automatically, and applies local caps of 8 requests/minute, 45/rolling 24 hours, a conservative 80,000-token/minute budget, and 1,200 output tokens per generation. NVIDIA’s account limits and available credits remain authoritative; provider failures produce a labelled local fallback. Live validation requires your locally configured NVIDIA key.
 
 ## Visual dashboards
 
@@ -95,7 +102,7 @@ Desktop SVGs and mobile bar rows show the same data without an external chart li
 
 ```bash
 .venv/bin/python manage.py check
-.venv/bin/python manage.py test evidence accounts planning evidence.database_checks --settings=apasa.test_settings
+.venv/bin/python manage.py test evidence accounts planning apasa.test_render evidence.database_checks --settings=apasa.test_settings
 .venv/bin/python manage.py makemigrations --check --dry-run
 .venv/bin/python manage.py collectstatic --noinput
 .venv/bin/python -m pip check
@@ -109,6 +116,7 @@ Desktop SVGs and mobile bar rows show the same data without an external chart li
 - [Statistical specification](docs/STATISTICS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Data provenance and coverage](docs/DATA.md)
+- [Render deployment](docs/RENDER.md)
 - [Deployment and operations](docs/DEPLOYMENT.md)
 - [Cleanup and implementation record](docs/CHANGELOG.md)
 - [Optional versioned evidence database](docs/public_evidence_data_layer.md)

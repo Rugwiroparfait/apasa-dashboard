@@ -4,7 +4,7 @@ import os, secrets, subprocess, time, re, http.client
 from http.cookies import SimpleCookie
 
 assert os.geteuid() != 0, "The deployment image must run as a non-root user"
-if os.environ.get("APASA_DB_NAME"):
+if os.environ.get("APASA_DB_NAME") or os.environ.get("DATABASE_URL"):
     raise SystemExit("Use a disposable container without a production database binding")
 os.environ["APASA_SQLITE_PATH"] = "/app/runtime/smoke.sqlite3"
 os.environ.update(
