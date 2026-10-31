@@ -1,5 +1,29 @@
 # APASA
 
+## Hackathon judges: start here
+
+- **Live app:** [apasa.inzuyange.com](https://apasa.inzuyange.com/)
+- **Demo video:** [Watch the APASA walkthrough](https://youtu.be/0JtlQ9XFxgE).
+- **Student cards:** [View the student cards PDF](student_cards/STUDENT%20CARDS.pdf).
+- **Sign in:** [Open the live app login](https://apasa.inzuyange.com/accounts/login/) using either judge account below.
+
+| Role | Username | Live demo password |
+| --- | --- | --- |
+| National policymaker | `policymaker` | `BiggerpolicY123` |
+| District agriculture officer | `district_officer` | `BiggerDistricT123` |
+
+These credentials are for evaluating the hosted hackathon demo. Passwords are case-sensitive; the local development accounts documented below use different passwords.
+
+### Suggested judging walkthrough
+
+1. Watch the demo video for the project walkthrough and open the student cards PDF above.
+2. Sign in as **policymaker**. Explore **Dashboard**, **Indicators**, and **National statistics**; change a crop or reporting period and inspect the linked sources.
+3. Open **Planning / Compare & plan** to review current values, targets, gaps, and next steps. Demonstration records labelled **MOCKED** are illustrative; source details distinguish them from official evidence.
+4. Sign out, then sign in as **district_officer**. Open **Districts**, select a district and crop, and explore the district statistics and crop comparisons.
+5. Try the **APASA Assistant** with a question about the selected evidence. AI responses depend on provider availability; the source-linked evidence remains available for review.
+
+## About APASA
+
 A Django workspace for two agricultural planning roles in Rwanda:
 
 - **National policymaker:** policy references, source-linked seasonal observations, and downloadable evidence notes.
