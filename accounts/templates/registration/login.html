@@ -1,8 +1,7 @@
-{% extends 'evidence/base.html' %}{% block content %}
-<section class="hero"><p class="eyebrow">APASA WORKSPACE</p><h1>Sign in</h1><p>Use your national policymaker or district agriculture officer account.</p></section>
-<section class="panel auth-panel"><form method="post">{% csrf_token %}
-{% if form.errors %}<p class="warning" role="alert">The username or password was not accepted. Please try again.</p>{% endif %}
-<label for="id_username">Username</label><input id="id_username" name="username" autocomplete="username" required maxlength="150" autofocus value="{{ form.username.value|default:'' }}">
-<label for="id_password">Password</label><input type="password" id="id_password" name="password" autocomplete="current-password" required>
-<input type="hidden" name="next" value="{{ next }}"><button type="submit">Sign in →</button></form>
-<p>Accounts are provisioned by your APASA administrator. Contact them if you need access or a password reset.</p></section>{% endblock %}
+{% load static %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sign in | APASA</title><link rel="stylesheet" href="{% static 'evidence/tokens.css' %}"><link rel="stylesheet" href="{% static 'accounts/login.css' %}"><link rel="stylesheet" href="{% static 'evidence/ui.css' %}"><script src="{% static 'accounts/login.js' %}" defer></script></head>
+<body class="signin-page"><main id="main" class="signin-main"><a class="signin-brand" href="{% url 'landing' %}" aria-label="APASA home">APASA<span aria-hidden="true"></span></a><section class="ui-card signin-card" aria-labelledby="signin-heading"><h1 id="signin-heading">Sign in</h1><form method="post" class="signin-form">{% csrf_token %}
+{% if form.errors %}<p class="signin-error" role="alert">The username or password was not accepted. Please try again.</p>{% endif %}
+<label for="id_username">Username</label><input id="id_username" name="username" autocomplete="username" required maxlength="150" autofocus autocapitalize="none" spellcheck="false" value="{{ form.username.value|default:'' }}">
+<label for="id_password">Password</label><div class="password-field"><input type="password" id="id_password" name="password" autocomplete="current-password" required><button type="button" class="password-toggle" aria-controls="id_password" aria-label="Show password" aria-pressed="false" hidden>Show</button></div>
+<input type="hidden" name="next" value="{{ next }}"><button class="ui-button signin-submit" type="submit">Sign in {% include 'evidence/icon.html' with name='arrow-right' %}</button><span class="visually-hidden signin-status" role="status"></span></form></section><p class="signin-help">Need access or a password reset?<br>Contact your APASA administrator.</p></main></body></html>

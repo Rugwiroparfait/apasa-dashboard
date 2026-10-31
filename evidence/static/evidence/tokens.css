@@ -1,0 +1,36 @@
+/* APASA foundations: local system typography; no font/CDN request required. */
+:root {
+  color-scheme: light;
+  --apasa-forest: #073d32;
+  --apasa-green: #155541;
+  --apasa-green-soft: #edf4ef;
+  --apasa-green-mid: #4f806a;
+  --apasa-green-light: #91ad9f;
+  --apasa-gold: #d7ad56;
+  --apasa-caution-bg: #fff8e5;
+  --apasa-caution-ink: #674b16;
+  --apasa-ink: #102a27;
+  --apasa-muted: #596765;
+  --apasa-border: #d8e0da;
+  --apasa-canvas: #f7f8f4;
+  --apasa-surface: #fff;
+  --apasa-error: #8c3525;
+  --apasa-error-bg: #fff3ec;
+  --apasa-focus: #ac6913;
+  --apasa-inverse-muted: #dce8df;
+  --apasa-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --apasa-text-xs: .75rem;
+  --apasa-text-sm: .875rem;
+  --apasa-text-base: 1rem;
+  --apasa-radius: 12px;
+  --apasa-shadow: 0 4px 18px #073d3208;
+  --apasa-space-1: 4px;
+  --apasa-space-2: 8px;
+  --apasa-space-3: 12px;
+  --apasa-space-4: 16px;
+  --apasa-space-6: 24px;
+  --apasa-space-8: 32px;
+  --apasa-space-12: 48px;
+  --apasa-content: 1440px;
+}
+.apasa-icon { width: 20px; height: 20px; flex: none; display: inline-block; vertical-align: middle; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }

@@ -112,6 +112,7 @@ def note_text(row):
         lines += [
             "",
             "MOCK DATA — DESIGN PREVIEW ONLY; NOT OFFICIAL EVIDENCE",
+            "Synthetic / illustrative — not official statistics. Generated for APASA interface demonstration on 2026-10-31; not NISR or MINAGRI statistics and not for analysis or policy decisions.",
             f"Illustrative value: {mock['value']}; illustrative unit: {mock['unit']} (borrowed from the policy target for layout only; actual unit unverified).",
             f"Period: {mock['period']}; geography: {mock['geography']}; source: {mock['source']}.",
             "Do not cite or use this placeholder for policy decisions, calculations or target progress. The official actual remains unverified.",

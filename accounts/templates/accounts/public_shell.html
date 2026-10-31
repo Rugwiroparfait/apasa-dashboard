@@ -1,0 +1,18 @@
+{% load static %}<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore Rwanda’s agricultural policy references and official crop statistics, with sources and comparison limits alongside the evidence.">
+<title>{% block title %}APASA | Agricultural evidence for Rwanda{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'evidence/tokens.css' %}">
+{% block extra_styles %}{% endblock %}
+<link rel="stylesheet" href="{% static 'accounts/landing.css' %}">
+{% block page_styles %}{% endblock %}
+{% block preload %}{% endblock %}
+<link rel="stylesheet" href="{% static 'evidence/ui.css' %}">
+<script src="{% static 'accounts/landing.js' %}" defer></script>
+</head><body class="public-site">
+<a class="landing-skip" href="#main">Skip to main content</a>
+{% block public_header %}<header class="public-header"><div class="public-header-inner"><a class="public-brand" href="{% url 'landing' %}" aria-label="APASA home">APASA<span aria-hidden="true"></span></a><nav aria-label="Public navigation"><a href="{% url 'landing' %}#about">About APASA</a><a href="{% url 'landing' %}#features">The workspace</a><a href="{% url 'landing' %}#how-it-works">How it works</a></nav>{% if user.is_authenticated %}<a class="ui-button public-button public-button-small" href="{% url 'workspace' %}">Open workspace {% include 'evidence/icon.html' with name='arrow-right' %}</a>{% else %}<a class="ui-button public-button public-button-small" href="{% url 'login' %}">Sign in {% include 'evidence/icon.html' with name='arrow-right' %}</a>{% endif %}</div></header>{% endblock %}
+<main id="main" class="{% block main_class %}public-main{% endblock %}">{% block content %}{% endblock %}</main>
+<footer class="public-footer"><div><a class="public-brand" href="{% url 'landing' %}">APASA<span aria-hidden="true"></span></a><p>Agricultural evidence for Rwanda.<br>Sources, context and limitations in view.</p></div><nav aria-label="Footer navigation"><a href="{% url 'landing' %}#about">About</a><a href="{% url 'landing' %}#evidence-principles">Evidence principles</a><a href="{% url 'login' %}">Sign in</a></nav><nav class="public-footer-evidence" aria-label="Workspace evidence"><a href="{% url 'evidence:policy' %}">National policy</a><a href="{% url 'evidence:workbooks' %}">National statistics</a><a href="{% url 'evidence:district-statistics' %}">District statistics</a></nav><p class="public-footer-note">Workspace access is managed by your APASA administrator.</p></footer>
+</body></html>

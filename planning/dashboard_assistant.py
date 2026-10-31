@@ -37,6 +37,7 @@ def snapshot(context):
         "province_name",
         "district_name",
         "chart_measure",
+        "population",
     ):
         if context.get(key):
             data["filters"][key] = str(context[key])[:200]
@@ -49,6 +50,8 @@ def snapshot(context):
         )
         if context.get("chart"):
             charts = [context["chart"]]
+        if context.get("history_chart"):
+            charts = list(charts) + [context["history_chart"]]
         for chart in charts:
             data["charts"].append(
                 dict(
@@ -93,6 +96,13 @@ def snapshot(context):
             data[
                 "notes"
             ] += " Selected policy references are contextual; do not infer target attainment."
+    if context.get("mock_requested"):
+        data["mocked"] = True
+    if context.get("demo_active"):
+        data["mocked"] = True
+        data["demonstration"] = True
+        data["page"] = "Demonstration data · " + data["page"]
+        data["notes"] += " Synthetic / illustrative — not official statistics. Generated for APASA interface demonstration on 2026-10-31; not official NISR or MINAGRI statistics and not for analysis or policy decisions. Places and periods identify illustrative aggregate examples only. No official district target or progress is established."
     # Session history is keyed by exact canonical context; changing filters starts a new thread.
     raw = json.dumps(data, sort_keys=True, ensure_ascii=False)
     if len(raw.encode()) > 17000:
@@ -136,9 +146,9 @@ def dashboard_question(request):
             },
             status=422,
         )
-    if context.get("mocked") or any(
-        v["state"] == "MOCKED" for c in context["charts"] for v in c["values"]
-    ):
+    if not context.get("demonstration") and (context.get("mocked") or any(
+        v["state"].startswith("MOCKED") for c in context["charts"] for v in c["values"]
+    )):
         return JsonResponse(
             {
                 "error": "This chart includes mocked previews. Turn them off before asking about published evidence."
@@ -160,7 +170,7 @@ def dashboard_question(request):
         {
             "answer": answer,
             "method": "ai",
-            "label": "AI explanation · unreviewed",
+            "label": "AI explanation · synthetic demonstration · unreviewed" if context.get("demonstration") else "AI explanation · unreviewed",
             "sources": list(
                 dict.fromkeys(
                     v["source"] for c in context["charts"] for v in c["values"]

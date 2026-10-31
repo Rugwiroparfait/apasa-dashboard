@@ -1,0 +1,72 @@
+{
+  "dataset_name": "DEMO — Synthetic Rwanda crop observations (not official)",
+  "publication_release": "APASA interface demonstration dataset, version 1.0; generated 31 October 2026",
+  "methodology": "APASA-SYNTH-DEMO-2026-V1",
+  "origin": "Synthetic illustrative data generated for APASA demonstration; not official NISR or MINAGRI statistics.",
+  "classification": "Synthetic / illustrative — not official statistics",
+  "generation_date": "2026-10-31",
+  "csv": "synthetic_rwanda_crop_observations_v1.csv",
+  "sha256": "02c6fd9f820349e172bed94559f8257aaf5f14cf137d66da20224774500ee867",
+  "bytes": 462111,
+  "row_count": 1536,
+  "headers": [
+    "measure",
+    "crop",
+    "value",
+    "unit",
+    "period",
+    "geography_code",
+    "geography",
+    "population",
+    "source_reference",
+    "standard_error",
+    "is_mocked"
+  ],
+  "years": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "period_types": [
+    "annual",
+    "Season A",
+    "Season B",
+    "Season C"
+  ],
+  "geographies": {
+    "RW": "Rwanda",
+    "11": "Nyarugenge",
+    "12": "Gasabo",
+    "24": "Huye"
+  },
+  "crops": [
+    "Maize",
+    "Bush bean",
+    "Cassava"
+  ],
+  "population": "Synthetic aggregate crop coverage; no sampled farmer population",
+  "variables": {
+    "cultivated_area": "Ha",
+    "harvested_area": "Ha",
+    "yield": "Kg/Ha",
+    "production": "MT"
+  },
+  "statistical_source_inputs": [],
+  "geographic_label_input": "Existing public district extract; names and IDs only, not numeric values",
+  "assumptions": [
+    "National RW is an independent illustrative series, not a sum of the three example districts. No provincial estimates are generated.",
+    "Base cultivated Ha: RW=120000, 11=400, 12=750, 24=1800. Crop multipliers Maize=1, Bush bean=0.7, Cassava=0.55.",
+    "Season area multipliers A=1, B=0.8, C=0.35; linear area growth multiplier=1+0.02*(year-2019). Areas rounded to two decimals.",
+    "Harvested Ha=90% of cultivated Ha. Base yields Kg/Ha: Maize=2100, Bush bean=850, Cassava=10000. Season yield multipliers A=1, B=0.96, C=0.90; linear yield growth multiplier=1+0.03*(year-2019). Seasonal yields rounded to two decimals.",
+    "Seasonal production MT=harvested Ha*yield Kg/Ha/1000. Annual cultivated/harvested area and production sum the three synthetic seasons; annual yield is production*1000/harvested area, rounded to eight decimals. Never add annual rows to seasonal rows.",
+    "All numerical values are invented positive aggregates. Standard errors are empty; no sampling design, verification or uncertainty estimates are claimed. Unavailable required values cannot be uploaded through this parser and are not fabricated as zeros.",
+    "Demonstration comparisons require matching geography, crop, measure, population, period type and methodology. Synthetic observations cannot establish official policy progress."
+  ],
+  "generator_command": "venv/bin/python manage.py generate_observation_demo",
+  "safe_loading": "Authenticated manual source form upload with synthetic demonstration checked; all rows is_mocked=true; no publication URL required; retained in demo state, never officially approved."
+}

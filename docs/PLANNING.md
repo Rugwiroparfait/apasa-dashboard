@@ -1,6 +1,6 @@
 # Reviewed planning workflow
 
-The diagrams are implemented as a database-backed workflow at `/planning/`, linked from both evidence journeys and the overview. Both national policymakers and district officers see the same clear summary: **current value, target, remaining need, and next steps**. Advanced methods, model details, source tables and review history are expandable.
+The diagrams are implemented as a database-backed workflow at `/planning/`, linked from both evidence journeys and the overview. National policymakers default to national goals; district officers default to local goals and follow-ups. Both use the same calculation summary: **current value, target, remaining need, and next steps**. Advanced methods, model details, source tables and review history are expandable.
 
 ## Try it locally
 
@@ -10,7 +10,7 @@ python manage.py provision_accounts --demo
 python manage.py seed_planning_demo
 ```
 
-The last two commands are development-only. Sign in, open **Compare & plan**, and choose the national or district mocked demonstration. Each has invented annual observations and a mocked model so the complete comparison and scenario interface can be exercised. No demonstration target, observation, model or advice can be approved as official evidence. Seeding is repeatable and does not reset passwords or create official approvals.
+The last two commands are development-only. Sign in, open **Goal progress** or **Local goals**, and choose the national or district mocked demonstration. Each has invented annual observations and a mocked model so the complete comparison and scenario interface can be exercised. No demonstration target, observation, model or advice can be approved as official evidence. Seeding is repeatable and does not reset passwords or create official approvals.
 
 The national demonstration has an invented current value of 124,000 MT, a target of 150,000 MT, and a remaining gap of 26,000 MT over two yearly reporting steps. This illustrates the interface only; it is not a real PSTA5 target or Rwanda production series.
 
@@ -80,3 +80,13 @@ The default model is `openai/gpt-oss-20b` hosted by NVIDIA. Locally enforced rol
 Credential errors, insufficient quota, rate limits, unavailable models, invalid/incomplete output and network failures return explicit notices and preserve local factual drafting. Provider error messages that may echo a key are never displayed. Redirects are disabled so an Authorization header is not forwarded to a different endpoint. Normal proxy and CA trust remain enabled.
 
 Provider protocol, success/error handling, token/request budgets, mock labels, fallback and user interfaces are tested with mocked HTTP responses. A live generation call has not been made in this cloud machine because the user's key is on their own computer. Do not interpret a mocked test as proof of live model entitlement or credits.
+
+## Evidence journeys and demonstration provenance
+
+National policy evidence (`/national-policy-evidence/`) retains the outcome/output → crop → indicator filters, source citations, contextual observations and export flow. The selected policy node is visible above the indicator even when filters are collapsed. Comparability warnings remain prominent; policy references are not replaced by synthetic targets.
+
+District evidence (`/district-crop-statistics/`) adds a visible period selector to the existing automatic province/district/crop/measure selections. Published mode offers only the actual 2026 B extract and explains that a cross-period comparison is unsupported. Apply opens the selected chart. An explicit **Demonstration data** mode (`?data=demo`) supplies three illustrative periods, three districts, three crops and four measures. An additional illustrative history chart is available after selecting a crop.
+
+Synthetic values, charts, tables and exports carry **Synthetic / illustrative — not official statistics.** labels. Each active demonstration offers a Data origin panel. [Demo README](../data/demo/README.md) and [manifest](../data/demo/manifest.json) record generation date, variables, units, inputs, assumptions and commands. `manage.py generate_demo_evidence` exports a deterministic district fixture, with no database writes. No demo command runs automatically during deployment or a GET request.
+
+The assistant keeps location, crop, period, coverage and origin in its signed, per-selection context. Explicit district demonstrations may use the same real AI transport with their synthetic status retained; mixed missing-cell previews remain blocked from being passed as published assistant evidence. Missing credentials, rate limits and provider failures retain existing unavailable/error states; no scripted or fabricated live AI response has been added.

@@ -4,6 +4,45 @@ For `apasa.inzuyange.com` behind the existing Nginx Proxy Manager, follow [VPS d
 
 For the supported Render Blueprint, follow [Render deployment](RENDER.md).
 
+## Release this interface update
+
+This is a repository implementation; publishing it still requires deploying the updated checkout. Follow the existing [VPS guide](VPS.md) or [Render guide](RENDER.md) for your host. Preserve the existing environment file, secrets and persistent database.
+
+Before deployment, build the frontend in your development/release checkout and include the generated Django assets in the release:
+
+```bash
+npm ci
+npm run build
+venv/bin/python manage.py test --settings=apasa.test_settings --noinput
+```
+
+The generated files are `evidence/static/evidence/ui.css` and `ui.js`. The Docker/Render runtime does not run Node; its static collection consumes these compiled files plus the updated `workspace.js` and templates. Commit/package those artifacts together. Never serve new templates with an old script bundle.
+
+For an existing VPS installation, back up and rebuild only APASA:
+
+```bash
+bash deploy/vps.sh backup
+bash deploy/vps.sh up
+bash deploy/vps.sh status
+```
+
+The VPS scripts apply migrations, provision missing accounts without replacing passwords, collect static assets and check deployment data. The image collects static files during build. For a first installation, use the `prepare` and environment configuration steps in [VPS.md](VPS.md). Do not replace an existing `.env.vps` or remove database volumes. On Render, deploy the updated checkout using the existing Blueprint/build/release commands described in [RENDER.md](RENDER.md).
+
+No synthetic seed/generation command belongs in a deployment hook. Read-only built-in demos work without seeding. The observation-upload CSV is supplied from the demonstrator’s computer; the production image does not need raw `data/` files. Saved demonstration sources are added only through an explicit authenticated upload. Production continues to reject the development-only demo seeder.
+
+After release, sign in as both roles and check:
+
+- Goal progress/local goals and their role-specific navigation.
+- District filters: province → district → crop; season and measure reload automatically; Apply opens a chart.
+- Published district coverage remains 2026 B; explicit demo mode offers illustrative periods.
+- National statistics selects available combinations automatically and exports the same selection.
+- A demo comparison has one compact data-origin label, with details expandable; source/validation restrictions remain intact.
+- The assistant retains the selected context. Use a deliberate question only if live AI testing is intended.
+
+If a province changes but districts do not load, first verify that the deployed `workspace.js`, templates and compiled assets are from the same release. Rebuild/recollect static files and restart the application using your host’s release process. Hashed production assets should change with the release. Purge any proxy cache serving old HTML; a hard refresh is a diagnostic step, not a substitute for deploying the new assets. Browser back/forward navigation now reloads dependent filter state.
+
+Use [the demonstration script](DEMONSTRATION.md) for the walkthrough. If rollback is necessary, redeploy the previously tested application image/commit and retain the database. Do not reverse migrations blindly; restore a verified backup only through your normal recovery procedure.
+
 ## Production requirements
 
 Use Python 3.12, PostgreSQL for multiple web instances, and an HTTPS reverse proxy. A single instance can use SQLite on a persistent writable volume. Never ship the development database or demonstration credentials. Back up the application database: it contains authentication sessions and accounts even when evidence uses CSV.
@@ -38,7 +77,7 @@ python manage.py check
 python -m gunicorn apasa.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 60 --access-logfile - --error-logfile -
 ```
 
-Run migrations once per release, not independently in each worker. This release adds the planning app and four schema migrations; back up the database before applying them. It stores source versions, policy targets, approvals, immutable comparison/scenario outputs, briefs and follow-up history in addition to accounts/sessions. `provision_accounts` is repeatable and preserves existing passwords. Use `python manage.py changepassword USERNAME` to rotate an existing account. Provisioning is transactional; production rejects known demo passwords. There is no public signup or email provider to configure.
+Run migrations once per release, not independently in each worker. Apply the migrations shipped with the selected release; back up the database before applying them. It stores source versions, policy targets, approvals, immutable comparison/scenario outputs, briefs and follow-up history in addition to accounts/sessions. `provision_accounts` is repeatable and preserves existing passwords. Use `python manage.py changepassword USERNAME` to rotate an existing account. Provisioning is transactional; production rejects known demo passwords. There is no public signup or email provider to configure.
 
 Before exposure, configure the trusted proxy to terminate TLS, replace forwarded headers, limit request sizes, and rate-limit `/accounts/login/`. Django login does not provide brute-force throttling by itself. An Nginx example is in `deploy/nginx.conf`; replace the hostname and supply your platform's TLS certificate configuration. The application port should only be reachable through that proxy. Set the correct real-client-IP handling for your hosting platform before using IP rate limits.
 

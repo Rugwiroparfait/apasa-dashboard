@@ -1,18 +1,8 @@
-{% load static %}<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore Rwanda’s agricultural policy references and official crop statistics in one evidence workspace.">
-  <title>APASA | Agricultural evidence for Rwanda</title>
-  <link rel="preload" as="image" href="{% static 'accounts/landing/landscape-rwanda.png' %}">
-  <link rel="stylesheet" href="{% static 'accounts/landing.css' %}">
-  <link rel="stylesheet" href="{% static 'accounts/landing/animations.css' %}">
-  <script src="{% static 'accounts/landing.js' %}" defer></script>
-</head>
-<body class="landing-page">
-  <a class="landing-skip" href="#main">Skip to main content</a>
-  <main id="main">
+{% extends 'accounts/public_shell.html' %}{% load static %}
+{% block preload %}<link rel="preload" as="image" href="{% static 'accounts/landing/landscape-rwanda-960.webp' %}" imagesrcset="{% static 'accounts/landing/landscape-rwanda-640.webp' %} 640w, {% static 'accounts/landing/landscape-rwanda-960.webp' %} 960w, {% static 'accounts/landing/landscape-rwanda-1440.webp' %} 1440w" imagesizes="100vw" fetchpriority="high">{% endblock %}
+{% block public_header %}{% endblock %}
+{% block page_styles %}<link rel="stylesheet" href="{% static 'accounts/hero.css' %}"><link rel="stylesheet" href="{% static 'accounts/landing/animations.css' %}">{% endblock %}
+{% block content %}
     <section class="hero-scene" aria-labelledby="hero-title">
       <header class="landing-header">
         <a class="landing-brand" href="{% url 'landing' %}" aria-label="APASA home">APASA</a>
@@ -21,25 +11,28 @@
         <p class="landing-kicker">RWANDA · AGRICULTURAL EVIDENCE</p>
         <h1 id="hero-title">Better planning starts with <span>clear evidence.</span></h1>
         <p class="landing-intro">Explore Rwanda’s agricultural policy references and official crop statistics in one evidence workspace.</p>
-        <a class="landing-cta" href="{% url 'login' %}">Sign in to your workspace <span aria-hidden="true">→</span></a>
-      </div>
+        <a class="landing-cta ui-button ui-button-gold h-14 px-7 text-base" href="{% url 'login' %}">Sign in to your workspace {% include 'evidence/icon.html' with name='arrow-right' %}</a>
+      <p class="mt-3 text-xs text-foreground/70">Evidence views require an APASA account</p></div>
       <div class="hero-scene__art" id="hero-art" aria-hidden="true">
-        <img class="hero-scene__background" src="{% static 'accounts/landing/landscape-rwanda.png' %}" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
+        <img class="hero-scene__background" src="{% static 'accounts/landing/landscape-rwanda-960.webp' %}" srcset="{% static 'accounts/landing/landscape-rwanda-640.webp' %} 640w, {% static 'accounts/landing/landscape-rwanda-960.webp' %} 960w, {% static 'accounts/landing/landscape-rwanda-1440.webp' %} 1440w" sizes="100vw" width="1672" height="941" alt="" fetchpriority="high" decoding="async">
         <div class="hero-scene__light"></div>
         <div class="hero-scene__wordmark">APASA</div>
-        <img class="hero-scene__dust" src="{% static 'accounts/landing/tractor-dust.png' %}" width="2046" height="768" alt="" decoding="async">
+        <img class="hero-scene__dust" src="{% static 'accounts/landing/tractor-dust-960.webp' %}" width="2046" height="768" alt="" decoding="async">
         <div class="hero-scene__vehicle">
-          <img class="hero-scene__tractor" src="{% static 'accounts/landing/tractor-3d.png' %}" width="1672" height="941" alt="" decoding="async">
+          <img class="hero-scene__tractor" src="{% static 'accounts/landing/tractor-3d-960.webp' %}" srcset="{% static 'accounts/landing/tractor-3d-640.webp' %} 640w, {% static 'accounts/landing/tractor-3d-960.webp' %} 960w, {% static 'accounts/landing/tractor-3d-1440.webp' %} 1440w" sizes="(max-width: 900px) 100vw, 46vw" width="1672" height="941" alt="" decoding="async">
           <img class="hero-scene__flag" src="{% static 'accounts/landing/rwanda-flag.svg' %}" width="640" height="420" alt="" decoding="async">
         </div>
-        <img class="hero-scene__crops" src="{% static 'accounts/landing/foreground-crops.png' %}" width="2146" height="733" alt="" decoding="async">
+        <img class="hero-scene__crops" src="{% static 'accounts/landing/foreground-crops-960.webp' %}" srcset="{% static 'accounts/landing/foreground-crops-640.webp' %} 640w, {% static 'accounts/landing/foreground-crops-960.webp' %} 960w, {% static 'accounts/landing/foreground-crops-1440.webp' %} 1440w" sizes="100vw" width="2146" height="733" alt="" decoding="async">
       </div>
-      <button class="landing-motion" type="button" aria-pressed="false" aria-controls="hero-art" hidden>Pause scenery</button>
     </section>
-    <section class="landing-about" aria-labelledby="about-title">
-      <h2 id="about-title">What is APASA?</h2>
-      <p>APASA is an agriculture policy and statistics workspace for Rwanda. It helps national planners and district agriculture officers explore sourced policy references and official crop statistics, with context and limitations alongside the evidence.</p>
-    </section>
-  </main>
-</body>
-</html>
+<section class="public-about public-container" id="about" aria-labelledby="about-title"><div><p class="public-eyebrow">ONE EVIDENCE WORKSPACE</p><h2 id="about-title">A clearer view of agriculture.</h2></div><div><p>APASA is an agriculture policy and statistics workspace for Rwanda. It brings policy indicators, published crop observations and reviewed comparisons into one place, with their sources and interpretation limits.</p><div class="public-audiences"><div><h3>For national planners</h3><p>Review national policy references and explore seasonal statistics without losing their original definitions.</p></div><div><h3>For district officers</h3><p>Inspect published district and crop observations, then use reviewed evidence to support planning and follow-up.</p></div></div></div></section>
+<section class="public-feature-section" id="features" aria-labelledby="features-title"><div class="public-container"><div class="public-section-title"><div><p class="public-eyebrow">EXPLORE THE WORKSPACE</p><h2 id="features-title">From policy questions to sourced observations.</h2></div><p>Four connected ways to work with evidence.<br>Sign in to explore each view.</p></div><div class="public-feature-grid">
+<article class="ui-card public-feature"><span class="public-feature-icon">{% include 'evidence/icon.html' with name='book-open' %}</span><h3>National policy evidence</h3><p>Find a PSTA5 indicator, read its policy target and inspect available official evidence. See why an observation may be context only or not comparable.</p><a href="{% url 'evidence:policy' %}">Explore policy references {% include 'evidence/icon.html' with name='arrow-right' %}</a></article>
+<article class="ui-card public-feature"><span class="public-feature-icon">{% include 'evidence/icon.html' with name='bar-chart-2' %}</span><h3>National statistics</h3><p>Explore published seasonal production, yield and input-use observations. Inspect exact values, reporting periods and workbook source cells.</p><a href="{% url 'evidence:workbooks' %}">Explore national statistics {% include 'evidence/icon.html' with name='arrow-right' %}</a></article>
+<article class="ui-card public-feature"><span class="public-feature-icon">{% include 'evidence/icon.html' with name='map-pin' %}</span><h3>District crop statistics</h3><p>Choose a province, district and crop to inspect published survey estimates. Keep source units and missing-value states visible.</p><a href="{% url 'evidence:district-statistics' %}">Explore district evidence {% include 'evidence/icon.html' with name='arrow-right' %}</a></article>
+<article class="ui-card public-feature"><span class="public-feature-icon">{% include 'evidence/icon.html' with name='activity' %}</span><h3>Compare &amp; plan</h3><p>Work with independently reviewed targets and sources. Understand a supported target gap, or see the evidence issues that prevent a reliable comparison.</p><a href="{% url 'planning:index' %}">Explore the planning workflow {% include 'evidence/icon.html' with name='arrow-right' %}</a></article>
+</div></div></section>
+<section class="public-container public-how" id="how-it-works" aria-labelledby="how-title"><p class="public-eyebrow">HOW IT WORKS</p><h2 id="how-title">Follow the evidence, one step at a time.</h2><ol class="public-steps"><li><span>01</span><h3>Choose your question</h3><p>Select a policy indicator, a crop, a reporting season or a district.</p></li><li><span>02</span><h3>Read the observation</h3><p>Explore charts and exact values alongside their units, geography and reporting period.</p></li><li><span>03</span><h3>Check before comparing</h3><p>Review sources and limitations. Use the reviewed comparison workflow when definitions and periods support it.</p></li></ol></section>
+<section class="public-principles public-container" id="evidence-principles" aria-labelledby="principles-title"><div class="public-principles-heading">{% include 'evidence/icon.html' with name='shield' %}<p class="public-eyebrow">EVIDENCE WITH ITS CONTEXT</p><h2 id="principles-title">The limits matter as much as the values.</h2><p>APASA keeps provenance and comparison limits beside the evidence, so an observation is read for what it can support.</p></div><ul><li><strong>Sources stay attached.</strong> Trace evidence to the reviewed report, table, workbook or source cell.</li><li><strong>Periods stay separate.</strong> Seasonal observations are not presented as annual totals or policy progress.</li><li><strong>Missing is not zero.</strong> Unavailable values, context-only evidence and unsupported comparisons remain clearly labelled.</li></ul></section>
+<section class="public-container public-closing" aria-labelledby="closing-title"><div><p class="public-eyebrow">YOUR NEXT PLANNING QUESTION</p><h2 id="closing-title">Start with the evidence.</h2><p>Open the workspace to explore policy references and published crop statistics.</p></div><a class="ui-button public-button" href="{% url 'workspace' %}">Explore the workspace {% include 'evidence/icon.html' with name='arrow-right' %}</a></section>
+{% endblock %}

@@ -63,3 +63,26 @@ class BundleIntegrityTests(SimpleTestCase):
             {"SSF": "16.64", "LSF": "72.57"},
         )
         self.assertEqual(len(bundle["register"]), 30)
+
+
+class DependentWorkbookFilterTests(TestCase):
+    def setUp(self):
+        self.client.force_login(get_user_model().objects.create_user('filter_reader'))
+
+    def test_known_stale_crop_is_cleared_after_measure_changes(self):
+        response = self.client.get('/workbook-evidence/', dict(indicator='improved_seeds', crop='Maize'))
+        self.assertEqual(response.status_code, 200)
+        filters = {f['name']: f for f in response.context['filters']}
+        self.assertEqual(filters['crop']['value'], '')
+        self.assertTrue(response.context['rows'])
+        self.assertTrue(all(row['indicator'] == 'improved_seeds' for row in response.context['rows']))
+        self.assertNotIn('Maize', [value for value, label in filters['crop']['options']])
+
+    def test_population_and_period_choices_follow_measure_and_crop(self):
+        response = self.client.get('/workbook-evidence/', dict(indicator='production', crop='Maize', population='SSF'))
+        filters = {f['name']: f for f in response.context['filters']}
+        self.assertEqual(filters['population']['value'], '')
+        self.assertNotIn('SSF', [value for value, label in filters['population']['options']])
+        self.assertTrue(response.context['rows'])
+        self.assertContains(response, 'data-national-filters')
+        self.assertContains(response, 'Selections update automatically')

@@ -1,0 +1,48 @@
+/* Original APASA hero geometry. Optimized assets preserve every layer. */
+.hero-scene{--landing-gold:#c18a11;--landing-paper:var(--apasa-canvas);background:var(--apasa-green-soft)}
+.hero-scene { min-height: 760px; height: clamp(760px, 55vw, 970px); }
+.landing-header { position: relative; z-index: 8; display: flex; justify-content: center; padding: 19px 24px 0; }
+.landing-brand { font-size: clamp(1.5rem, 2.2vw, 2rem); font-weight: 850; letter-spacing: -.045em; text-decoration: none; line-height: 1.2; }
+.landing-brand::after { content: ""; display: block; width: 32px; height: 3px; margin: 12px auto 0; background: #e7ae27; }
+.landing-copy { position: relative; z-index: 7; max-width: 1140px; padding: 0 24px; margin: 10px auto 0; text-align: center; }
+.hero-scene .landing-kicker { margin: 0 0 14px; font-size: .75rem; line-height: 1.5; font-weight: 650; letter-spacing: .28em; }
+.hero-scene .landing-kicker::after { content: ""; display: block; width: 44px; height: 3px; background: #e7ae27; margin: 12px auto 0; }
+.hero-scene .landing-copy h1 { margin: 0 auto 12px; max-width: 1050px; font-size: clamp(2.5rem, 4.25vw, 4.65rem); font-weight: 850; line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
+.hero-scene .landing-copy h1 span { display: block; color: var(--landing-gold); }
+.hero-scene .landing-intro { max-width: 680px; margin: 0 auto 20px; font-size: clamp(1rem, 1.45vw, 1.35rem); font-weight: 450; line-height: 1.45; text-wrap: balance; }
+
+
+.hero-scene__art { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.hero-scene__light { position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse 65% 58% at 50% 10%, #fffcf2ed 0%, #fff9e4a8 40%, #fff8e22b 78%, transparent 100%); }
+.hero-scene__vehicle { position: absolute; z-index: 4; width: min(46vw, 790px); aspect-ratio: 1672 / 941; left: 50%; bottom: 8px; transform: translateX(-50%); }
+.hero-scene__tractor { display: block; width: 100%; height: 100%; object-fit: contain; }
+.hero-scene__flag { position: absolute; z-index: 1; width: 10%; height: auto; left: 65%; top: -1%; }
+.hero-scene__flag::selection { background: transparent; }
+
+
+
+
+@media (min-width: 1800px) { .hero-scene__vehicle { width: 900px; } }
+@media (max-width: 900px) {
+  .hero-scene { min-height: 830px; height: 88vw; }
+  .landing-copy { margin-top: 26px; }
+  .hero-scene .landing-copy h1 { font-size: clamp(2.6rem, 6vw, 3.7rem); }
+  .hero-scene__vehicle { width: min(84vw, 710px); bottom: 22px; }
+  .hero-scene .landing-intro { max-width: 570px; }
+}
+@media (max-width: 540px) {
+  .hero-scene { height: clamp(780px, 164vw, 890px); min-height: 780px; }
+  .landing-header { padding-top: 23px; }
+  .landing-copy { padding: 0 19px; margin-top: 28px; }
+  .hero-scene .landing-kicker { font-size: .61rem; letter-spacing: .18em; margin-bottom: 20px; }
+  .hero-scene .landing-copy h1 { max-width: 400px; font-size: clamp(2.15rem, 8.8vw, 2.9rem); line-height: 1.08; }
+  .hero-scene .landing-intro { max-width: 370px; font-size: 1rem; line-height: 1.5; margin-top: 16px; margin-bottom: 22px; }
+  
+  .hero-scene__vehicle { width: 111vw; max-width: 575px; bottom: 28px; left: 49%; }
+  .hero-scene__flag { width: 11%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-page *, .landing-page *::before, .landing-page *::after { transition: none !important; scroll-behavior: auto !important; }
+}
+
+.hero-scene .landing-brand{color:#062f26}.hero-scene .landing-copy>p:last-child{margin-top:12px;font-size:12px}

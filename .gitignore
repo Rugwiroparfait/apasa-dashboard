@@ -1,5 +1,12 @@
 # Raw survey files and local microdata must never be committed.
-/data/
+/data/*
+!/data/demo/
+/data/demo/*
+!/data/demo/README.md
+!/data/demo/manifest.json
+!/data/demo/district_statistics.json
+!/data/demo/synthetic_rwanda_crop_observations_v1.csv
+!/data/demo/observation_upload_v1.manifest.json
 /local_data/
 *.[dD][tT][aA]
 section3_4_plot_crop_slots.*
@@ -65,9 +72,14 @@ CLAUDE.md
 # Reviewed planning workflow documentation.
 !/docs/PLANNING.md
 !/docs/STATISTICS.md
-
+python manage.py seed_planning_demo
 !/docs/RENDER.md
 
 # Private VPS database backups.
 /backups/
 !/docs/VPS.md
+
+# Reproducible frontend tooling; compiled Django assets are checked in.
+/node_modules/
+
+!/docs/DEMONSTRATION.md

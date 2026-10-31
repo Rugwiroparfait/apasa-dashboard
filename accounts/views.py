@@ -15,9 +15,7 @@ def landing(request):
 @login_required
 @require_safe
 def workspace(request):
-    if request.user.groups.filter(name="District agriculture officer").exists():
-        return redirect("evidence:district-statistics")
-    return redirect("evidence:policy")
+    return redirect("planning:index")
 
 
 @require_safe

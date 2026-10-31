@@ -1,12 +1,12 @@
-<figure class="panel data-chart">
+<figure {% if not popup_disabled %}data-chart-popup="{{ chart.uid }}"{% endif %} class="ui-card panel data-chart">
 <figcaption><h3>{{ chart.title }}</h3><p class="muted">{{ chart.description }}</p></figcaption>
-{% if chart.has_mock %}<p class="mocked"><strong>MOCKED values included.</strong> Gold outlined bars are illustrative replacements, not official observations.</p>{% endif %}
-{% if chart.bars %}<div class="chart-mobile" aria-label="{{ chart.title }} values">{% for bar in chart.bars %}<div class="mobile-chart-row {% if bar.mocked %}is-mock{% endif %} {% if bar.highlight %}is-selected{% endif %}"><div class="mobile-chart-label"><span>{{ bar.label }}</span><strong>{{ bar.display }}{% if bar.available %} {{ chart.unit }}{% endif %}{% if bar.mocked %} · MOCKED{% endif %}</strong></div><div class="mobile-chart-track">{% if bar.available %}<span style="width:{{ bar.percent }}%" {% if bar.zero %}class="zero-marker"{% endif %}></span>{% endif %}</div></div>{% endfor %}<p class="chart-scale">Scale: 0–{{ chart.scale_label }} {{ chart.unit }}</p></div><div class="chart-scroll" tabindex="0" role="region" aria-label="{{ chart.title }} chart">
-<svg viewBox="0 0 820 {{ chart.height }}" class="bar-chart" style="--bar-fill:url(#chart-green-{{ chart.uid }})" role="img" aria-label="{{ chart.title }} in {{ chart.unit }}. Zero-baseline bars; exact values and sources follow in the data table.">
-<defs><linearGradient id="chart-green-{{ chart.uid }}" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#58ad91"/><stop offset=".3" stop-color="#20836a"/><stop offset="1" stop-color="#0b5844"/></linearGradient></defs>
+{% if chart.has_mock %}<p class="chart-series-label"><span class="badge" title="Synthetic / illustrative — not official statistics.">Demo series</span><span class="sr-only">MOCKED values included. Synthetic / illustrative — not official statistics.</span></p>{% endif %}
+{% if chart.bars %}<div class="chart-mobile" aria-label="{{ chart.title }} values">{% for bar in chart.bars %}<div class="mobile-chart-row {% if bar.mocked %}is-mock{% endif %} {% if bar.highlight %}is-selected{% endif %}"><div class="mobile-chart-label"><span>{{ bar.label }}</span><strong>{{ bar.display }}{% if bar.available %} {{ chart.unit }}{% endif %}{% if bar.mocked %} · MOCKED · Synthetic / illustrative — not official statistics.{% endif %}</strong></div><div class="mobile-chart-track">{% if bar.available %}<span style="width:{{ bar.percent }}%" {% if bar.zero %}class="zero-marker"{% endif %}></span>{% endif %}</div></div>{% endfor %}<p class="chart-scale">Scale: 0–{{ chart.scale_label }} {{ chart.unit }}</p></div><div class="chart-scroll" tabindex="0" role="region" aria-label="{{ chart.title }} chart">
+<svg viewBox="0 0 820 {{ chart.height }}" class="bar-chart" role="img" aria-label="{{ chart.title }} in {{ chart.unit }}. Zero-baseline bars; exact values and sources follow in the data table.">
+
 <text x="200" y="16" class="chart-axis-label">{{ chart.unit }}</text>
 {% for bar in chart.bars %}<g class="chart-mark {% if bar.mocked %}chart-mark-mock{% endif %} {% if bar.highlight %}chart-mark-selected{% endif %}">
-<title>{{ bar.label }}: {{ bar.value|default:'Unavailable' }} {{ chart.unit }} · {{ bar.state }} · {{ bar.source }}</title>
+<title>{{ bar.label }}: {% if bar.available %}{{ bar.value }}{% else %}Unavailable{% endif %} {{ chart.unit }} · {{ bar.state }} · {{ bar.source }}</title>
 <text x="185" y="{{ bar.text_y }}" text-anchor="end" class="chart-label">{{ bar.label }}</text>
 {% if bar.available %}<rect x="200" y="{{ bar.y }}" width="{{ bar.width }}" height="24" rx="3"/>{% if bar.zero %}<circle cx="200" cy="{{ bar.text_y }}" r="3"/>{% endif %}{% endif %}
 <text x="650" y="{{ bar.text_y }}" class="chart-value">{{ bar.display }}{% if bar.mocked %} MOCKED{% endif %}</text>
@@ -14,5 +14,7 @@
 <line x1="200" x2="630" y1="{{ chart.axis_y }}" y2="{{ chart.axis_y }}" class="chart-axis"/>
 <text x="200" y="{{ chart.height }}" class="chart-axis-label">0</text><text x="630" y="{{ chart.height }}" text-anchor="end" class="chart-axis-label">{{ chart.scale_label }} {{ chart.unit }}</text>
 </svg></div>{% else %}<p>No observations are available for this selection.</p>{% endif %}
-<details><summary>Exact chart values and sources</summary><div class="scroll"><table><thead><tr><th>Category</th><th>Exact source value</th><th>Status</th><th>Source</th></tr></thead><tbody>{% for bar in chart.bars %}<tr><th>{{ bar.label }}</th><td>{{ bar.value|default:'Unavailable' }} {{ chart.unit }}</td><td>{{ bar.state }}</td><td>{{ bar.source }}</td></tr>{% endfor %}</tbody></table></div></details>
+<details><summary>Exact chart values and sources</summary>{% if chart.has_mock %}<p>Synthetic / illustrative — not official statistics. Each series is labelled separately.</p>{% endif %}<div class="scroll"><table><thead><tr><th>Category</th><th>Exact source value</th><th>Status</th><th>Source</th></tr></thead><tbody>{% for bar in chart.bars %}<tr><th>{{ bar.label }}</th><td>{% if bar.available %}{{ bar.value }}{% else %}Unavailable{% endif %} {{ chart.unit }}</td><td>{{ bar.state }}</td><td>{{ bar.source }}</td></tr>{% endfor %}</tbody></table></div></details>
 </figure>
+
+{{ chart|json_script:chart.uid }}

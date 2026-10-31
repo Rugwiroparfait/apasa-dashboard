@@ -1,0 +1,340 @@
+/* Tailwind v4 + shadcn New York foundations, themed for APASA. */
+@import "tailwindcss" source(none);
+@import "tw-animate-css";
+@source "../accounts/templates";
+@source "../evidence/templates";
+@source "../planning/templates";
+@source "./";
+
+:root {
+  --background: var(--apasa-canvas);
+  --foreground: var(--apasa-ink);
+  --card: #fff;
+  --card-foreground: var(--apasa-ink);
+  --popover: #fff;
+  --popover-foreground: var(--apasa-ink);
+  --primary: var(--apasa-green);
+  --primary-foreground: #fff;
+  --secondary: var(--apasa-green-soft);
+  --secondary-foreground: var(--apasa-forest);
+  --ui-muted: #f0f3ef;
+  --muted-foreground: var(--apasa-muted);
+  --accent: #e7efe8;
+  --accent-foreground: var(--apasa-forest);
+  --destructive: var(--apasa-error);
+  --border: var(--apasa-border);
+  --input: #bcc9c0;
+  --ring: var(--apasa-gold);
+  --radius: .75rem;
+}
+@theme inline {
+  --font-sans: var(--apasa-font);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--ui-muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--apasa-gold);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+/* shadcn type hierarchy, explicit because Tailwind Preflight resets heading weight. */
+.dashboard-shell h1,.signin-page h1 { @apply font-semibold tracking-tight; }
+.dashboard-shell h2,.dashboard-shell h3,.public-site h2,.public-site h3 { @apply font-semibold tracking-tight; }
+.workspace-links { scrollbar-width:none; }
+.workspace-links::-webkit-scrollbar { display:none; }
+.apasa-chat-popover .assistant-thread { scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+/* The official shadcn Button and Card recipes also serve Django's native markup. */
+.ui-button,
+.dashboard-shell main :is(button,.button-link),
+.public-site .public-button,
+.signin-page .signin-submit {
+  @apply inline-flex min-h-11 shrink-0 border border-transparent items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-xs transition-colors outline-none hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50;
+  text-decoration: none;
+}
+.public-site .public-button-small { @apply min-h-11 px-4 py-2; }
+.public-site .ui-button-gold { @apply bg-gold text-foreground hover:bg-gold/90; }
+.ui-button-outline,
+.dashboard-shell main :is(.secondary-button,.secondary-link) { @apply border border-input bg-background text-foreground shadow-xs hover:bg-accent hover:text-accent-foreground; }
+.ui-card,
+.dashboard-shell :is(.panel,.evidence-card,.district-measures article,.metric-strip>div),
+.public-site .public-feature,
+.signin-page .signin-card {
+  @apply rounded-xl border border-border bg-card p-6 text-card-foreground shadow-sm;
+}
+.dashboard-shell .metric-strip>div { @apply gap-2; }
+.dashboard-shell .panel h2,.dashboard-shell .panel h3,
+.public-site .public-feature h3 { @apply font-semibold tracking-tight; }
+.dashboard-shell .notice,.dashboard-shell .mocked { @apply rounded-lg; }
+.dashboard-shell :is(input:not([type=checkbox]):not([type=hidden]),select,textarea),
+.signin-page .signin-form input,
+.assistant-panel textarea {
+  @apply min-h-11 rounded-md border border-input bg-background font-sans text-sm shadow-xs outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-60;
+}
+.dashboard-shell .badge { @apply inline-flex w-fit items-center rounded-full border border-transparent bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground; }
+.dashboard-shell .workflow-steps { @apply gap-3; }
+.dashboard-shell .workflow-steps span { @apply rounded-full border border-border bg-secondary px-4 py-2 text-xs font-medium text-secondary-foreground; }
+/* shadcn Popover is portalled above the app and anchored to the fixed left launcher. */
+#assistant-launcher { @apply fixed bottom-5 left-5 z-[80]; }
+#assistant-launcher button { @apply h-14 gap-2 rounded-full border border-white/15 bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-lg hover:bg-primary/90; }
+.apasa-chat-popover { @apply z-[100] w-[min(400px,calc(100vw-32px))] overflow-hidden rounded-2xl border border-border bg-popover p-0 text-popover-foreground shadow-xl; }
+.apasa-chat-popover>div { @apply h-full gap-0 rounded-none border-0 p-0 shadow-none; }
+.apasa-chat-popover .assistant-panel { @apply static inset-auto flex h-full w-full min-h-0 flex-col overflow-hidden rounded-none border-0 bg-card shadow-none; }
+.apasa-chat-popover .assistant-panel[hidden] { display:none; }
+.apasa-chat-popover .assistant-heading { @apply flex shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-5 py-4; }
+.apasa-chat-popover .assistant-heading-identity { @apply flex items-center gap-3; }
+.apasa-chat-popover .assistant-avatar { @apply grid size-10 place-items-center rounded-xl bg-secondary text-primary; }
+.apasa-chat-popover .assistant-heading h2 { @apply m-0 text-base leading-tight font-semibold tracking-tight text-foreground; }
+.apasa-chat-popover .assistant-heading p { @apply mt-1 mb-0 text-xs text-muted-foreground; }
+.apasa-chat-popover .assistant-close { @apply grid size-10 min-h-10 min-w-10 place-items-center rounded-md border-0 bg-transparent p-0 text-muted-foreground shadow-none hover:bg-accent hover:text-accent-foreground; }
+.apasa-chat-popover .assistant-context { @apply m-0 shrink-0 border-b border-border bg-muted/40 p-0; }
+.apasa-chat-popover .assistant-context>summary { @apply flex min-h-12 list-none items-center justify-between gap-4 px-5 py-3 text-xs; }
+.apasa-chat-popover .assistant-context strong { @apply text-xs font-medium text-foreground; }
+.apasa-chat-popover .assistant-context-eyebrow { @apply hidden; }
+.apasa-chat-popover .assistant-thread { @apply min-h-0 flex-1 overflow-y-auto overscroll-contain p-5; }
+.apasa-chat-popover .assistant-conversation { @apply grid gap-5; }
+.apasa-chat-popover .assistant-empty { @apply py-3; }
+.apasa-chat-popover .assistant-empty h3 { @apply mt-0 mb-2 text-lg font-semibold tracking-tight; }
+.apasa-chat-popover .assistant-empty p { @apply m-0 text-sm leading-relaxed text-muted-foreground; }
+.apasa-chat-popover .assistant-empty>.apasa-icon { @apply mb-4 size-7 text-primary; }
+.apasa-chat-popover .assistant-question { @apply mr-0 mb-4 ml-5 rounded-2xl rounded-br-sm bg-secondary px-4 py-3 text-sm leading-relaxed; }
+.apasa-chat-popover .assistant-answer { @apply m-0 text-sm leading-relaxed text-foreground; }
+.apasa-chat-popover .assistant-response-label { @apply mb-2 text-[10px] font-medium text-muted-foreground; }
+.apasa-chat-popover .assistant-response { @apply border-l-2 border-border pl-3; }
+.apasa-chat-popover .assistant-answer-note { @apply mt-3 text-[11px] leading-relaxed text-muted-foreground; }
+.apasa-chat-popover .assistant-quick { @apply mt-5 grid gap-2; }
+.apasa-chat-popover .assistant-quick>p { @apply text-xs text-muted-foreground; }
+.apasa-chat-popover .assistant-quick button { @apply flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border bg-card px-3 py-2 text-left text-xs font-medium text-primary shadow-xs hover:bg-accent; }
+.apasa-chat-popover .has-conversation .assistant-quick { display: none; }
+.apasa-chat-popover .assistant-composer { @apply shrink-0 border-t border-border bg-card px-5 py-4; }
+.apasa-chat-popover .assistant-form { @apply m-0 block p-0; }
+.apasa-chat-popover .assistant-form label { @apply mb-2 block text-xs font-medium; }
+.apasa-chat-popover .assistant-form textarea { @apply block min-h-16 w-full resize-none bg-card px-3 py-2.5; }
+.apasa-chat-popover .assistant-composer-actions { @apply mt-2 flex items-center justify-between gap-3; }
+.apasa-chat-popover .assistant-composer-actions>span { @apply max-w-44 text-[10px] leading-relaxed text-muted-foreground; }
+.apasa-chat-popover .assistant-form button,.apasa-chat-popover .assistant-retry { @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-xs font-medium text-primary-foreground shadow-xs hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50; }
+.apasa-chat-popover .assistant-disclaimer { @apply mt-3 mb-0 flex items-center gap-1.5 text-[10px] leading-relaxed text-muted-foreground; }
+.apasa-chat-popover .assistant-disclaimer .apasa-icon { @apply size-3; }
+.apasa-chat-popover .assistant-status { @apply mt-4 mb-0 text-xs leading-relaxed text-muted-foreground; }
+.apasa-chat-popover .assistant-status.is-error { @apply rounded-lg border-l-2 border-gold bg-gold/10 p-3 text-foreground; }
+.apasa-chat-popover .assistant-retry { @apply mt-2; }
+.apasa-chat-popover .assistant-thinking { @apply flex items-center gap-2 py-4 text-xs text-muted-foreground; }
+.apasa-chat-popover .assistant-thinking[hidden],.apasa-chat-popover .assistant-retry[hidden] { display:none; }
+.apasa-chat-popover .assistant-sources { @apply mt-2 border-0 py-2 text-xs; }
+.apasa-chat-popover .assistant-sources summary { @apply min-h-8 text-xs font-medium text-primary; }
+.apasa-chat-popover .assistant-context-body { @apply max-h-44 overflow-y-auto px-5 pb-3 text-xs; }
+@media(max-height:550px) {
+  .apasa-chat-popover .assistant-heading { @apply px-4 py-2; }
+  .apasa-chat-popover .assistant-heading p,.apasa-chat-popover .assistant-disclaimer { display:none; }
+  .apasa-chat-popover .assistant-context>summary { @apply min-h-8 py-2; }
+  .apasa-chat-popover .assistant-composer { @apply px-4 py-2; }
+  .apasa-chat-popover .assistant-form textarea { @apply h-12 min-h-12; }
+}
+@media(prefers-reduced-motion:reduce) { .apasa-chat-popover { animation:none!important; transition:none!important; } }
+
+/* Landing motion: content stays visible until an observer explicitly prepares it. */
+.public-site .scroll-reveal {
+  @apply transition-[opacity,transform,translate,box-shadow,border-color] duration-700;
+  transition-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+.public-site .scroll-reveal[data-reveal-pending] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0) scale(.985);
+}
+.public-site .scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.public-site .public-feature {
+  @apply hover:delay-0 focus-within:delay-0 hover:duration-300 focus-within:duration-300 motion-safe:hover:-translate-y-1.5 motion-safe:focus-within:-translate-y-1.5 hover:border-primary/25 hover:shadow-lg focus-within:border-primary/25 focus-within:shadow-lg;
+}
+.public-site .public-feature .public-feature-icon {
+  @apply transition-colors duration-300;
+}
+.public-site .public-feature:hover .public-feature-icon,
+.public-site .public-feature:focus-within .public-feature-icon {
+  @apply bg-primary text-primary-foreground;
+}
+.public-site .public-feature a .apasa-icon {
+  @apply transition-transform duration-300;
+}
+.public-site .public-feature:hover a .apasa-icon,
+.public-site .public-feature:focus-within a .apasa-icon {
+  transform: translateX(4px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .public-site .scroll-reveal,
+  .public-site .scroll-reveal[data-reveal-pending],
+  .public-site .scroll-reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+    translate: none;
+    transition: none;
+  }
+  .public-site .public-feature a .apasa-icon { transform: none; }
+}
+@media print {
+  .public-site .scroll-reveal[data-reveal-pending] { opacity: 1; transform: none; }
+}
+
+/* Compact district controls: one toolbar, one Apply action, one chart launcher. */
+.dashboard-shell main:has(.district-workspace) { @apply pt-6; }
+.district-workspace .page-title { @apply mb-5 gap-4 pb-4; }
+.district-workspace .page-title h1 { @apply mb-2 text-3xl; }
+.district-workspace .page-title .page-intro { @apply text-sm; }
+.district-workspace .district-controls { @apply mb-4 p-4; }
+.dashboard-shell .district-toolbar { @apply m-0 grid items-end gap-3 border-0 p-0; grid-template-columns:repeat(5,minmax(0,1fr)) auto; }
+.district-toolbar>div { @apply min-w-0; }
+.district-toolbar label { @apply mb-1.5 block text-xs font-medium text-muted-foreground; }
+.dashboard-shell .district-toolbar select { @apply min-h-11 w-full min-w-0 bg-card px-3 py-2 text-sm; }
+.dashboard-shell .district-toolbar button { @apply min-h-11 whitespace-nowrap px-4 py-2 text-sm; }
+.district-controls #district-filter-help { @apply mt-3 mb-0 text-xs leading-relaxed text-muted-foreground; }
+.district-chart-action button { @apply w-full; }
+.district-selection-summary { @apply mb-4 flex flex-wrap justify-between gap-2 text-xs text-muted-foreground; }
+.district-selection-summary strong { @apply font-semibold text-foreground; }
+.district-values-heading { @apply mb-2 flex flex-wrap items-center justify-between gap-3; }
+.district-values-heading h2 { @apply m-0 text-xl; }
+.dashboard-shell .district-values-heading .secondary-link { @apply min-h-10 px-3 py-2 text-xs; }
+.district-workspace #district-values>p { @apply text-xs leading-relaxed text-muted-foreground; }
+.dashboard-shell .district-measures { @apply mb-4 gap-3; }
+.dashboard-shell .district-measures article { @apply p-4; }
+.dashboard-shell .district-measures h3 { @apply mb-2 text-sm; }
+.dashboard-shell .district-measures p { @apply mb-1 text-xs text-muted-foreground; }
+.dashboard-shell .district-measures .district-value { @apply my-2 text-2xl font-semibold text-foreground; }
+.district-chart-fallback[hidden] { display:none; }
+/* A compact source-linked preview replaces each page-height inline graph. */
+.dashboard-shell .chart-enhanced { @apply grid items-center gap-x-4 gap-y-3; grid-template-columns:minmax(0,1fr) auto; }
+.chart-enhanced>figcaption,.chart-enhanced>.mocked { grid-column:1/-1; }
+.chart-enhanced :is(.chart-scroll,.chart-mobile,.seasonal-chart-scroll,.season-legend) { display:none!important; }
+.dashboard-shell .chart-enhanced figcaption p { @apply mb-0; }
+.dashboard-shell .chart-enhanced>details { @apply m-0 border-0 p-0; }
+.dashboard-shell .chart-enhanced>details[open] { grid-column:1/-1; }
+.chart-enhanced .chart-dialog-mount { @apply flex; }
+.dashboard-shell .chart-enhanced>details summary { @apply text-xs; }
+/* shadcn Dialog occupies the viewport; the chart pane never scrolls vertically. */
+.apasa-chart-dialog[data-slot=dialog-content] { @apply z-[110] flex min-h-0 flex-col gap-0 overflow-hidden rounded-xl border-border bg-card p-0 text-card-foreground shadow-2xl; }
+[data-slot=dialog-overlay] { @apply z-[105] bg-foreground/45; }
+.apasa-chart-dialog .chart-dialog-heading { @apply shrink-0 border-b border-border px-6 py-4 pr-16 text-left; }
+.apasa-chart-dialog .chart-dialog-heading h2 { @apply m-0 text-xl leading-tight font-semibold tracking-tight text-foreground; }
+.apasa-chart-dialog .chart-dialog-heading p { @apply mt-1.5 mb-0 text-xs leading-relaxed text-muted-foreground; }
+.apasa-chart-dialog>[data-slot=dialog-close] { @apply top-3 right-3 grid size-10 min-h-10 place-items-center rounded-md border-0 bg-transparent p-0 text-muted-foreground opacity-100 shadow-none hover:bg-accent; }
+.apasa-chart-dialog>[data-slot=dialog-close] svg { @apply size-5; }
+.apasa-chart-dialog .chart-dialog-toolbar { @apply flex shrink-0 items-center justify-between gap-3 border-b border-border bg-muted/40 px-6 py-2; }
+.chart-view-switch { @apply flex gap-1; }
+.apasa-chart-dialog button { @apply min-h-10 gap-2 rounded-md px-3 py-2 text-xs font-medium shadow-none; }
+.apasa-chart-dialog button[data-variant=default] { @apply border border-primary bg-primary text-primary-foreground; }
+.apasa-chart-dialog button[data-variant=ghost] { @apply border-transparent bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground; }
+.apasa-chart-dialog button[data-variant=outline] { @apply border border-input bg-card text-foreground hover:bg-accent; }
+.apasa-chart-dialog button:disabled { @apply pointer-events-none opacity-40; }
+.chart-unit { @apply text-xs text-muted-foreground; }
+.chart-unit strong { @apply font-semibold text-foreground; }
+.chart-dialog-plot { @apply flex min-h-0 flex-1 flex-col overflow-hidden px-6 pt-3 pb-2; }
+.chart-fit-rows { @apply grid min-h-0 flex-1 gap-1; }
+.chart-fit-row { @apply grid min-h-0 items-center gap-4 rounded-md px-2; grid-template-columns:minmax(130px,180px) minmax(0,1fr) minmax(90px,140px); }
+.chart-fit-row.is-selected { @apply bg-secondary; }
+.chart-fit-label { @apply text-sm leading-tight text-foreground; overflow-wrap:anywhere; }
+.chart-selected-label { @apply ml-2 text-[10px] font-medium text-primary; }
+.chart-fit-track { @apply relative block h-4 rounded-sm border-l border-border bg-secondary; }
+.chart-fit-track>span { @apply block h-full rounded-r-sm bg-primary; }
+.chart-fit-track>.season-1 { background:var(--apasa-green-mid); }
+.chart-fit-track>.season-2 { background:var(--apasa-green-light); }
+.is-selected .chart-fit-track>span { background:var(--apasa-forest); }
+.chart-fit-track>.is-zero { width:2px!important; }
+.is-mock .chart-fit-track>span { @apply border border-dashed border-gold bg-gold/20; }
+.chart-fit-value { @apply text-right text-sm font-semibold text-foreground tabular-nums; }
+.chart-fit-value small { @apply ml-1 text-[9px] text-muted-foreground; }
+.chart-fit-axis { @apply mt-1 grid h-7 shrink-0 gap-4 px-2 text-[11px] text-muted-foreground; grid-template-columns:minmax(130px,180px) minmax(0,1fr) minmax(90px,140px); }
+.chart-axis-range { @apply flex justify-between; }
+.chart-dialog-sources { @apply min-h-0 flex-1 overflow-auto px-6 py-3; }
+.apasa-chart-dialog .chart-dialog-sources table { @apply w-full text-xs; }
+.apasa-chart-dialog .chart-dialog-sources th,.apasa-chart-dialog .chart-dialog-sources td { @apply border-b border-border px-3 py-3 text-left; }
+.apasa-chart-dialog .chart-dialog-sources thead { @apply sticky top-0 bg-card; }
+.apasa-chart-dialog .chart-dialog-sources caption { @apply pb-3 text-left text-xs text-muted-foreground; }
+.chart-dialog-footer { @apply flex shrink-0 items-center justify-between gap-3 border-t border-border bg-muted/40 px-6 py-3; }
+.chart-dialog-footer>p { @apply m-0 text-[11px] leading-relaxed text-muted-foreground; }
+.chart-pagination { @apply flex shrink-0 items-center gap-3; }
+.chart-pagination>span { @apply min-w-20 text-center text-xs text-muted-foreground tabular-nums; }
+.chart-mock-notice { @apply m-0 shrink-0 border-b border-gold bg-gold/10 px-6 py-2 text-xs; }
+@media(max-width:1100px) {
+  .dashboard-shell .district-toolbar { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .district-toolbar .district-apply { grid-column:3; }
+  .district-toolbar .district-chart-action { grid-column:4; }
+}
+@media(max-width:640px) {
+  .dashboard-shell .district-toolbar { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .district-toolbar .district-apply,.district-toolbar .district-chart-action { grid-column:auto; }
+  .apasa-chart-dialog .chart-dialog-heading { @apply px-4 py-3 pr-14; }
+  .apasa-chart-dialog .chart-dialog-heading h2 { @apply text-base; }
+  .apasa-chart-dialog .chart-dialog-toolbar { @apply flex-wrap gap-1 px-3 py-1; }
+  .apasa-chart-dialog .chart-dialog-toolbar button { @apply min-h-9 px-2 text-[11px]; }
+  .chart-unit { @apply px-1 pb-1 text-[11px]; }
+  .chart-dialog-plot { @apply px-3 pt-2; }
+  .chart-fit-row { @apply gap-2 px-0; grid-template-columns:minmax(88px,1fr) minmax(48px,1.1fr) minmax(76px,1fr); }
+  .chart-fit-label,.chart-fit-value { @apply text-xs; }
+  .chart-selected-label { @apply ml-0 block text-[9px]; }
+  .chart-fit-track { @apply h-3; }
+  .chart-fit-axis { @apply gap-2 px-0 text-[10px]; grid-template-columns:minmax(88px,1fr) minmax(48px,1.1fr) minmax(76px,1fr); }
+  .chart-dialog-footer { @apply flex-col gap-2 px-3 py-2; }
+  .chart-pagination { @apply w-full justify-between; }
+  .chart-dialog-sources { @apply px-3; }
+}
+@media print { .chart-enhanced :is(.chart-scroll,.seasonal-chart-scroll) { display:block!important; } .chart-dialog-mount,[data-slot=dialog-overlay],[data-slot=dialog-content] { display:none!important; } }
+
+.dashboard-shell .chart-open-button { @apply border border-input bg-card text-primary hover:bg-accent; }
+
+.workspace-role { @apply hidden text-xs text-white/80 xl:block; }
+.goal-metrics { @apply mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3; }
+.goal-metrics article { @apply rounded-xl border border-border bg-card p-4; }
+.goal-metrics strong { @apply block text-3xl font-semibold text-primary; }
+.goal-filters { @apply my-5 flex flex-wrap items-end gap-3 rounded-xl border border-border bg-card p-4; }
+.goal-filters label { @apply flex min-w-40 flex-col gap-1 text-xs text-muted-foreground; }
+.goal-filters select { @apply min-h-11 rounded-lg border border-input bg-background px-3 text-sm text-foreground; }
+.goal-values { @apply my-4 grid grid-cols-3 gap-3; }
+.goal-values dt { @apply text-xs text-muted-foreground; }
+.goal-values dd { @apply m-0 mt-1 text-lg font-semibold; }
+.goal-progress { @apply my-3 h-2.5 w-full overflow-hidden rounded-full; accent-color:var(--primary); }
+.goal-progress::-webkit-progress-bar { background:var(--muted); border-radius:999px; }
+.goal-progress::-webkit-progress-value { background:var(--primary); border-radius:999px; }
+.goal-progress::-moz-progress-bar { background:var(--primary); }
+
+.dashboard-shell .goal-home-actions { @apply flex flex-wrap justify-start gap-x-5 gap-y-3; }
+
+.dashboard-shell .goal-mode-actions { @apply mb-4 flex flex-wrap gap-2; }
+.dashboard-shell .goal-mode-actions a { @apply min-h-11 rounded-lg border border-border bg-card px-4 py-2 text-sm text-foreground no-underline; }
+.dashboard-shell .goal-mode-actions a[aria-current] { @apply border-primary bg-primary text-primary-foreground; }
+.dashboard-shell .demo-mode-notice { @apply mb-5 rounded-xl border-2 border-dashed border-amber-500 bg-amber-50 p-4 text-amber-950; }
+.dashboard-shell .demo-mode-notice p { @apply mb-0 mt-2 text-sm; }
+
+/* One readable data label, with provenance available on demand. */
+.dashboard-shell .data-label { @apply my-4 rounded-lg border border-border bg-card px-4 py-3 text-sm; }
+.data-label>summary { @apply flex cursor-pointer flex-wrap items-center gap-x-3 gap-y-1; list-style:none; }
+.data-label>summary::-webkit-details-marker { display:none; }
+.data-label>summary>span:nth-child(2) { @apply text-xs text-muted-foreground; }
+.data-label-more { @apply ml-auto text-xs font-medium text-primary underline underline-offset-4; }
+.data-label>div { @apply mt-3 border-t border-border pt-3; }
+.dashboard-shell .data-label .interpretation { @apply my-2 border-0 bg-transparent p-0; }
+.dashboard-shell .chart-series-label { @apply my-2 text-xs; }
+.dashboard-shell .statistics-controls { @apply mb-5 p-4; }
+.dashboard-shell .statistics-toolbar { @apply m-0 grid grid-cols-1 gap-3 border-0 p-0 sm:grid-cols-2 xl:grid-cols-4; }
+.statistics-toolbar label { @apply mb-1.5 block text-xs text-muted-foreground; }
+.dashboard-shell .statistics-toolbar select { @apply min-h-11 w-full min-w-0 px-3 py-2 text-sm; }
+.statistics-filter-footer { @apply mt-3 flex flex-wrap items-start justify-between gap-3 text-xs; }
+.statistics-filter-footer details { @apply text-xs; }
+.statistics-filter-footer form { @apply mt-2 flex flex-wrap items-center gap-3; }
+.dashboard-shell .statistics-controls>p { @apply mb-0 mt-2 text-xs; }

@@ -11,7 +11,7 @@ from django.core.exceptions import (
     ImproperlyConfigured,
 )
 from django.db import transaction, DatabaseError
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -36,6 +36,7 @@ from .validation import validate_csv, fingerprint
 from .calculations import comparison, report_result, fit_forecast, scenario
 from .briefs import draft_brief, explain_evidence
 from evidence.charts import bar_chart
+from accounts.context_processors import workspace_role
 
 
 def planner(view):
@@ -70,30 +71,74 @@ def destination(kind, pk):
 
 @require_safe
 def index(request):
-    return render(
-        request,
-        "planning/index.html",
-        {
-            "reports": visible(Assessment, request.user).select_related(
-                "indicator", "dataset"
-            ),
-            "due_tasks": FollowUp.objects.filter(
-                owner=request.user, due_date__lte=timezone.localdate()
+    role = workspace_role(request)
+    scope = request.GET.get("scope", "local" if role.get("is_district_workspace") else "national")
+    if scope not in {"national", "local", "all"}:
+        scope = "national"
+    reports = visible(Assessment, request.user).select_related("indicator", "dataset")
+    if scope == "national":
+        reports = reports.filter(indicator__geography_code="RW")
+    elif scope == "local":
+        reports = reports.exclude(indicator__geography_code="RW")
+    geographies = list(reports.filter(is_mocked=False).values_list("indicator__geography_code", "indicator__geography").distinct().order_by("indicator__geography"))
+    geography = request.GET.get("geography", "")
+    if geography:
+        reports = reports.filter(indicator__geography_code=geography)
+    goals, work, demos = [], [], []
+    # A goal can have several observations: use its most recently reviewed report.
+    seen = set()
+    for item in reports.order_by(F("reviewed_at").desc(nulls_last=True), "-created_at", "-pk"):
+        if item.is_mocked or item.indicator.is_mocked or item.dataset.is_mocked:
+            demos.append(item)
+        elif item.status != State.APPROVED:
+            work.append(item)
+        elif item.indicator_id not in seen:
+            seen.add(item.indicator_id)
+            goals.append({"item": item, "result": report_result(item)})
+    comparable_count = sum(bool(g["result"].get("comparable")) for g in goals)
+    show_demo = request.GET.get("mode") == "demo" or (not comparable_count and request.GET.get("mode") != "official")
+    demo_goals = []
+    if show_demo:
+        from .demo_examples import examples
+        # Do not filter synthetic examples to a real geography or relabel them.
+        # A selected geography may have no matching evidence; examples keep their own scope.
+        candidates = [item for item in demos if item.status == State.DEMO and item.is_mocked and item.indicator.is_mocked and item.dataset.is_mocked]
+        seen_demo = set()
+        for item in candidates:
+            result = report_result(item)
+            if result.get("comparable") and item.indicator_id not in seen_demo:
+                seen_demo.add(item.indicator_id)
+                demo_goals.append({"item": item, "result": result})
+        if not demo_goals:
+            for label, item, tolerance in examples():
+                if scope == "national" and item.indicator.geography_code != "RW":
+                    continue
+                if scope == "local" and item.indicator.geography_code == "RW":
+                    continue
+                demo_goals.append({"item": item, "result": report_result(item)})
+        for goal in demo_goals:
+            item, result = goal["item"], goal["result"]
+            goal["chart"] = bar_chart(
+                item.indicator.name + " · invented history", item.indicator.unit,
+                [dict(label=row["period"], value=row["value"], unit=row["unit"], mocked=True,
+                      source=row["source_reference"]) for row in item.dataset.rows],
+                description="MOCKED annual observations, not official evidence or a forecast.",
+                scale_max=item.indicator.target_value,
             )
-            .exclude(status="completed")
-            .select_related("assessment__indicator"),
-            "pending": (
-                sum(
-                    m.objects.filter(status=State.SUBMITTED)
-                    .exclude(created_by=request.user)
-                    .count()
-                    for m in RECORDS.values()
-                )
-                if trusted(request.user)
-                else 0
-            ),
-        },
-    )
+    return render(request, "planning/index.html", {
+        "scope": scope, "geography": geography, "geographies": geographies,
+        "goals": goals, "work": work, "demos": demos,
+        "show_demo": show_demo, "demo_goals": demo_goals,
+        "display_goals": demo_goals if show_demo else goals,
+        "display_count": len(demo_goals) if show_demo else len(goals),
+        "demo_fallback": show_demo and not comparable_count,
+        "goal_count": len(goals),
+        "comparable_count": comparable_count,
+        "gap_count": sum(not g["result"].get("comparable", False) for g in goals),
+        "can_plan": trusted(request.user),
+        "due_tasks": FollowUp.objects.filter(owner=request.user, due_date__lte=timezone.localdate()).exclude(status="completed").select_related("assessment__indicator"),
+        "pending": sum(m.objects.filter(status=State.SUBMITTED).exclude(created_by=request.user).count() for m in RECORDS.values()) if trusted(request.user) else 0,
+    })
 
 
 @planner
@@ -122,11 +167,26 @@ def upload(request):
     if request.method == "POST" and form.is_valid():
         raw = form.cleaned_data["file"].read(2 * 1024 * 1024 + 1)
         rows, errors = validate_csv(raw)
-        mocked = any(r["is_mocked"] for r in rows)
+        declared_demo = form.cleaned_data["synthetic_demo"]
+        mocked = declared_demo or any(r["is_mocked"] for r in rows)
+        if declared_demo and rows and not all(r["is_mocked"] for r in rows):
+            errors = ["Synthetic demonstration uploads require is_mocked=true on every row. Real and synthetic rows must remain separate."]
+            rows = []
+        source_reference = form.cleaned_data["source_reference"]
+        if form.cleaned_data["origin"]:
+            source_reference += "\nOrigin: " + form.cleaned_data["origin"]
+        if mocked and not errors and not request.GET.get("supersedes"):
+            existing = SourceBatch.objects.filter(created_by=request.user, is_mocked=True, status=State.DEMO,
+                content_sha256=fingerprint(raw), title=form.cleaned_data["title"],
+                source_reference=source_reference, methodology=form.cleaned_data["methodology"],
+                source_url=form.cleaned_data["source_url"]).first()
+            if existing:
+                messages.info(request, "This identical synthetic demonstration dataset is already loaded. Reusing its existing demo version.")
+                return redirect("planning:record", kind="source", pk=existing.pk)
         record = SourceBatch.objects.create(
             title=form.cleaned_data["title"],
             source_url=form.cleaned_data["source_url"],
-            source_reference=form.cleaned_data["source_reference"],
+            source_reference=source_reference,
             methodology=form.cleaned_data["methodology"],
             content_sha256=fingerprint(raw),
             rows=rows,
@@ -347,6 +407,8 @@ def record(request, kind, pk):
             "created_by",
             "reviewed_by",
         }:
+            if item.is_mocked and field.name == "source_url":
+                continue
             value = getattr(item, field.name)
             if value is not None and value != "":
                 fields.append(

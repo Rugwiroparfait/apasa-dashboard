@@ -77,10 +77,10 @@ class DashboardAssistantTests(PlanningFixture):
             return_value=("Only the cited observations are available.", {}),
         ):
             self.ask(token)
-        self.assertContains(
-            self.client.get("/workspace/overview/"),
-            "Only the cited observations are available.",
-        )
+        reloaded = self.client.get("/workspace/overview/")
+        self.assertContains(reloaded, "Only the cited observations are available.")
+        self.assertContains(reloaded, "Source references")
+        self.assertContains(reloaded, "Table 6!I6")
         self.assertNotContains(
             self.client.get("/workspace/overview/?crop=Maize&period=2026+Season+B"),
             "Only the cited observations are available.",
@@ -100,6 +100,26 @@ class DashboardAssistantTests(PlanningFixture):
         with patch("planning.briefs.generate") as call:
             self.assertEqual(self.ask(token).status_code, 422)
             call.assert_not_called()
+
+    def test_unconfigured_panel_disables_generation_controls(self):
+        with patch("evidence.templatetags.workspace_ui.local_status", return_value={"configured": False}):
+            response = self.client.get("/workspace/overview/")
+        self.assertContains(response, 'data-enabled="false"')
+        self.assertContains(response, "Assistant unavailable")
+        self.assertContains(response, 'type="submit" disabled')
+        self.assertNotContains(response, 'data-assistant-question=')
+
+    def test_display_context_omits_blank_fields(self):
+        from evidence.templatetags.workspace_ui import workspace_assistant
+        response = self.client.get("/workspace/overview/")
+        context = {"request": response.wsgi_request}
+        with patch("evidence.templatetags.workspace_ui.snapshot", return_value=(
+            {"page": "", "filters": {"crop": "  ", "period": None, "district_name": "Gasabo"}, "charts": []},
+            "test-context", "signed-token",
+        )):
+            panel = workspace_assistant(context)
+        self.assertEqual(panel["assistant_context_page"], "General APASA question")
+        self.assertEqual(panel["assistant_context_fields"], [("District", "Gasabo")])
 
     def test_csrf_and_existing_role_boundary_are_preserved(self):
         client = Client(enforce_csrf_checks=True)
@@ -125,3 +145,14 @@ class DashboardAssistantTests(PlanningFixture):
         self.assertEqual(answer.assessment, self.report)
         self.assertEqual(answer.method, "ai")
         self.assertIn("planning/records/answer", response.json()["url"])
+
+    def test_district_demo_context_preserves_selection_origin_and_limits(self):
+        token = self.token('/district-crop-statistics/?data=demo&province=2&district=24&crop=Maize&period=2026+A&chart_measure=crop_production')
+        with patch('planning.briefs.generate', return_value=('This is a synthetic example, not official evidence.', {})) as provider:
+            response = self.ask(token)
+        self.assertEqual(response.status_code, 200)
+        sent = provider.call_args.args[1]
+        for phrase in ['Huye', 'Maize', '2026 A', 'Synthetic / illustrative', 'not official statistics', 'no sample or farmer population']:
+            self.assertIn(phrase.lower(), sent.lower())
+        self.assertNotIn('NISR SAS 2026 Season B', sent)
+        self.assertTrue(response.json()['sources'])

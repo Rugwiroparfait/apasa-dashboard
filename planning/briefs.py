@@ -17,9 +17,11 @@ def canonical_facts(assessment, proposed_action, scenario=None):
         f"Indicator: {indicator.framework} {indicator.code} v{indicator.version} — {indicator.name}",
         f"Geography: {indicator.geography}; population: {indicator.population}.",
         f"Target: {indicator.target_value:,.2f} {indicator.unit}, {indicator.target_period}.",
-        f"Policy source: {indicator.source_url} — {indicator.source_reference}.",
-        f"Observation source: {assessment.dataset.source_url} — {assessment.dataset.source_reference}.",
+        f"Policy source: {'No official source (synthetic)' if result['mocked'] else indicator.source_url} — {indicator.source_reference}.",
+        f"Observation source: {'No official source (synthetic)' if result['mocked'] else assessment.dataset.source_url} — {assessment.dataset.source_reference}.",
     ]
+    if result["mocked"]:
+        lines.append("Demonstration data. Synthetic / illustrative — not official statistics. Generated for APASA interface demonstration; not NISR or MINAGRI statistics and not for analysis or policy decisions.")
     if result["comparable"]:
         lines.extend(
             [
@@ -197,7 +199,7 @@ def explain_dashboard(context, question, history, actor):
         memory.pop(0)
     return generate(
         INSTRUCTIONS
-        + " Explain only the published chart context. Conversation memory is not evidence. Cite the provided source cells; if no target comparison is supplied, do not calculate policy progress. Do not infer causes or recommend an intervention from these observations.",
+        + " Explain only the supplied chart context. Preserve synthetic/demo classifications: synthetic records are not official statistics, even when they use real place names. Never present invented records as a published source. Conversation memory is not evidence. Cite the provided source cells; if no target comparison is supplied, do not calculate policy progress. Do not infer causes or recommend an intervention from these observations.",
         facts,
         actor,
     )

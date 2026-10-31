@@ -31,10 +31,13 @@ def workbook_evidence(request):
         ("population", "Farmer population"),
         ("period", "Reporting period"),
     ]:
-        choices = sorted({r[key] for r in bundle["observations"]})
+        global_choices = {r[key] for r in bundle["observations"]}
+        choices = sorted({r[key] for r in rows})
         value = request.GET.get(key, defaults.get(key, ""))
-        if value and value not in choices:
+        if value and value not in global_choices:
             raise Http404("Unknown workbook filter")
+        if value and value not in choices:
+            value = ""
         filters.append(
             {
                 "name": key,
@@ -49,6 +52,7 @@ def workbook_evidence(request):
     for row in rows:
         row["label"] = LABELS[row["indicator"]]
         row["source_value"] = row["value"]
+        row["data_origin"] = "Published workbook source cell; original value retained"
         if mock and row["status"] == "unavailable":
             row.update(
                 value=(
@@ -56,7 +60,8 @@ def workbook_evidence(request):
                     if row["unit"] == "MT"
                     else "1" if row["unit"] == "MT/ha" else "50"
                 ),
-                status="MOCKED — illustrative, not official evidence",
+                status="MOCKED — illustrative, not official evidence · Synthetic / illustrative — not official statistics.",
+                data_origin="Generated for APASA interface demonstration on 2026-10-31; not NISR or MINAGRI statistics and not for analysis or policy decisions. Original workbook references identify only the unavailable cell, not a source for the invented value.",
                 mocked=True,
             )
     if request.GET.get("download") == "csv":
@@ -82,6 +87,7 @@ def workbook_evidence(request):
             "source_sheet",
             "source_cell",
             "source_sha256",
+            "data_origin",
         ]
         writer = csv.DictWriter(response, fieldnames=fields, extrasaction="ignore")
         writer.writeheader()

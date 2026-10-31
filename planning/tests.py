@@ -748,3 +748,143 @@ class ScenarioPublicationTests(PlanningFixture):
         self.report.refresh_from_db()
         self.assertEqual(report_result(self.report)["gap"], 30)
         self.assertEqual(comparison(self.report)["gap"], 10)
+
+
+class ProgressHomeTests(PlanningFixture):
+    def test_national_home_uses_reviewed_calculation(self):
+        response = self.client.get(reverse("planning:index"))
+        self.assertEqual(response.context["scope"], "national")
+        self.assertEqual(response.context["goal_count"], 1)
+        self.assertContains(response, "70.0% of baseline-to-target change")
+        self.assertContains(response, "Observed · 2026")
+        self.assertContains(response, "Table 1")
+
+    def test_district_home_defaults_local_and_shared_national_access_remains(self):
+        self.client.force_login(self.reviewer)
+        response = self.client.get(reverse("planning:index"))
+        self.assertEqual(response.context["scope"], "local")
+        self.assertContains(response, "Local goals & follow-ups")
+        self.assertEqual(response.context["goal_count"], 0)
+        self.assertContains(response, "Accounts do not have an assigned district")
+        response = self.client.get(reverse("planning:index"), {"scope": "national"})
+        self.assertEqual(response.context["goal_count"], 1)
+        self.assertContains(response, "70.0% of baseline-to-target change")
+
+    def test_drafts_mocked_and_incompatible_reports_are_not_official_progress(self):
+        self.report.status = State.DRAFT
+        self.report.save()
+        response = self.client.get(reverse("planning:index"), {"mode": "official"})
+        self.assertEqual(response.context["goal_count"], 0)
+        self.assertNotContains(response, '<progress ')
+        self.report.status = State.APPROVED
+        self.report.methodology_confirmed = False
+        self.report.save()
+        response = self.client.get(reverse("planning:index"), {"mode": "official"})
+        self.assertEqual(response.context["gap_count"], 1)
+        self.assertNotContains(response, '<progress ')
+        self.report.is_mocked = True
+        self.report.save()
+        response = self.client.get(reverse("planning:index"), {"mode": "official"})
+        self.assertEqual(response.context["goal_count"], 0)
+        self.assertNotContains(response, '<progress ')
+
+    def test_private_work_stays_private(self):
+        self.report.status = State.DRAFT
+        self.report.reviewed_by = None
+        self.report.save()
+        self.client.force_login(self.reviewer)
+        response = self.client.get(reverse("planning:index"), {"scope": "all"})
+        self.assertEqual(list(response.context["work"]), [])
+
+    def test_local_goal_filters_and_duplicate_observations(self):
+        self.indicator.geography_code = "12"
+        self.indicator.geography = "Gasabo"
+        self.indicator.save()
+        self.batch.rows = [dict(row, geography_code="12", geography="Gasabo") for row in self.rows]
+        self.batch.save()
+        Assessment.objects.create(indicator=self.indicator, dataset=self.batch, row_index=6, methodology_confirmed=True, status=State.APPROVED, created_by=self.author, reviewed_by=self.reviewer)
+        self.client.force_login(self.reviewer)
+        response = self.client.get(reverse("planning:index"), {"geography": "12"})
+        self.assertEqual(response.context["goal_count"], 1)
+        self.assertContains(response, "Gasabo")
+        self.assertEqual(self.client.get(reverse("planning:index"), {"geography": "nonexistent"}).context["goal_count"], 0)
+
+
+class DemonstrationFallbackTests(PlanningFixture):
+    def test_missing_comparison_shows_working_demo_without_database_writes(self):
+        self.report.delete()
+        before = (SourceBatch.objects.count(), IndicatorVersion.objects.count(), Assessment.objects.count())
+        response = self.client.get(reverse("planning:index"))
+        self.assertTrue(response.context["show_demo"])
+        self.assertTrue(response.context["demo_fallback"])
+        self.assertContains(response, "Demonstration data")
+        self.assertContains(response, 'class="data-label"')
+        self.assertContains(response, "48.0% of baseline-to-target change")
+        self.assertContains(response, "124000.00 MT")
+        self.assertContains(response, "26000.00 MT")
+        self.assertContains(response, 'data-chart-popup=')
+        self.assertNotContains(response, "No reviewed goals in this selection yet")
+        self.assertEqual(before, (SourceBatch.objects.count(), IndicatorVersion.objects.count(), Assessment.objects.count()))
+        self.assertEqual(response.context["goal_count"], 0)
+
+    def test_incompatible_official_comparison_keeps_reasons_next_to_demo(self):
+        self.report.methodology_confirmed = False
+        self.report.save()
+        response = self.client.get(reverse("planning:index"))
+        self.assertTrue(response.context["show_demo"])
+        self.assertContains(response, "Why official progress is unavailable")
+        self.assertContains(response, "Verify matching survey methods")
+        self.assertContains(response, "48.0% of baseline-to-target change")
+
+    def test_local_demo_keeps_own_geography_and_works_without_seed_in_production(self):
+        self.client.force_login(self.reviewer)
+        with self.settings(DEBUG=False):
+            response = self.client.get(reverse("planning:index"), {"geography": "12"})
+        self.assertTrue(response.context["show_demo"])
+        self.assertContains(response, "Nyarugenge (MOCKED)")
+        self.assertContains(response, "52.0% of baseline-to-target change")
+        self.assertContains(response, "not official NISR or MINAGRI statistics")
+        self.assertEqual(response.context["demo_goals"][0]["item"].indicator.geography_code, "11")
+
+    def test_real_comparable_data_remains_default_and_demo_is_selectable(self):
+        response = self.client.get(reverse("planning:index"))
+        self.assertFalse(response.context["show_demo"])
+        self.assertContains(response, "70.0% of baseline-to-target change")
+        response = self.client.get(reverse("planning:index"), {"mode": "demo"})
+        self.assertTrue(response.context["show_demo"])
+        self.assertContains(response, "48.0% of baseline-to-target change")
+        self.assertEqual(response.context["comparable_count"], 1)
+
+    def test_seeded_demo_workflow_remains_idempotent_and_is_reused(self):
+        from django.core.management import call_command
+        with self.settings(DEBUG=True):
+            call_command("seed_planning_demo", stdout=io.StringIO())
+            counts = (SourceBatch.objects.count(), IndicatorVersion.objects.count(), Assessment.objects.count(), ForecastModel.objects.count())
+            call_command("seed_planning_demo", stdout=io.StringIO())
+        self.assertEqual(counts, (SourceBatch.objects.count(), IndicatorVersion.objects.count(), Assessment.objects.count(), ForecastModel.objects.count()))
+        response = self.client.get(reverse("planning:index"), {"mode": "demo"})
+        self.assertContains(response, "Open demonstration workflow")
+        self.assertIsNotNone(response.context["demo_goals"][0]["item"].pk)
+
+
+class DemoSeederSafetyTests(PlanningFixture):
+    def test_existing_non_demo_identifier_is_never_reused_or_modified(self):
+        from django.core.management import call_command
+        from django.core.management.base import CommandError
+        self.indicator.code = "DEMO-RW"
+        self.indicator.save()
+        before = SourceBatch.objects.count()
+        with self.settings(DEBUG=True), self.assertRaises(CommandError):
+            call_command('seed_planning_demo', stdout=io.StringIO())
+        self.indicator.refresh_from_db()
+        self.assertEqual(self.indicator.status, State.APPROVED)
+        self.assertFalse(self.indicator.is_mocked)
+        self.assertEqual(SourceBatch.objects.count(), before)
+
+    def test_generated_sources_never_invent_source_urls(self):
+        from .demo_examples import examples
+        for label, report, tolerance in examples():
+            self.assertEqual(report.dataset.source_url, '')
+            self.assertEqual(report.indicator.source_url, '')
+            self.assertTrue(report.dataset.is_mocked)
+            self.assertTrue(report.indicator.is_mocked)

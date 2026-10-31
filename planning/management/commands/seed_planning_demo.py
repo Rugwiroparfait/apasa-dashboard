@@ -1,7 +1,6 @@
 """Populate invented end-to-end examples, always outside official publication."""
 
 import json
-from decimal import Decimal
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
@@ -23,101 +22,47 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         if not settings.DEBUG:
             raise CommandError("Demonstration seeding is disabled in production.")
-        for label, geo, values, target, tolerance in [
-            (
-                "National demonstration",
-                "RW",
-                [100000, 104000, 108000, 109000, 113000, 117000, 120000, 124000],
-                150000,
-                20000,
-            ),
-            (
-                "District demonstration",
-                "11",
-                [400, 440, 480, 510, 550, 580, 620, 660],
-                900,
-                200,
-            ),
-        ]:
-            rows = [
-                dict(
-                    measure="production",
-                    crop="Maize",
-                    unit="MT",
-                    period=str(2019 + i),
-                    geography_code=geo,
-                    geography=(
-                        "Rwanda (MOCKED)" if geo == "RW" else "Nyarugenge (MOCKED)"
-                    ),
-                    population="All farmer types",
-                    value=str(value),
-                    standard_error="",
-                    is_mocked=True,
-                    source_reference="MOCKED invented example; no official source",
-                )
-                for i, value in enumerate(values)
-            ]
-            raw = json.dumps(rows, sort_keys=True).encode()
+        from planning.demo_examples import examples
+
+        for label, example, tolerance in examples():
+            def defaults(record, exclude):
+                return {field.name: getattr(record, field.name) for field in record._meta.fields
+                        if field.name not in exclude | {"id", "created_at"}}
+
             batch, _ = SourceBatch.objects.get_or_create(
-                title="MOCKED · " + label,
-                defaults=dict(
-                    source_url="https://example.invalid/mocked",
-                    source_reference="Invented annual observations, demonstration only.",
-                    methodology="MOCKED consistent annual example",
-                    content_sha256=fingerprint(raw),
-                    rows=rows,
-                    status=State.DEMO,
-                    is_mocked=True,
-                ),
+                title=example.dataset.title,
+                defaults=defaults(example.dataset, {"title"}),
             )
+            self.require_demo(batch)
             indicator, _ = IndicatorVersion.objects.get_or_create(
-                framework="PSTA5",
-                code="DEMO-" + geo,
-                version=1,
-                defaults=dict(
-                    name="MOCKED · " + label + " maize production",
-                    measure="production",
-                    crop="Maize",
-                    unit="MT",
-                    population="All farmer types",
-                    geography_code=geo,
-                    geography=rows[0]["geography"],
-                    methodology=batch.methodology,
-                    baseline_period="2019",
-                    baseline_value=Decimal(values[0]),
-                    target_period="2028",
-                    target_value=Decimal(target),
-                    direction="higher",
-                    source_url="https://example.invalid/mocked-target",
-                    source_reference="MOCKED target, not an authenticated PSTA5 goal.",
-                    status=State.DEMO,
-                    is_mocked=True,
-                ),
+                framework=example.indicator.framework, code=example.indicator.code, version=1,
+                defaults=defaults(example.indicator, {"framework", "code", "version"}),
             )
+            self.require_demo(indicator)
             report, _ = Assessment.objects.get_or_create(
-                indicator=indicator,
-                dataset=batch,
-                row_index=7,
-                defaults=dict(
-                    mapping_notes="MOCKED example with deliberately aligned definitions; not official evidence.",
-                    methodology_confirmed=True,
-                    is_mocked=True,
-                    status=State.DEMO,
-                ),
+                indicator=indicator, dataset=batch, row_index=7,
+                defaults=defaults(example, {"indicator", "dataset", "row_index"}),
             )
-            spec = fit_forecast(report, Decimal(tolerance))
-            ForecastModel.objects.get_or_create(
+            self.require_demo(report)
+            spec = fit_forecast(report, tolerance)
+            model, _ = ForecastModel.objects.get_or_create(
                 assessment=report,
                 status=State.DEMO,
                 defaults=dict(
                     is_mocked=True,
-                    acceptable_rmse=Decimal(tolerance),
+                    acceptable_rmse=tolerance,
                     specification=spec,
                     training_sha256=fingerprint(
                         json.dumps(spec["points"], sort_keys=True).encode()
                     ),
                 ),
             )
+            self.require_demo(model)
             self.stdout.write(
                 f"{label}: MOCKED report {report.pk} prepared; no official data or approvals created."
             )
+
+    @staticmethod
+    def require_demo(record):
+        if not record.is_mocked or record.status != State.DEMO:
+            raise CommandError("A demo identifier collides with non-demo data. No records were changed.")

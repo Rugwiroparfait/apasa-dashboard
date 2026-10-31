@@ -59,6 +59,46 @@ Render uses native Python with `render.yaml` and three small deployment scripts.
 `compose.vps.yaml` isolates the VPS web/database in project `apasa`. NPM shares only the external `apasa-proxy` network with the web alias `apasa-web`; PostgreSQL stays on an internal network and persistent named volume. No APASA ports are published. `deploy/configure_vps.py` generates non-overwriting private settings; `deploy/vps.sh` scopes lifecycle/backups to APASA. Shared `deploy/release.sh`/`start.sh` serve VPS, container and Render wrappers. `APASA_RUN_RELEASE=true` explicitly enables one-instance release-on-start outside Render.
 
 
-Authenticated dashboards use `evidence/workspace_shell.html`; `public_shell.html` retains the previous sign-in layout, and the standalone public landing page is unchanged. Charts remain server-rendered SVG/HTML without a new library. Overview counts come from the workbook bundle and current district adapter. Seasonal front-face heights use one zero-based scale; decorative facets stay inside each value’s rectangle. Exact values, statuses and citations remain available in tables; mobile uses labelled bars on the same scale.
+Authenticated dashboards use `evidence/workspace_shell.html`. Public pages share `accounts/public_shell.html`; sign-in has a standalone compact form. `evidence/tokens.css` defines the shared forest-green/gold/neutral palette and system typography. A version-pinned Feather SVG subset and its MIT license are served locally; no icon or font CDN is used. Charts remain server-rendered SVG/HTML without a new library. Overview counts come from the workbook bundle and current district adapter. Seasonal bars use one zero-based scale and flat green series; gold is reserved for evidence cautions and explicitly mocked states. Exact values, statuses and citations remain available in tables; mobile uses labelled bars on the same scale.
 
 The persistent assistant panel extends the existing `planning.views.question_create` endpoint: `/planning/ai/ask/` handles signed public dashboard context, while existing comparison `/ask/` URLs retain canonical calculation facts and saved `AIExplanation` review records. Both paths call `planning.briefs` and the same NVIDIA `planning.ai.generate` transport/ledger, model allowlist, timeout and rolling limits. Public-page threads use the existing server-side session (four turns, at most three context hashes); only two bounded prior turns accompany a follow-up. Context tokens are user-bound, signed, and expire after 30 minutes. The server whitelists published evidence chart values, source metadata and validated filters; browser-supplied facts are ignored, private planning drafts are not serialized, and mocked previews are rejected by the published-dashboard assistant. Opening a page does not call the provider. Errors return no fabricated AI answer. Reviewed comparison side-panel answers use the original generation/review path and remain unapproved.
+
+### Public assets and assistant layout
+
+The landing page contains audience, feature, workflow and evidence-limit sections.
+The original full-width layered hero is restored with responsive local WebP
+landscape, tractor and crops, plus a compressed dust layer and the existing flag.
+Matching responsive preload, explicit dimensions and asynchronous decoding reduce
+loading costs while preserving the artwork, wordmark and motion controls. Original
+PNGs remain source assets. Below-the-fold sections use HTML and local SVG icons.
+All evidence routes still require authentication; public workflow links preserve
+the existing login redirects.
+
+The assistant opens from a fixed bottom-left launcher in an actual shadcn New York
+Popover, with Button and Card components. Tailwind CSS v4 compiles shared button,
+card and input styles for both React and Django markup. The independently scrolling
+message thread retains its fixed composer. Empty context labels are omitted only
+from presentation; canonical signed evidence facts are unchanged. Missing credentials
+disable panel generation controls. The existing provider, limits, signed contexts,
+session history and reviewed-report explanations are reused. Sources remain visible
+with replies and on reload; the complete-response endpoint does not support streaming.
+
+The frontend build is `npm ci && npm run build`. Compiled `ui.css` and `ui.js` are
+checked in and collected by the existing Python-only deployment pipeline; no Node
+runtime, icon CDN or Tailwind browser compiler is required in production.
+
+### Role-aware goal home
+
+The default authenticated `/workspace/` entry redirects to `/planning/`. Safe explicit login `next` destinations still work. The home defaults to national goals for national policymakers and local (non-`RW`) goals for district officers; accounts with both roles or superuser access default to national scope. These are presentation defaults, not additional permission gates. No user district assignment exists: users explicitly select the reviewed goal geography, and shared evidence routes retain their existing access rules.
+
+Goal cards use `report_result`, including approved immutable snapshots, and select the latest reviewed comparison per target version. Drafts, mocked inputs and demonstrations are excluded from official counts and progress. Incompatible comparisons show their validation reasons. Percentages describe baseline-to-target change, with only the visual bar bounded to 0–100; no aggregate progress score is calculated.
+
+District selectors submit GET selections automatically, resetting district/crop when their parent changes. The single enhanced Apply control opens the existing shadcn chart dialog. Without JavaScript, Load selection submits the form and the chart/source disclosure remains available.
+
+When no comparable official result exists for a selection, the progress home automatically displays explicitly labelled invented demonstrations. `planning.demo_examples` supplies the same national and district examples to the existing development seeder and to a stateless fallback using unsaved model instances and the existing comparison engine. GET requests do not seed or modify the database. Seeded demonstration reports retain links to their complete workflow; unseeded examples show progress, invented history charts and illustrative next steps directly on the dashboard. Official validation reasons remain visible and users can explicitly switch between official evidence and demonstration modes. Demonstrations never count as reviewed official goals or acquire the selected real geography.
+
+### Explicit district demonstration journey
+
+The published repository adapter is unchanged. `evidence.demo_data` generates a separate deterministic aggregate-only dataset solely for the explicit `data=demo` district mode. Period selectors use only the active dataset's periods. Synthetic numerical values have no source agency or report/workbook URL; geographic labels alone are reused from the public administrative extract. `generate_demo_evidence` exports only under `data/demo`, refuses unrelated files, and is never part of deployment. Manifest and README in that directory document the recipe and the existing development-only planning seeder.
+
+The assistant signs demo origin, coverage and period alongside chart facts; only the explicit server-generated demonstration branch is allowed to explain synthetic dashboard data. The existing mixed-preview rejection, signature validation, actor permissions, session handling, provider transport and quota ledger remain in force. Provider calls still require an explicit question.

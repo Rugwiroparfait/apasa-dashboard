@@ -23,6 +23,16 @@ class ChartGeometryTests(SimpleTestCase):
             self.assertFalse(row["available"])
             self.assertEqual(row["display"], "Unavailable")
 
+    def test_numeric_zero_is_not_rendered_as_unavailable(self):
+        from django.template.loader import render_to_string
+        chart = bar_chart("Zero and missing", "MT", [
+            dict(label="Reported zero", value=0, unit="MT", source="Table 1"),
+            dict(label="Missing", value=None, unit="MT", source="Table 1", available=False),
+        ])
+        markup = render_to_string("evidence/chart.html", {"chart": chart})
+        self.assertIn("<td>0 MT</td>", markup)
+        self.assertIn("<td>Unavailable MT</td>", markup)
+
     def test_units_cannot_share_a_chart(self):
         with self.assertRaises(ValueError):
             bar_chart(
@@ -67,7 +77,7 @@ class ChartPageTests(TestCase):
             response.context["charts"][0]["scale_label"],
             response.context["charts"][1]["scale_label"],
         )
-        self.assertContains(response, "<svg", count=2)
+        self.assertContains(response, 'class="bar-chart"', count=2)
         self.assertContains(response, "Table 6!I6")
         exported = self.client.get(
             "/workbook-evidence/?" + response.context["download_query"]

@@ -41,6 +41,8 @@ These accounts are for local demonstrations. Do not deploy this development data
 
 CSV evidence is the default. Authentication now requires a database even in CSV mode; local development uses ignored SQLite. PostgreSQL is supported for production and for the optional versioned evidence import.
 
+If you copied `.env.example` for local development, leave `APASA_SQLITE_PATH=` empty to use `db.sqlite3` in the project root. The example `/app/runtime/db.sqlite3` path is for Docker with a writable persistent volume; SQLite cannot create missing parent directories.
+
 ## Data and mocked previews
 
 `/national-policy-evidence/` retains the reviewed 126-record policy inventory. `/workbook-evidence/` adds 348 source-linked entries from six 2024–2026 seasonal workbooks and the 30 supplied register entries. Crop observations are also linked to the national workflow and included in evidence-note downloads.

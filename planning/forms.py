@@ -12,7 +12,9 @@ from .validation import period_key, number, UNITS, MEASURE_UNITS
 
 class SourceForm(forms.Form):
     title = forms.CharField(max_length=200, label="Dataset name")
-    source_url = forms.URLField(max_length=1000, label="Publication or source URL")
+    synthetic_demo = forms.BooleanField(required=False, label="Synthetic demonstration dataset — not official statistics", help_text="Check for invented illustrative data. It can never be approved as official evidence; every CSV row must have is_mocked=true.")
+    source_url = forms.URLField(max_length=1000, required=False, label="Publication or source URL", help_text="Required for real evidence. Leave blank for synthetic demonstrations; do not invent a citation.")
+    origin = forms.CharField(required=False, max_length=2000, widget=forms.Textarea(attrs={"rows": 2}), label="Data origin", help_text="Required for synthetic demonstrations. Explain who generated the illustrative data and that it is not official statistics.")
     source_reference = forms.CharField(
         max_length=5000,
         widget=forms.Textarea(attrs={"rows": 2}),
@@ -25,8 +27,17 @@ class SourceForm(forms.Form):
     )
     file = forms.FileField(label="Aggregate observations (UTF-8 CSV)")
     aggregate_only = forms.BooleanField(
-        label="This file contains approved aggregate statistics, not individual farmer or household data."
+        label="This file contains aggregate observations only, not individual farmer, household or person-level records."
     )
+
+    def clean(self):
+        data = super().clean()
+        if data.get("synthetic_demo"):
+            if not data.get("origin", "").strip():
+                self.add_error("origin", "Describe the synthetic data origin; do not supply an invented publication URL.")
+        elif not data.get("source_url"):
+            self.add_error("source_url", "A publication or source URL is required for real evidence.")
+        return data
 
     def clean_file(self):
         upload = self.cleaned_data["file"]
@@ -38,6 +49,7 @@ class SourceForm(forms.Form):
 
 
 class IndicatorForm(forms.ModelForm):
+    source_url = forms.URLField(required=False, max_length=1000, label="Policy publication URL", help_text="Required for a real policy target. Leave blank for an invented demonstration target and describe its origin below.")
     source_reference = forms.CharField(
         max_length=5000, widget=forms.Textarea(attrs={"rows": 3})
     )
@@ -73,7 +85,7 @@ class IndicatorForm(forms.ModelForm):
         help_texts = {
             "code": "Use the verified official code; local codes must be explicitly identified as local.",
             "measure": "Match the observation code, for example production, yield or improved_seeds.",
-            "source_reference": "Cite the official document, page/table, approval and exact target period.",
+            "source_reference": "For real targets, cite the official document, page/table, approval and period. For synthetic targets, describe the invented origin and state that it is not official.",
             "geography_code": "RW for national Rwanda, or the exact district code in the selected dataset.",
             "baseline_period": "Example: 2024 Season B, 2024 or 2024/25.",
             "methodology": "A shared identifier is valid only after a human verifies definitions, denominators and coverage.",
@@ -81,6 +93,8 @@ class IndicatorForm(forms.ModelForm):
 
     def clean(self):
         data = super().clean()
+        if not data.get("is_mocked") and not data.get("source_url"):
+            self.add_error("source_url", "A policy publication URL is required for a real target.")
         try:
             a = period_key(data.get("baseline_period", ""))
             b = period_key(data.get("target_period", ""))

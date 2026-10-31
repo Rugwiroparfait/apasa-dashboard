@@ -1,0 +1,92 @@
+{
+  "dataset_id": "apasa-interface-demo-v1",
+  "generation_date": "2026-10-31",
+  "classification": "Synthetic / illustrative — not official statistics.",
+  "purpose": "APASA interface and planning workflow demonstration only; not for analysis or policy decisions",
+  "statistical_source_inputs": [],
+  "geographic_label_input": "outputs/day7/official_sas_2026_b_district.csv; administrative names and IDs only, not statistical values",
+  "generator": "evidence/demo_data.py:district_examples; planning/demo_examples.py:examples",
+  "district": {
+    "records": 108,
+    "district_ids": [
+      "11",
+      "12",
+      "24"
+    ],
+    "crops": [
+      "Maize",
+      "Bush bean",
+      "Cassava"
+    ],
+    "periods": [
+      "2025 B",
+      "2026 A",
+      "2026 B"
+    ],
+    "coverage": "Illustrative aggregate crop coverage; no sampled population or household records",
+    "variables": {
+      "cultivated_crop_area": "Ha",
+      "harvested_crop_area": "Ha",
+      "average_crop_yield": "Kg/Ha",
+      "crop_production": "MT"
+    },
+    "assumptions": [
+      "Place, crop and period indices follow generator list order, starting at zero",
+      "Cultivated hectares = 400 + place_index*180 + crop_index*90 + period_index*35",
+      "Harvested hectares = cultivated hectares * 0.9",
+      "Yield Kg/Ha = 1800 + crop_index*650 + place_index*120 + period_index*100",
+      "Production MT = harvested hectares * yield Kg/Ha / 1000",
+      "Nyarugenge Cassava 2025 B yield and production are true-zero examples",
+      "Huye Bush bean 2026 A yield and production are intentionally missing, not zero",
+      "Seasons are separate observations; no annual sum, ranking or policy-target comparison"
+    ]
+  },
+  "planning": {
+    "periods": [
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025",
+      "2026"
+    ],
+    "unit": "MT",
+    "crop": "Maize",
+    "national_annual_values": [
+      100000,
+      104000,
+      108000,
+      109000,
+      113000,
+      117000,
+      120000,
+      124000
+    ],
+    "national_target_2028": 150000,
+    "district_annual_values": [
+      400,
+      440,
+      480,
+      510,
+      550,
+      580,
+      620,
+      660
+    ],
+    "district_target_2028": 900,
+    "assumptions": [
+      "All annual values and targets are invented",
+      "PSTA5 is an example framework selection, not a claim that these targets appear in PSTA5",
+      "Annual planning examples and seasonal district examples are separate datasets and must not be joined",
+      "No standard errors, sample sizes, survey verification or intervention effects are claimed"
+    ]
+  },
+  "legacy_previews": {
+    "policy_missing_actual": "Only when explicitly requested and actual is unverified: value 1000 in the target unit, which does not verify an actual unit. No progress calculation.",
+    "national_workbook_unavailable_cells": "Only when explicitly requested: illustrative value 1000 for MT, 1 for MT/ha, otherwise 50 in source units. Original source_value retained separately. Observed values and real zeros are never replaced.",
+    "source_inputs": "Existing source labels and unavailable-cell positions only, not numerical inputs to generate replacement values.",
+    "classification": "Synthetic / illustrative — not official statistics."
+  }
+}

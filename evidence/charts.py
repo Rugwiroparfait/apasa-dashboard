@@ -30,7 +30,7 @@ def bar_chart(title, unit, points, description="", scale_max=None):
         row["number"] = number
         row["display"] = format(number, ",.2f") if number is not None else "Unavailable"
         row["state"] = (
-            "MOCKED"
+            "MOCKED · Synthetic / illustrative — not official statistics."
             if row.get("mocked")
             else "Observed" if number is not None else "Unavailable"
         )
@@ -106,7 +106,7 @@ def seasonal_charts(rows, max_series=4):
                 unit=unit,
                 available=r["status"] == "observed" or r.get("mocked", False),
                 mocked=r.get("mocked", False),
-                source=f"{r['source_workbook']} · {r['source_sheet']}!{r['source_cell']}",
+                source=("Synthetic / illustrative — not official statistics. Generated for APASA interface demonstration; original unavailable cell: " if r.get("mocked") else "") + f"{r['source_workbook']} · {r['source_sheet']}!{r['source_cell']}",
             )
             for r in series
         ]
@@ -115,7 +115,7 @@ def seasonal_charts(rows, max_series=4):
                 f"{crop} · {MEASURE_LABELS[indicator]} · Season {season}",
                 unit,
                 points,
-                f"Rwanda · {population.split(';')[0]}. Published observations; source details below.",
+                f"Rwanda · {population.split(';')[0]}. " + ("Mixed view: published observations and separately labelled synthetic examples; source details below." if any(r.get("mocked") for r in series) else "Published observations; source details below."),
                 scale_max=scales.get((indicator, crop, population, unit)),
             )
         )
@@ -140,7 +140,7 @@ def grouped_season_chart(rows):
             value=r["value"],
             unit=unit,
             available=r["status"] == "observed",
-            source=f"{r['source_workbook']} · {r['source_sheet']}!{r['source_cell']}",
+            source=("Synthetic / illustrative — not official statistics. Generated for APASA interface demonstration; original unavailable cell: " if r.get("mocked") else "") + f"{r['source_workbook']} · {r['source_sheet']}!{r['source_cell']}",
             period=r["period"],
             season=r["period"].split()[-1],
         )
