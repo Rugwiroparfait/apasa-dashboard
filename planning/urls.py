@@ -12,6 +12,7 @@ urlpatterns = [
     path("sources/existing/", views.import_existing, name="existing"),
     path("sources/template.csv", views.csv_template, name="template"),
     path("targets/new/", views.indicator_create, name="indicator-create"),
+    path("demonstrations/load/", views.load_comparison_demos, name="load-comparison-demos"),
     path("comparisons/new/", views.assessment_create, name="assessment-create"),
     path("comparisons/<int:pk>/", views.assessment_detail, name="assessment"),
     path("records/<str:kind>/<int:pk>/", views.record, name="record"),

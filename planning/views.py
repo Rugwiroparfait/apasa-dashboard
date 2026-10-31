@@ -355,6 +355,21 @@ def indicator_create(request):
 
 
 @planner
+@require_POST
+def load_comparison_demos(request):
+    from .demo_examples import load_comparison_examples
+    try:
+        datasets = load_comparison_examples(request.user)
+    except ValueError:
+        messages.error(request, "Demonstration identifiers conflict with existing records. Add a separate dataset or contact your administrator.")
+        return redirect("planning:assessment-create")
+    district = workspace_role(request).get("is_district_workspace", False)
+    dataset = datasets[1 if district else 0]
+    messages.info(request, "Demonstration datasets are ready. Choose a target and observation below.")
+    return redirect(reverse("planning:assessment-create") + f"?dataset={dataset.pk}")
+
+
+@planner
 def assessment_create(request):
     values = request.POST if request.method == "POST" else request.GET
     dataset = None
@@ -383,6 +398,8 @@ def assessment_create(request):
                 status__in=[State.APPROVED, State.DEMO]
             ),
             "dataset": dataset,
+            "has_targets": form.fields["indicator"].queryset.exists(),
+            "dataset_requested": bool(values.get("dataset")),
         },
     )
 

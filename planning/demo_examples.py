@@ -43,3 +43,39 @@ def examples():
             status=State.DEMO, is_mocked=True,
         )
         yield label, report, Decimal(tolerance)
+
+
+def load_comparison_examples(actor):
+    """Explicit, repeatable demo loading; no GET writes or official-data changes.
+
+    The caller must authorize a planning role. Lock the unique target identity
+    before loading its source so concurrent POSTs reuse the same demo records.
+    """
+    from django.db import transaction
+
+    def defaults(record, exclude):
+        return {field.name: getattr(record, field.name) for field in record._meta.fields
+                if field.name not in exclude | {"id", "created_at", "created_by"}}
+
+    def require_demo(record):
+        if not record.is_mocked or record.status != State.DEMO:
+            raise ValueError("A reserved demonstration identifier is used by a non-demo record.")
+
+    loaded = []
+    with transaction.atomic():
+        for label, example, tolerance in examples():
+            indicator, _ = IndicatorVersion.objects.get_or_create(
+                framework=example.indicator.framework, code=example.indicator.code, version=1,
+                defaults=dict(defaults(example.indicator, {"framework", "code", "version"}), created_by=actor),
+            )
+            indicator = IndicatorVersion.objects.select_for_update().get(pk=indicator.pk)
+            require_demo(indicator)
+            batch = SourceBatch.objects.filter(title=example.dataset.title).order_by("pk").first()
+            if batch is None:
+                batch = SourceBatch.objects.create(title=example.dataset.title,
+                    **dict(defaults(example.dataset, {"title"}), created_by=actor))
+            require_demo(batch)
+            if not batch.rows or not all(row.get("is_mocked") is True for row in batch.rows):
+                raise ValueError("The demonstration source contains non-demo or missing observations.")
+            loaded.append(batch)
+    return loaded

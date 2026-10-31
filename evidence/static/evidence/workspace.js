@@ -51,14 +51,14 @@ if (nationalFilters) {
     }
   });
 }
-if (districtFilters || nationalFilters) {
+if (districtFilters || nationalFilters || document.querySelector('[data-comparison-dataset]')) {
   window.addEventListener('pageshow', event => {
     if (event.persisted) { window.location.reload(); return; }
     try {
       const saved = JSON.parse(sessionStorage.getItem('apasa-filter-focus') || 'null');
       sessionStorage.removeItem('apasa-filter-focus');
       if (saved?.path === location.pathname) {
-        const control = (districtFilters || nationalFilters).elements.namedItem(saved.name);
+        const control = (districtFilters || nationalFilters || document.querySelector('[data-comparison-dataset]')).elements.namedItem(saved.name);
         if (control && !control.disabled) control.focus({preventScroll: true});
       }
     } catch (_) {}
@@ -92,4 +92,13 @@ if (!syntheticUpload && syntheticTarget && targetSourceURL) {
   const updateTargetURL = () => { targetSourceURL.required = !syntheticTarget.checked; };
   syntheticTarget.addEventListener('change', updateTargetURL);
   updateTargetURL();
+}
+
+const comparisonDataset = document.querySelector('[data-comparison-dataset]');
+if (comparisonDataset) {
+  comparisonDataset.addEventListener('change', event => {
+    if (event.target instanceof HTMLSelectElement && event.target.value) {
+      autoNavigateFilters(comparisonDataset, event.target.name, document.querySelector('[data-dataset-status]'));
+    }
+  });
 }

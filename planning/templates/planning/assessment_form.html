@@ -1,3 +1,19 @@
-{% extends 'evidence/base.html' %}{% block content %}<a href="{% url 'planning:index' %}">{% include 'evidence/icon.html' with name='arrow-left' %} Comparisons</a><h1>Choose a target and current evidence</h1><p>Only independently approved real inputs, or explicitly mocked demonstrations, can be selected.</p>
-<section class="ui-card panel"><h2>1. Choose a dataset</h2><form method="get"><label for="dataset-select">Dataset</label><select id="dataset-select" name="dataset"><option value="">Choose a dataset</option>{% for item in datasets %}<option value="{{ item.pk }}" {% if dataset.pk == item.pk %}selected{% endif %}>{{ item.title }}{% if item.is_mocked %} · MOCKED{% endif %}</option>{% endfor %}</select><button type="submit">Load observations</button></form></section>
-{% if dataset %}<h2>2. Match the target and observation</h2><form method="post" class="planning-form panel">{% csrf_token %}{{ form.as_p }}<button type="submit">Check comparison {% include 'evidence/icon.html' with name='arrow-right' %}</button></form>{% else %}<p>No suitable source yet? <a href="{% url 'planning:manage' %}">Register and review evidence first.</a></p>{% endif %}{% endblock %}
+{% extends 'evidence/base.html' %}{% block content %}
+<a href="{% url 'planning:index' %}">{% include 'evidence/icon.html' with name='arrow-left' %} Back to goals</a>
+{% include 'evidence/page_title.html' with title='Choose a target and current evidence' description='Select an observation dataset, then match its target and reporting period.' %}
+{% if datasets %}
+<section class="ui-card panel" aria-labelledby="dataset-heading"><h2 id="dataset-heading">1. Choose a dataset</h2>
+<form method="get" class="dataset-picker" data-comparison-dataset><div><label for="dataset-select">Observation dataset</label><select id="dataset-select" name="dataset" required><option value="">Choose a dataset</option>{% for item in datasets %}<option value="{{ item.pk }}" {% if dataset.pk == item.pk %}selected{% endif %}>{{ item.title }}{% if item.is_mocked %} · Demo{% else %} · Reviewed{% endif %}</option>{% endfor %}</select></div><button type="submit">Load observations</button></form>
+<p class="muted" role="status" data-dataset-status>Choosing a dataset loads its observations automatically.</p>
+{% if dataset_requested and not dataset %}<p role="status">That dataset is unavailable for comparison. Choose an approved dataset or a demonstration.</p>{% endif %}
+</section>
+{% else %}
+<section class="ui-card panel"><h2>Start with a dataset</h2><p>No reviewed or demonstration datasets have been loaded for comparisons yet.</p><p>Use the ready-to-use national and district examples, or add an observation dataset below.</p></section>
+{% endif %}
+{% if dataset %}
+<section aria-labelledby="match-heading"><h2 id="match-heading">2. Match the target and observation</h2><p><strong>Dataset:</strong> {{ dataset.title }} · {{ dataset.rows|length }} observations</p>
+{% if has_targets %}<form method="post" class="planning-form panel">{% csrf_token %}{{ form.as_p }}<button type="submit">Check comparison {% include 'evidence/icon.html' with name='arrow-right' %}</button></form>
+{% else %}<div class="ui-card panel"><p>{% if dataset.is_mocked %}This demonstration needs a synthetic target.{% else %}No independently approved real targets are available yet.{% endif %}</p><a class="ui-button button-link" href="{% url 'planning:indicator-create' %}">Add a target</a><a href="{% url 'planning:manage' %}">Manage targets &amp; review</a></div>{% endif %}</section>
+{% endif %}
+<section class="ui-card panel"><h2>{% if datasets %}Need another dataset?{% else %}Load demonstration data{% endif %}</h2><div class="dataset-options"><form method="post" action="{% url 'planning:load-comparison-demos' %}">{% csrf_token %}<button type="submit">Use demonstration datasets</button></form><a href="{% url 'planning:upload' %}">Add an observation dataset</a><a href="{% url 'planning:manage' %}">Manage evidence &amp; review</a></div><p class="muted">The examples include matching targets and invented observations. Real datasets must pass independent review before appearing here.</p></section>
+{% endblock %}

@@ -9,23 +9,48 @@ function capacity() {
   const mobile = window.innerWidth < 640
   return Math.max(2, Math.min(mobile ? 8 : 15, Math.floor((window.innerHeight - 250) / (mobile ? 48 : 32))))
 }
-function ChartDialog({ chart, label = "View chart" }: { chart: Chart; label?: string }) {
-  const [open, setOpen] = React.useState(false)
+function ChartDialog({ chart, label = "View chart", externalTrigger, autoOpen = false }: { chart: Chart; label?: string; externalTrigger?: HTMLButtonElement | null; autoOpen?: boolean }) {
+  const [open, setOpen] = React.useState(autoOpen)
   const [view, setView] = React.useState<'chart' | 'sources'>('chart')
-  const [page, setPage] = React.useState(0)
+  const [page, setPage] = React.useState(() => { const selected = chart.bars.findIndex(bar => bar.highlight); return autoOpen && selected >= 0 ? Math.floor(selected / capacity()) : 0 })
   const [pageSize, setPageSize] = React.useState(capacity)
   React.useEffect(() => {
     const resize = () => { setPageSize(capacity()); setPage(0) }
     window.addEventListener('resize', resize, {passive: true})
     return () => window.removeEventListener('resize', resize)
   }, [])
+  const openChart = React.useCallback(() => {
+    setView('chart')
+    const selected = chart.bars.findIndex(bar => bar.highlight)
+    setPage(selected < 0 ? 0 : Math.floor(selected / pageSize))
+    setOpen(true)
+  }, [chart, pageSize])
+  React.useEffect(() => {
+    if (!externalTrigger) return
+    const launch = (event: MouseEvent) => {
+      const form = externalTrigger.form
+      const fields = [['province', 'province'], ['district', 'district'], ['crop', 'crop'], ['period', 'period'], ['chart_measure', 'chartMeasure']]
+      const unchanged = form && fields.every(([name, key]) => (form.elements.namedItem(name) as HTMLSelectElement | null)?.value === externalTrigger.dataset[key])
+      // Unsaved choices submit normally, loading a fresh server chart first.
+      if (!unchanged) return
+      event.preventDefault()
+      openChart()
+    }
+    externalTrigger.addEventListener('click', launch)
+    return () => externalTrigger.removeEventListener('click', launch)
+  }, [externalTrigger, openChart])
+  React.useEffect(() => {
+    if (!externalTrigger) return
+    externalTrigger.setAttribute('aria-haspopup', 'dialog')
+    externalTrigger.setAttribute('aria-expanded', String(open))
+  }, [externalTrigger, open])
   const total = chart.bars.length
   const start = page * pageSize
   const bars = chart.bars.slice(start, start + pageSize)
   const pages = Math.ceil(total / pageSize)
   return <Dialog open={open} onOpenChange={value => { setOpen(value); if (value) { setView('chart'); const selected = chart.bars.findIndex(bar => bar.highlight); setPage(selected < 0 ? 0 : Math.floor(selected / pageSize)) } }}>
-    <DialogTrigger asChild><Button type="button" variant="outline" className="chart-open-button min-h-11 gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>{label}</Button></DialogTrigger>
-    <DialogContent className="apasa-chart-dialog" style={{width: 'min(1280px, calc(100vw - 24px))', maxWidth: 'none', height: 'min(860px, calc(100dvh - 24px))'}}>
+    {!externalTrigger && <DialogTrigger asChild><Button type="button" variant="outline" className="chart-open-button min-h-11 gap-2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>{label}</Button></DialogTrigger>}
+    <DialogContent onCloseAutoFocus={event => { if (externalTrigger) { event.preventDefault(); externalTrigger.focus({preventScroll: true}) } }} className="apasa-chart-dialog" style={{width: 'min(1280px, calc(100vw - 24px))', maxWidth: 'none', height: 'min(860px, calc(100dvh - 24px))'}}>
       <DialogHeader className="chart-dialog-heading">
         <DialogTitle>{chart.title}</DialogTitle>
         <DialogDescription>{chart.description}</DialogDescription>
@@ -69,7 +94,8 @@ export function mountCharts() {
     try {
       const chart = JSON.parse(source.textContent || '') as Chart
       if (!Array.isArray(chart.bars)) return
-      createRoot(host).render(<ChartDialog chart={chart} label={host.dataset.chartLabel} />)
+      const externalTrigger = host.dataset.chartTrigger ? document.getElementById(host.dataset.chartTrigger) as HTMLButtonElement | null : null
+      createRoot(host).render(<ChartDialog chart={chart} label={host.dataset.chartLabel} externalTrigger={externalTrigger} autoOpen={host.dataset.chartAutoOpen === 'true'} />)
       host.closest('[data-chart-popup]')?.classList.add('chart-enhanced')
       if (host.matches('[data-chart-json]')) document.querySelectorAll<HTMLElement>('[data-chart-fallback]').forEach(element => element.hidden = true)
     } catch { /* The native chart and exact-value table remain the fallback. */ }

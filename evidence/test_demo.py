@@ -98,3 +98,33 @@ class DistrictDemoTests(SimpleTestCase):
         self.assertContains(response, 'class="data-label"', count=1)
         self.assertNotContains(response, 'demo-mode-notice')
         self.assertContains(response, 'Data origin &amp; details')
+
+    def test_apply_is_a_native_enabled_submit_even_before_selecting_a_province(self):
+        response = self.client.get('/district-crop-statistics/')
+        self.assertContains(response, 'id="district-apply" type="submit" name="show_chart" value="1"')
+        self.assertContains(response, 'Choose province first')
+        self.assertContains(response, 'Choose district first')
+        self.assertNotContains(response, '<button type="button" disabled')
+        empty = self.client.get('/district-crop-statistics/', {'show_chart': '1'})
+        self.assertEqual(empty.status_code, 200)
+        self.assertContains(empty, 'Choose a province to start')
+
+    def test_native_apply_refreshes_parent_choices_without_script_help(self):
+        response = self.client.get('/district-crop-statistics/', dict(district_form='1', previous_province='1', previous_district='11', province='2', district='11', crop='Maize', show_chart='1'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['province_id'], '2')
+        self.assertEqual(response.context['district_id'], '')
+        self.assertEqual(response.context['crop'], '')
+        self.assertIn('24', dict(response.context['districts']))
+        response = self.client.get('/district-crop-statistics/', dict(district_form='1', previous_province='2', previous_district='', province='2', district='24', show_chart='1'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['district_id'], '24')
+        self.assertTrue(response.context['chart'])
+        self.assertTrue(response.context['show_chart'])
+        self.assertContains(response, 'data-chart-fallback class="district-chart-fallback" open')
+        self.assertContains(response, 'data-chart-trigger="district-apply"')
+        self.assertContains(response, 'data-chart-auto-open="true"')
+
+    def test_direct_invalid_geographic_query_remains_invalid(self):
+        response = self.client.get('/district-crop-statistics/', dict(province='2', district='11', crop='Maize'))
+        self.assertEqual(response.status_code, 404)

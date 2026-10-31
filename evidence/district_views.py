@@ -39,6 +39,14 @@ def district_statistics(request):
     province_id = request.GET.get("province", "")
     district_id = request.GET.get("district", "")
     crop = request.GET.get("crop", "")
+    # Native form submissions remain usable if a script fails to load. Clear
+    # stale child choices only for an explicit parent change from this form.
+    if request.GET.get("district_form") == "1":
+        if request.GET.get("previous_province", "") != province_id:
+            district_id = ""
+            crop = ""
+        elif request.GET.get("previous_district", "") != district_id:
+            crop = ""
     provinces = sorted({(r["province_id"], r["province"]) for r in rows})
     if province_id and province_id not in dict(provinces):
         raise Http404("Unknown province")
@@ -120,6 +128,7 @@ def district_statistics(request):
         "evidence/district.html",
         dict(
             chart=chart, history_chart=history_chart, demo_active=demo_active,
+            show_chart=request.GET.get("show_chart") == "1",
             published_url=published_url, demo_url=demo_url,
             district_eyebrow="DEMONSTRATION DATA" if demo_active else "OFFICIAL DISTRICT EVIDENCE",
             period=period, periods=periods, reference_period=dict(periods)[period],

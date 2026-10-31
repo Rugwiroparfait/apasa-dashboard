@@ -338,3 +338,10 @@
 .statistics-filter-footer details { @apply text-xs; }
 .statistics-filter-footer form { @apply mt-2 flex flex-wrap items-center gap-3; }
 .dashboard-shell .statistics-controls>p { @apply mb-0 mt-2 text-xs; }
+
+.dashboard-shell .dataset-picker { @apply m-0 flex flex-wrap items-end gap-3 border-0 p-0; }
+.dataset-picker>div { @apply min-w-0 flex-1 basis-64; }
+.dataset-picker label { @apply mb-1.5 block text-sm; }
+.dashboard-shell .dataset-picker select { @apply min-h-11 w-full min-w-0; }
+.dataset-options { @apply flex flex-wrap items-center gap-4; }
+.dataset-options form { @apply m-0 border-0 p-0; }

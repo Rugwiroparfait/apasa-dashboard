@@ -160,6 +160,9 @@ class AssessmentForm(forms.ModelForm):
         self.fields["dataset"].queryset = SourceBatch.objects.filter(
             status__in=[State.APPROVED, State.DEMO]
         )
+        if dataset:
+            self.fields["dataset"].widget = forms.HiddenInput()
+            self.fields["indicator"].queryset = self.fields["indicator"].queryset.filter(is_mocked=dataset.is_mocked)
         choices = []
         if dataset:
             for index, row in enumerate(dataset.rows):
